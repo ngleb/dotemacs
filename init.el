@@ -4,7 +4,7 @@
 (setq byte-compile-warnings nil)
 (require 'package)
 (package-initialize)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
 (setq default-frame-alist
@@ -82,6 +82,7 @@
 
 (setq solarized-scale-org-headlines nil)
 (setq solarized-use-variable-pitch nil)
+(setq x-underline-at-descent-line t)
 ;(setq solarized-height-minus-1 1)
 ;(setq solarized-height-plus-1 1)
 ;(setq solarized-height-plus-2 1)
