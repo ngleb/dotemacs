@@ -28,7 +28,7 @@
 ;; Tab & indent setup
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
-;(setq-default tab-always-indent t)
+(setq tab-always-indent 'complete)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq delete-old-versions nil)
