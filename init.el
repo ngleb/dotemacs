@@ -26,8 +26,8 @@
 (setq inhibit-startup-message t)
 
 ;; Tab & indent setup
-;(setq-default tab-width 4)
-;(setq-default indent-tabs-mode t)
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 ;(setq-default tab-always-indent t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
