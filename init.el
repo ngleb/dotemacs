@@ -8,12 +8,12 @@
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
 (setq default-frame-alist
-	  '(
-		(width . 120)
-		(height . 40)
-		(top . 200)
-		(left . 500)
-		))
+      '(
+        (width . 120)
+        (height . 40)
+        (top . 200)
+        (left . 500)
+        ))
 
 ;; MULE setup
 (set-language-environment 'UTF-8)
@@ -44,7 +44,7 @@
 (prefer-coding-system 'utf-8)
 
 (add-to-list 'default-frame-alist
-			 '(font . "Consolas 10"))
+             '(font . "Consolas 10"))
 
 (setq visible-bell t)
 (setq show-paren-delay 0)
@@ -65,18 +65,18 @@
 (global-set-key (kbd "C-c b") 'org-iswitchb)
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-todo-keywords
-	  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
-		(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(o)" "|" "CANCELLED(c@/!)")))
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(o)" "|" "CANCELLED(c@/!)")))
 (setq org-default-notes-file (expand-file-name "~/my/org/todo.org"))
 (setq org-capture-templates
-	  '(("r" "Todo" entry (file+headline "~/my/org/inbox.org" "Inbox")
-		 "* TODO %?\n %i\n %a")
-		("j" "Journal" entry (file+datetree "~/my/org/journal.org")
-		 "* %?\n entered on %U\n  %i\n  %a")))
+      '(("r" "Todo" entry (file+headline "~/my/org/inbox.org" "Inbox")
+         "* TODO %?\n %i\n %a")
+        ("j" "Journal" entry (file+datetree "~/my/org/journal.org")
+         "* %?\n entered on %U\n  %i\n  %a")))
 (global-set-key (kbd "C-c r")
-				(lambda () (interactive) (org-capture nil "r")))
+                (lambda () (interactive) (org-capture nil "r")))
 (global-set-key (kbd "C-c j")
-				(lambda () (interactive) (org-capture nil "j")))
+                (lambda () (interactive) (org-capture nil "j")))
 
 ; backup settings
 (setq make-backup-files t)
@@ -92,3 +92,5 @@
 ;(setq solarized-height-plus-3 1)
 ;(setq solarized-height-plus-4 1)
 (load-theme 'solarized-dark t)
+
+;; end of init.el file
