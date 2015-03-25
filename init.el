@@ -83,6 +83,13 @@
 ;(setq version-control t)
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
+(setq monokai-use-variable-pitch nil)
+(setq monokai-height-minus-1 1.0)
+(setq monokai-height-plus-1 1.0)
+(setq monokai-height-plus-2 1.0)
+(setq monokai-height-plus-3 1.0)
+(setq monokai-height-plus-4 1.0)
+
 (setq solarized-scale-org-headlines nil)
 (setq solarized-use-variable-pitch nil)
 (setq x-underline-at-descent-line t)
@@ -91,6 +98,7 @@
 ;(setq solarized-height-plus-2 1)
 ;(setq solarized-height-plus-3 1)
 ;(setq solarized-height-plus-4 1)
-(load-theme 'solarized-dark t)
+;(load-theme 'solarized-dark t)
+(load-theme 'monokai t)
 
 ;; end of init.el file
