@@ -7,7 +7,6 @@ bookmarks
 elpa
 el-get
 history
-.custom.el
 rc/rc-personal.el
 places
 pkgs
@@ -17,3 +16,4 @@ tramp
 .smex-items
 savefile
 eshell
+.org-it-locations

@@ -19,16 +19,22 @@
 (set-language-environment 'utf-8)
 (setq default-input-method "russian-computer")
 
-(require 'ido)
-(ido-mode 1)
-(global-font-lock-mode 1)
-;; Tab & indent setup
+; Tab & indent setup
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (setq tab-always-indent 'complete)
 
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(require 'helm)
+(require 'helm-config)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+(helm-mode 1)
 
 (setq visible-bell t)
 (setq show-paren-delay 0)
