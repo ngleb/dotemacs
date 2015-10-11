@@ -1,12 +1,17 @@
+;; File for custom setup
+;;
 (setq custom-file "~/.emacs.d/custom.el")
 
-; package setup
+;; package.el settins
+;;
 (setq byte-compile-warnings nil)
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
+;; Personal config
+;;
 (add-to-list 'load-path "~/.emacs.d/rc")
 
 (require 'rc-ui)
@@ -15,11 +20,13 @@
 (require 'rc-files)
 
 ;; MULE setup
+;;
 (prefer-coding-system 'utf-8)
 (set-language-environment 'utf-8)
 (setq default-input-method "russian-computer")
 
-; Tab & indent setup
+;; Tab & indent setup
+;;
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (setq tab-always-indent 'complete)
@@ -27,6 +34,8 @@
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Helm settings
+;;
 (require 'helm)
 (require 'helm-config)
 
@@ -35,14 +44,10 @@
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (helm-mode 1)
+(helm-autoresize-mode t)
 
-(setq visible-bell t)
-(setq show-paren-delay 0)
-(setq column-number-mode t)
-(setq-default indicate-empty-lines t)
-(setq-default show-trailing-whitespace t)
-
-;; keyboard setup
+;; General keyboard bindings
+;;
 (global-set-key (kbd "<f10>") 'save-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-c e") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
