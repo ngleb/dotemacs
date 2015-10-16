@@ -46,10 +46,16 @@
 (helm-mode 1)
 (helm-autoresize-mode t)
 
+;; smooth-scrolling
+;;
+(require 'smooth-scrolling)
+(setq smooth-scroll-margin 5)
+
 ;; General keyboard bindings
 ;;
 (global-set-key (kbd "<f10>") 'save-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-c e") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key (kbd "C-c q") 'auto-fill-mode)
 
 ;; end of init.el file
