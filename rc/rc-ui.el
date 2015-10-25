@@ -1,19 +1,21 @@
+;;; rc-ui.el ---
+
 ;; UI settings
 (provide 'rc-ui)
 
-;; Window size and position
+(setq inhibit-startup-message t)
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Frame size, position, font
 ;;
 (setq default-frame-alist
       '(
-        (width . 100)
-        (height . 35)
+        (width . 120)
+        (height . 40)
         (top . 200)
         (left . 400)
+        (font . "Hack 11")
         ))
-
-;; Font setup
-(add-to-list 'default-frame-alist
-             '(font . "Hack 11"))
 
 ;; Window elements
 ;;
@@ -26,9 +28,9 @@
 ;; Other general options
 ;;
 ;; (setq visible-bell t)
-;; (setq column-number-mode t)
-;; (setq-default indicate-empty-lines t)
-;; (setq-default show-trailing-whitespace t)
+(setq column-number-mode t)
+(setq-default indicate-empty-lines t)
+(setq-default show-trailing-whitespace t)
 
 ;; Theme settings
 ;;
@@ -46,4 +48,9 @@
 (require 'powerline)
 (powerline-default-theme)
 
-;; EOF
+;; smooth-scrolling
+;;
+(require 'smooth-scrolling)
+(setq smooth-scroll-margin 5)
+
+;;; rc-ui.el ends here
