@@ -8,11 +8,9 @@
 
 (add-to-list 'load-path "~/.emacs.d/rc")
 
-(require 'rc-edit)
 (require 'rc-general)
 (require 'rc-ui)
 (require 'rc-org)
 (require 'rc-personal)
-(require 'rc-files)
 
 ;;; init.el ends here
