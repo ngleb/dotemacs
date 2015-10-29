@@ -7,7 +7,7 @@
 (global-set-key (kbd "C-c b") 'org-iswitchb)
 (global-set-key (kbd "C-c c") 'org-capture)
 
-(setq org-directory "~/OrgMode")
+(setq org-directory "~/Dropbox/OrgMode")
 (find-file (concat org-directory "/main.org"))
 
 ;; agenda
@@ -16,9 +16,9 @@
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                  (org-agenda-files :maxlevel . 9))))
 
-(setq org-refile-use-outline-path t)
+(setq org-refile-use-outline-path 'file)
 (setq org-outline-path-complete-in-steps nil)
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
+(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; (setq org-completion-use-ido t)
 ;; (setq ido-everywhere t)

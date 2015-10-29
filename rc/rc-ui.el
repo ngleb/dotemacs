@@ -29,7 +29,7 @@
 ;;
 ;; (setq visible-bell t)
 (setq column-number-mode t)
-(setq-default indicate-empty-lines t)
+;; (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
 
 ;; Theme settings
