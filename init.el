@@ -12,23 +12,11 @@
       '((async . "melpa-stable")
         (company . "melpa-stable")
         (dash . "melpa-stable")
-        (git-commit . "melpa-stable")
         (helm . "melpa-stable")
         (helm-core . "melpa-stable")
         (ledger-mode . "melpa-stable")
-        (magit . "melpa-stable") ; magit
-        (magit-popup . "melpa-stable") ; magit
         (markdown-mode . "melpa-stable")
-        (with-editor . "melpa-stable") ; magit
-        (yasnippet . "melpa-stable")
-        (zenburn-theme . "melpa-stable")
         (flyspell-popup . "melpa-stable")
-        (ess . "melpa-stable")
-        (julia-mode . "melpa-stable")
-        (find-file-in-project . "melpa-stable")
-        (highlight-indentation . "melpa-stable")
-        (pyvenv . "melpa-stable")
-        (elpy . "melpa-stable")
 
         (fill-column-indicator . "melpa")
         (deft . "melpa")
@@ -37,6 +25,26 @@
         (org-plus-contrib . "org")
         (smooth-scrolling . "melpa")
         (use-package . "melpa")))
+
+(when (equal (system-name) "lenovo")
+  (add-to-list 'package-pinned-packages '(zenburn-theme . "melpa-stable"))
+
+  ;; ESS
+  (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable"))
+
+  ;; elpy
+  (add-to-list 'package-pinned-packages '(find-file-in-project . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(highlight-indentation . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(pyvenv . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(elpy . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(yasnippet . "melpa-stable"))
+
+  ;; magit
+  (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(git-commit . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(with-editor . "melpa-stable")))
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
