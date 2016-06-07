@@ -3,8 +3,9 @@
 .cask
 .org-id-locations
 .smex-items
-auto-save-alist
+auto-save-list
 backups
+backup
 bookmarks
 el-get
 elpa
