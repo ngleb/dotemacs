@@ -113,7 +113,32 @@
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
 (setq ad-redefinition-action 'accept)
 
-;; use-package
+;; python settings
+(use-package python-mode
+  :config
+  (progn
+    (setq-default python-indent 4)
+    (when (executable-find "ipython2.7")
+      (setq python-shell-interpreter "ipython2.7"
+            python-shell-interpreter-args ""))))
+
+;; (use-package fill-column-indicator
+;;   :init
+;;   (setq-default fci-rule-column 80)
+;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode))
+
+(use-package company
+  :diminish company-mode
+  :init
+  (progn
+    (setq company-idle-delay 0.5)
+    (setq company-tooltip-limit 10)
+    (setq company-minimum-prefix-length 2)
+    (setq company-tooltip-flip-when-above t))
+  :config
+  (progn
+    (global-company-mode 1)))
+
 (use-package whitespace
   :diminish whitespace-mode
   :init
@@ -123,11 +148,6 @@
   :config
   (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs tab-mark trailing)))
-
-(use-package fill-column-indicator
-  :init
-  (setq-default fci-rule-column 80)
-  (add-hook 'prog-mode-hook 'turn-on-fci-mode))
 
 (use-package org
   :mode (("\\.org$" . org-mode))
@@ -306,17 +326,6 @@
     (require 'helm-config)
     (helm-mode 1)
     (helm-autoresize-mode 1)))
-
-(use-package company
-  :init
-  (progn
-    (setq company-idle-delay 0.3)
-    (setq company-tooltip-limit 10)
-    (setq company-minimum-prefix-length 2)
-    (setq company-tooltip-flip-when-above t))
-  :config
-  (progn
-    (global-company-mode 1)))
 
 (use-package smooth-scrolling
   :init
