@@ -35,8 +35,7 @@
         (use-package . "melpa")))
 
 (when (eq system-type 'windows-nt)
-  (add-to-list 'package-pinned-packages
-               '(w32-browser . "melpa")))
+  (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
 
 (package-initialize)
 (setq package-contents-refreshed nil)
@@ -62,12 +61,12 @@
 (require 'bind-key)
 
 ;; open init.el via hotkey
-;;
 (global-set-key (kbd "C-c e")
-                (lambda () (interactive) (find-file user-init-file)))
+                (lambda ()
+                  (interactive)
+                  (find-file user-init-file)))
 
-;; Window elements
-;;
+;; window elements
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (menu-bar-mode -1)
@@ -89,19 +88,16 @@
 (setq tab-always-indent 'complete)
 
 ;; Startup tweaks
-;;
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 
 ;; Other tweaks
-;;
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq visible-bell t)
 (setq ring-bell-function 'ignore)
 
 ;; MULE & encoding setup
-;;
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment "UTF-8")
@@ -109,16 +105,15 @@
 (setq default-input-method "russian-computer")
 
 ;; Stop creating backub and autosave files
-;;
 (setq make-backup-files nil) ; stop creating those backup~ files
 (setq auto-save-default nil) ; stop creating those #autosave# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
-;;
 (setq ad-redefinition-action 'accept)
 
+;; use-package
 (use-package whitespace
   :diminish whitespace-mode
   :init
@@ -221,28 +216,46 @@
                        (org-agenda-prefix-format "%t")
                        (org-agenda-todo-keyword-format "")))
               (tags-todo "@home|@anna|@laptop|@review|@city|@buy"
-                         ((org-agenda-overriding-header "\nNext actions")
+                         ((org-agenda-overriding-header "\nNext actions for home")
                           (org-agenda-skip-function '(org-agenda-skip-entry-if
                                                       'scheduled
                                                       'deadline
                                                       'timestamp))
                           (org-agenda-sorting-strategy '(tag-up))
-                          ;(org-agenda-prefix-format "")
-                                        ;(org-agenda-todo-keyword-format "•")))
+                          (org-agenda-prefix-format "\t")))
+              (todo "WAITING"
+                    ((org-agenda-overriding-header "\nWaiting")
+                     (org-agenda-prefix-format ""))))
+             ((org-agenda-compact-blocks t)))
+
+            ("o" "Agenda and Office-related tasks"
+             ((agenda ""
+                      ((org-agenda-span 'day)
+                       (org-agenda-use-time-grid nil)
+                       (org-agenda-prefix-format "\t%t")
+                       (org-agenda-todo-keyword-format "")))
+              (tags-todo "@office"
+                         ((org-agenda-overriding-header "\nNext actions for office")
+                          (org-agenda-skip-function '(org-agenda-skip-entry-if
+                                                      'scheduled
+                                                      'deadline
+                                                      'timestamp))
+                          (org-agenda-sorting-strategy '(tag-up))
+                          (org-agenda-prefix-format "\t")
+                          ))
+              (tags-todo "@review|@laptop|@anna"
+                         ((org-agenda-overriding-header "\nOther related tasks")
+                          (org-agenda-skip-function '(org-agenda-skip-entry-if
+                                                      'scheduled
+                                                      'deadline
+                                                      'timestamp))
+                          (org-agenda-sorting-strategy '(tag-up))
+                          (org-agenda-prefix-format "\t")
                           ))
               (todo "WAITING"
                     ((org-agenda-overriding-header "\nWaiting")
-                     (org-agenda-prefix-format "")
-                     (org-agenda-todo-keyword-format "•"))))
-             ((org-agenda-compact-blocks t)))
-             ("o" "Agenda and Office-related tasks"
-               ((agenda "")
-                (tags-todo "@office")
-                (tags-todo "@review")
-                (tags-todo "@laptop")
-                (tags-todo "@anna")
-                (tags-todo "@city")
-                (tags-todo "@buy")))))
+                     (org-agenda-prefix-format "\t"))))
+             ((org-agenda-compact-blocks t)))))
 
     (eval-after-load "org" '(require 'ox-md nil t))
     (require 'ox-latex)
@@ -414,8 +427,6 @@
     (setq ispell-hunspell-dictionary-alist
           ispell-local-dictionary-alist)))
 
-;; dired+ setup
-;;
 (use-package dired
   :config
   (use-package dired-x)
@@ -430,14 +441,10 @@
         ((eq system-type 'windows-nt)
          (setq dired-listing-switches "-alh"))))
 
-;; LaTeX settings
-;;
 ;; (setq tex-compile-commands '(("xelatex %r")))
 ;; (setq tex-command "xelatex")
 ;; (setq-default TeX-engine 'xelatex)
 
-;; system-specific settings
-;;
 (cond ((eq system-type 'gnu/linux)
        ;; Frame size, position, font
        (add-to-list 'default-frame-alist '(width . 140))
