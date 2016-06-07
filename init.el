@@ -25,6 +25,10 @@
         (flyspell-popup . "melpa-stable")
         (ess . "melpa-stable")
         (julia-mode . "melpa-stable")
+        (find-file-in-project . "melpa-stable")
+        (highlight-indentation . "melpa-stable")
+        (pyvenv . "melpa-stable")
+        (elpy . "melpa-stable")
 
         (fill-column-indicator . "melpa")
         (deft . "melpa")
@@ -114,13 +118,20 @@
 (setq ad-redefinition-action 'accept)
 
 ;; python settings
-(use-package python-mode
+;; (use-package python-mode
+;;   :init
+;;   (progn
+;;     (setq-default python-indent 4)
+;;     (when (executable-find "ipython2.7")
+;;       (setq python-shell-interpreter "ipython2.7"
+;;             python-shell-interpreter-args ""))))
+
+(use-package elpy
   :config
   (progn
-    (setq-default python-indent 4)
-    (when (executable-find "ipython2.7")
-      (setq python-shell-interpreter "ipython2.7"
-            python-shell-interpreter-args ""))))
+    (elpy-enable)
+    (setq elpy-rpc-backend "jedi")
+    (elpy-use-ipython "ipython2")))
 
 ;; (use-package fill-column-indicator
 ;;   :init
@@ -137,7 +148,12 @@
     (setq company-tooltip-flip-when-above t))
   :config
   (progn
+    (bind-key "C-<tab>" 'company-complete)
     (global-company-mode 1)))
+
+(use-package magit
+  :init
+  (bind-key "C-c m" 'magit-status))
 
 (use-package whitespace
   :diminish whitespace-mode
