@@ -33,12 +33,12 @@
   (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable"))
 
-  ;; elpy
-  (add-to-list 'package-pinned-packages '(find-file-in-project . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(highlight-indentation . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(pyvenv . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(elpy . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(yasnippet . "melpa-stable"))
+  ;; ;; elpy
+  ;; (add-to-list 'package-pinned-packages '(find-file-in-project . "melpa-stable"))
+  ;; (add-to-list 'package-pinned-packages '(highlight-indentation . "melpa-stable"))
+  ;; (add-to-list 'package-pinned-packages '(pyvenv . "melpa-stable"))
+  ;; (add-to-list 'package-pinned-packages '(elpy . "melpa-stable"))
+  ;; (add-to-list 'package-pinned-packages '(yasnippet . "melpa-stable"))
 
   ;; magit
   (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
@@ -126,20 +126,20 @@
 (setq ad-redefinition-action 'accept)
 
 ;; python settings
-;; (use-package python-mode
-;;   :init
-;;   (progn
-;;     (setq-default python-indent 4)
-;;     (when (executable-find "ipython2.7")
-;;       (setq python-shell-interpreter "ipython2.7"
-;;             python-shell-interpreter-args ""))))
-
-(use-package elpy
-  :config
+(use-package python-mode
+  :init
   (progn
-    (elpy-enable)
-    (setq elpy-rpc-backend "jedi")
-    (elpy-use-ipython "ipython2")))
+    (setq-default python-indent 4)
+    (when (executable-find "ipython2.7")
+      (setq python-shell-interpreter "ipython2.7"
+            python-shell-interpreter-args ""))))
+
+;; (use-package elpy
+;;   :config
+;;   (progn
+;;     (elpy-enable)
+;;     (setq elpy-rpc-backend "jedi")
+;;     (elpy-use-ipython "ipython2")))
 
 ;; (use-package fill-column-indicator
 ;;   :init
