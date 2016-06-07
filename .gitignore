@@ -13,7 +13,7 @@ history
 image-dired
 pkgs
 places
-rc/rc-personal.el
+personal.el
 savefile
 session*
 tramp
