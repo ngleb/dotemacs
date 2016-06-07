@@ -26,6 +26,7 @@
         (ess . "melpa-stable")
         (julia-mode . "melpa-stable")
 
+        (fill-column-indicator . "melpa")
         (deft . "melpa")
         (dired+ . "melpa")
         (olivetti . "melpa")
@@ -35,7 +36,7 @@
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages
-               '((w32-browser . "melpa"))))
+               '(w32-browser . "melpa")))
 
 (package-initialize)
 (setq package-contents-refreshed nil)
@@ -119,13 +120,19 @@
 (setq ad-redefinition-action 'accept)
 
 (use-package whitespace
+  :diminish whitespace-mode
   :init
-  (dolist (hook '(prog-mode-hook text-mode-hook))
+  (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
     (add-hook hook #'whitespace-mode))
   (add-hook 'before-save-hook #'whitespace-cleanup)
   :config
   (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs tab-mark trailing)))
+
+(use-package fill-column-indicator
+  :init
+  (setq-default fci-rule-column 80)
+  (add-hook 'prog-mode-hook 'turn-on-fci-mode))
 
 (use-package org
   :mode (("\\.org$" . org-mode))
@@ -168,9 +175,13 @@
     ;; (setq org-archive-save-context-info nil)
 
     (setq org-capture-templates
-          '(("x" "New inbound entry" entry (file+headline (concat org-directory "/gtd.org") "Inbox")
+          '(("x" "New inbound entry"
+             entry
+             (file+headline (concat org-directory "/gtd.org") "Inbox")
              "* %?\n%U\n")
-            ("t" "New TODO entry" entry (file+headline (concat org-directory "/gtd.org") "Actions")
+            ("t" "New TODO entry"
+             entry
+             (file+headline (concat org-directory "/gtd.org") "Actions")
              "* TODO %?\n%U\n")))
 
     (define-key global-map "\C-cx"
@@ -199,7 +210,8 @@
                           ("@office" .?o)))
 
     (setq org-todo-keywords
-          '((sequence "TODO(t)" "WAITING(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+          '((sequence "TODO(t)" "WAITING(w@/!)" "IN PROGRESS(p@/!)"
+                      "|" "DONE(d!)" "CANCELED(c@)")))
 
     (setq org-agenda-custom-commands
           '(("h" "Agenda and Home-related tasks"
@@ -210,7 +222,11 @@
                        (org-agenda-todo-keyword-format "")))
               (tags-todo "@home|@anna|@laptop|@review|@city|@buy"
                          ((org-agenda-overriding-header "\nNext actions")
-                          ;(org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                          (org-agenda-skip-function '(org-agenda-skip-entry-if
+                                                      'scheduled
+                                                      'deadline
+                                                      'timestamp))
+                          (org-agenda-sorting-strategy '(tag-up))
                           ;(org-agenda-prefix-format "")
                                         ;(org-agenda-todo-keyword-format "•")))
                           ))
@@ -395,7 +411,8 @@
        (interactive)
        (ispell-change-dictionary "english")))
 
-    (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist)))
+    (setq ispell-hunspell-dictionary-alist
+          ispell-local-dictionary-alist)))
 
 ;; dired+ setup
 ;;
@@ -408,7 +425,8 @@
     (diredp-toggle-find-file-reuse-dir 1))
   (add-hook 'dired-mode-hook '(lambda () (hl-line-mode 1)))
   (cond ((eq system-type 'gnu/linux)
-         (setq dired-listing-switches "-aBhl --group-directories-first"))
+         (setq dired-listing-switches
+               "-aBhl --group-directories-first"))
         ((eq system-type 'windows-nt)
          (setq dired-listing-switches "-alh"))))
 
