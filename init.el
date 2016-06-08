@@ -153,6 +153,10 @@
 ;;   (setq-default fci-rule-column 80)
 ;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode))
 
+;; (use-package jedi
+;;   :init
+;;   (add-hook 'python-mode-hook 'jedi:setup))
+
 (use-package company
   :diminish company-mode
   :init
@@ -351,7 +355,7 @@
   (setq deft-text-mode 'org-mode))
 
 (use-package helm
-  :diminish helm
+  :diminish helm-mode
   :bind
   (("M-x" . undefined)
    ("M-x" . helm-M-x)
