@@ -40,6 +40,13 @@
   ;; (add-to-list 'package-pinned-packages '(elpy . "melpa-stable"))
   ;; (add-to-list 'package-pinned-packages '(yasnippet . "melpa-stable"))
 
+  ;; company-jedi
+  (add-to-list 'package-pinned-packages '(cl-lib . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(epc . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(python-environment . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(jedi-core . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(company-jedi . "melpa-stable"))
+
   ;; magit
   (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
@@ -132,7 +139,7 @@
     (setq-default python-indent 4)
     (when (executable-find "ipython2.7")
       (setq python-shell-interpreter "ipython2.7"
-            python-shell-interpreter-args ""))))
+            python-shell-interpreter-args "-i"))))
 
 ;; (use-package elpy
 ;;   :config
@@ -157,7 +164,11 @@
   :config
   (progn
     (bind-key "C-<tab>" 'company-complete)
-    (global-company-mode 1)))
+    (add-hook 'prog-mode-hook 'global-company-mode)))
+
+(use-package company-jedi
+  :config
+  (add-to-list 'company-backends 'company-jedi))
 
 (use-package magit
   :init

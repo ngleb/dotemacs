@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (elpy zenburn-theme yasnippet use-package smooth-scrolling pyvenv org-plus-contrib olivetti markdown-mode magit ledger-mode highlight-indentation helm flyspell-popup find-file-in-project fill-column-indicator ess dired+ deft company))))
+    (company-jedi zenburn-theme use-package smooth-scrolling org-plus-contrib olivetti markdown-mode magit ledger-mode helm flyspell-popup fill-column-indicator ess elpy dired+ deft))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

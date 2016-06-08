@@ -2,6 +2,7 @@
 *~
 .cask
 .org-id-locations
+.python-environments
 .smex-items
 auto-save-list
 backups
