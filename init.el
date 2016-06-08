@@ -351,6 +351,7 @@
   (setq deft-text-mode 'org-mode))
 
 (use-package helm
+  :diminish helm
   :bind
   (("M-x" . undefined)
    ("M-x" . helm-M-x)
