@@ -47,6 +47,12 @@
   (add-to-list 'package-pinned-packages '(jedi-core . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(company-jedi . "melpa-stable"))
 
+  ;; flycheck
+  (add-to-list 'package-pinned-packages '(let-alist . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(pkg-info . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(seq . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(flycheck . "melpa-stable"))
+
   ;; magit
   (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
@@ -132,31 +138,6 @@
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
 (setq ad-redefinition-action 'accept)
 
-;; python settings
-(use-package python-mode
-  :init
-  (progn
-    (setq-default python-indent 4)
-    (when (executable-find "ipython2.7")
-      (setq python-shell-interpreter "ipython2.7"
-            python-shell-interpreter-args "-i"))))
-
-;; (use-package elpy
-;;   :config
-;;   (progn
-;;     (elpy-enable)
-;;     (setq elpy-rpc-backend "jedi")
-;;     (elpy-use-ipython "ipython2")))
-
-;; (use-package fill-column-indicator
-;;   :init
-;;   (setq-default fci-rule-column 80)
-;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode))
-
-;; (use-package jedi
-;;   :init
-;;   (add-hook 'python-mode-hook 'jedi:setup))
-
 (use-package company
   :diminish company-mode
   :init
@@ -174,9 +155,41 @@
   :config
   (add-to-list 'company-backends 'company-jedi))
 
+(use-package flycheck
+  :defer t)
+
+;; python settings
+(use-package python
+  :config
+  (progn
+    (add-hook 'python-mode-hook 'flycheck-mode)
+
+    (setq flycheck-python-flake8-executable
+          "/usr/lib/python-exec/python2.7/flake8")
+
+    (bind-key "M-n" #'flycheck-next-error python-mode-map)
+    (bind-key "M-p" #'flycheck-previous-error python-mode-map)
+
+    (setq-default python-indent 4)
+    (when (executable-find "ipython2.7")
+      (setq python-shell-interpreter "ipython2.7"
+            python-shell-interpreter-args "-i"))))
+
+;; (use-package elpy
+;;   :config
+;;   (progn
+;;     (elpy-enable)
+;;     (setq elpy-rpc-backend "jedi")
+;;     (elpy-use-ipython "ipython2")))
+
 (use-package magit
   :init
   (bind-key "C-c m" 'magit-status))
+
+;; (use-package fill-column-indicator
+;;   :init
+;;   (setq-default fci-rule-column 80)
+;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode))
 
 (use-package whitespace
   :diminish whitespace-mode
