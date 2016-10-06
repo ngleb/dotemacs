@@ -1,6 +1,7 @@
 (require 'package)
 
 (setq package-enable-at-startup nil)
+
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
@@ -9,22 +10,28 @@
              '("org" . "http://orgmode.org/elpa/") t)
 
 (setq package-pinned-packages
-      '((async . "melpa-stable")
-        (company . "melpa-stable")
-        (dash . "melpa-stable")
-        (helm . "melpa-stable")
-        (helm-core . "melpa-stable")
-        (ledger-mode . "melpa-stable")
-        (markdown-mode . "melpa-stable")
+      '((dash . "melpa-stable")
+
+        (ivy . "melpa-stable")
+        (swiper . "melpa-stable")
+        (counsel . "melpa-stable")
+
+        (popup . "melpa-stable")
         (flyspell-popup . "melpa-stable")
 
-        (fill-column-indicator . "melpa")
-        (deft . "melpa")
+        (company . "melpa-stable")
+        (deft . "melpa-stable")
+        (ledger-mode . "melpa-stable")
+        (markdown-mode . "melpa-stable")
+        (olivetti . "melpa-stable")
+        (yasnippet . "melpa-stable")
+        (nlinum . "gnu")
+
         (dired+ . "melpa")
-        (olivetti . "melpa")
-        (org-plus-contrib . "org")
         (smooth-scrolling . "melpa")
-        (use-package . "melpa")))
+        (use-package . "melpa")
+
+        (org-plus-contrib . "org")))
 
 (when (equal (system-name) "lenovo")
   (add-to-list 'package-pinned-packages '(zenburn-theme . "melpa-stable"))
@@ -33,41 +40,28 @@
   (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable"))
 
-  ;; ;; elpy
-  ;; (add-to-list 'package-pinned-packages '(find-file-in-project . "melpa-stable"))
-  ;; (add-to-list 'package-pinned-packages '(highlight-indentation . "melpa-stable"))
-  ;; (add-to-list 'package-pinned-packages '(pyvenv . "melpa-stable"))
-  ;; (add-to-list 'package-pinned-packages '(elpy . "melpa-stable"))
-  ;; (add-to-list 'package-pinned-packages '(yasnippet . "melpa-stable"))
+  ;; Magit
+  (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(async . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(git-commit . "melpa-stable"))
+  (add-to-list 'package-pinned-packages '(with-editor . "melpa-stable"))
 
   ;; company-jedi
-  (add-to-list 'package-pinned-packages '(cl-lib . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(epc . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(python-environment . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(jedi-core . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(company-jedi . "melpa-stable"))
 
-  ;; flycheck
-  (add-to-list 'package-pinned-packages '(let-alist . "melpa-stable"))
+  ;; flycheck (elpa: seq, pkg-info)
   (add-to-list 'package-pinned-packages '(pkg-info . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(seq . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(flycheck . "melpa-stable"))
-
-  ;; magit
-  (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(git-commit . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(with-editor . "melpa-stable")))
+  (add-to-list 'package-pinned-packages '(flycheck . "melpa-stable")))
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
 
 (package-initialize)
 (setq package-contents-refreshed nil)
-
-;; (unless (package-installed-p 'use-package)
-;;   (package-refresh-contents)
-;;   (package-install 'use-package))
 
 (mapc (lambda (pinned-package)
         (let ((package (car pinned-package))
@@ -101,11 +95,12 @@
 (show-paren-mode 1)
 (setq visible-bell t)
 (setq x-underline-at-descent-line t)
+(add-hook 'prog-mode-hook 'nlinum-mode)
 
 ;; Truncate lines
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
-(define-key global-map [f5] 'toggle-truncate-lines)
+;(define-key global-map [f5] 'toggle-truncate-lines)
 
 ;; Tab & indent setup
 (setq-default tab-width 4)
@@ -138,18 +133,32 @@
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
 (setq ad-redefinition-action 'accept)
 
+(setq-default c-default-style "linux"
+              c-basic-offset 4)
+
+(use-package swiper
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+
+  (global-set-key (kbd "C-s") 'swiper)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+
+  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
+
 (use-package company
   :diminish company-mode
   :init
-  (progn
-    (setq company-idle-delay 0.5)
-    (setq company-tooltip-limit 10)
-    (setq company-minimum-prefix-length 2)
-    (setq company-tooltip-flip-when-above t))
+  (setq company-idle-delay 0.5)
+  (setq company-tooltip-limit 10)
+  (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-flip-when-above t)
   :config
-  (progn
-    (bind-key "C-<tab>" 'company-complete)
-    (add-hook 'prog-mode-hook 'global-company-mode)))
+  (bind-key "C-<tab>" 'company-complete)
+  (add-hook 'prog-mode-hook 'global-company-mode))
 
 (use-package company-jedi
   :config
@@ -158,38 +167,21 @@
 (use-package flycheck
   :defer t)
 
-;; python settings
 (use-package python
   :config
-  (progn
-    (add-hook 'python-mode-hook 'flycheck-mode)
-
-    (setq flycheck-python-flake8-executable
-          "/usr/lib/python-exec/python2.7/flake8")
-
-    (bind-key "M-n" #'flycheck-next-error python-mode-map)
-    (bind-key "M-p" #'flycheck-previous-error python-mode-map)
-
-    (setq-default python-indent 4)
-    (when (executable-find "ipython2.7")
-      (setq python-shell-interpreter "ipython2.7"
-            python-shell-interpreter-args "-i"))))
-
-;; (use-package elpy
-;;   :config
-;;   (progn
-;;     (elpy-enable)
-;;     (setq elpy-rpc-backend "jedi")
-;;     (elpy-use-ipython "ipython2")))
+  (add-hook 'python-mode-hook 'flycheck-mode)
+  (setq-default python-indent 4)
+  (bind-key "M-n" #'flycheck-next-error python-mode-map)
+  (bind-key "M-p" #'flycheck-previous-error python-mode-map)
+  (when (executable-find "ipython2.7")
+    (setq python-shell-interpreter "ipython2.7"
+          python-shell-interpreter-args "-i"))
+  (setq flycheck-python-flake8-executable
+        "/usr/lib/python-exec/python2.7/flake8"))
 
 (use-package magit
-  :init
-  (bind-key "C-c m" 'magit-status))
-
-;; (use-package fill-column-indicator
-;;   :init
-;;   (setq-default fci-rule-column 80)
-;;   (add-hook 'prog-mode-hook 'turn-on-fci-mode))
+  :bind
+  (("C-c m" . magit-status)))
 
 (use-package whitespace
   :diminish whitespace-mode
@@ -208,144 +200,71 @@
    ("C-c l" . org-store-link)
    ("C-c b" . org-iswitchb)
    ("C-c c" . org-capture))
+  :commands
+  (org
+   org-capture
+   org-mode
+   org-store-link)
   :config
-  (progn
-    (add-hook 'org-mode-hook 'turn-on-font-lock)
-    (add-hook 'org-mode-hook
-              (lambda ()
-                (visual-line-mode 1)))
-    (add-hook 'org-agenda-mode-hook
-              (lambda ()
-                (visual-line-mode -1)
-                (toggle-truncate-lines 1)))
-    (setq org-startup-indented t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
-    (setq org-use-fast-todo-selection t)
+  (use-package org-protocol)
+  (setq org-modules '(org-habit))
+  (add-hook 'org-mode-hook 'turn-on-font-lock)
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (visual-line-mode 1)))
+  (add-hook 'org-agenda-mode-hook
+            (lambda ()
+              (visual-line-mode -1)
+              (toggle-truncate-lines 1)))
+  (setq org-startup-indented t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-use-fast-todo-selection t)
+  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  (setq org-archive-save-context-info nil)
 
-    (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  (cond ((eq system-type 'gnu/linux)
+         (setq org-directory "~/my/org"))
+        ((eq system-type 'windows-nt)
+         (setq org-directory "C:/Users/nga/Documents/org")))
 
-    (setq org-modules '(org-bbdb
-                        org-habit))
+  (setq org-agenda-files
+        (list (concat org-directory "/gtd.org")
+              (concat org-directory "/someday.org")))
 
-    (cond ((eq system-type 'gnu/linux)
-           (setq org-directory "~/my/org"))
-          ((eq system-type 'windows-nt)
-           (setq org-directory "C:/Users/nga/Documents/org")))
+  (setq org-capture-templates
+        '(("x" "New inbound entry"
+           entry
+           (file+headline (concat org-directory "/gtd.org") "Inbox")
+           "* %?\n%U\n")
+          ("t" "New TODO entry"
+           entry
+           (file+headline (concat org-directory "/gtd.org") "Actions")
+           "* TODO %?\n%U\n")))
 
-    (setq org-agenda-files
-          (list (concat org-directory "/gtd.org")
-                (concat org-directory "/someday.org")))
+  (define-key global-map "\C-cx"
+    (lambda () (interactive) (org-capture nil "x")))
+  (define-key global-map "\C-ct"
+    (lambda () (interactive) (org-capture nil "t")))
 
-    ;; (setq org-archive-location
-    ;;       (concat org-directory "/archive.org::datetree/"))
-    ;; (setq org-archive-save-context-info nil)
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 9)))
+  (setq org-refile-use-outline-path 'file)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-fontify-emphasized-text nil)
 
-    (setq org-capture-templates
-          '(("x" "New inbound entry"
-             entry
-             (file+headline (concat org-directory "/gtd.org") "Inbox")
-             "* %?\n%U\n")
-            ("t" "New TODO entry"
-             entry
-             (file+headline (concat org-directory "/gtd.org") "Actions")
-             "* TODO %?\n%U\n")))
+  (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
 
-    (define-key global-map "\C-cx"
-      (lambda () (interactive) (org-capture nil "x")))
-    (define-key global-map "\C-ct"
-      (lambda () (interactive) (org-capture nil "t")))
+  (setq org-tag-alist '(("@home" . ?h)
+                        ("@laptop" . ?l)
+                        ("@anna" . ?a)
+                        ("@errands" . ?e)
+                        ("@office" .?o)))
 
-    (setq org-refile-targets '((nil :maxlevel . 9)
-                               (org-agenda-files :maxlevel . 9)))
-    (setq org-refile-use-outline-path 'file)
-    (setq org-outline-path-complete-in-steps nil)
-    (setq org-refile-allow-creating-parent-nodes 'confirm)
-    (setq org-fontify-emphasized-text nil)
-    (setq org-export-latex-tables-centered nil)
-
-    (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
-
-    (setq org-tag-alist '(("@home" . ?h)
-                          ("@laptop" . ?l)
-                          ("@anna" . ?a)
-                          ("@review" . ?r)
-                          (:newline . nil)
-                          ("@city" . ?c)
-                          ("@buy" . ?b)
-                          ("@project" . ?p)
-                          ("@office" .?o)))
-
-    (setq org-todo-keywords
-          '((sequence "TODO(t)" "WAITING(w@/!)" "IN PROGRESS(p@/!)"
-                      "|" "DONE(d!)" "CANCELED(c@)")))
-
-    (setq org-agenda-custom-commands
-          '(("h" "Agenda and Home-related tasks"
-             ((agenda ""
-                      ((org-agenda-span 'day)
-                       (org-agenda-use-time-grid nil)
-                       (org-agenda-prefix-format "%t")
-                       (org-agenda-todo-keyword-format "")))
-              (tags-todo "@home|@anna|@laptop|@review|@city|@buy"
-                         ((org-agenda-overriding-header "\nNext actions for home")
-                          (org-agenda-skip-function '(org-agenda-skip-entry-if
-                                                      'scheduled
-                                                      'deadline
-                                                      'timestamp))
-                          (org-agenda-sorting-strategy '(tag-up))
-                          (org-agenda-prefix-format "\t")))
-              (todo "WAITING"
-                    ((org-agenda-overriding-header "\nWaiting")
-                     (org-agenda-prefix-format ""))))
-             ((org-agenda-compact-blocks t)))
-
-            ("o" "Agenda and Office-related tasks"
-             ((agenda ""
-                      ((org-agenda-span 'day)
-                       (org-agenda-use-time-grid nil)
-                       (org-agenda-prefix-format "\t%t")
-                       (org-agenda-todo-keyword-format "")))
-              (tags-todo "@office"
-                         ((org-agenda-overriding-header "\nNext actions for office")
-                          (org-agenda-skip-function '(org-agenda-skip-entry-if
-                                                      'scheduled
-                                                      'deadline
-                                                      'timestamp))
-                          (org-agenda-sorting-strategy '(tag-up))
-                          (org-agenda-prefix-format "\t")
-                          ))
-              (tags-todo "@review|@laptop|@anna"
-                         ((org-agenda-overriding-header "\nOther related tasks")
-                          (org-agenda-skip-function '(org-agenda-skip-entry-if
-                                                      'scheduled
-                                                      'deadline
-                                                      'timestamp))
-                          (org-agenda-sorting-strategy '(tag-up))
-                          (org-agenda-prefix-format "\t")
-                          ))
-              (todo "WAITING"
-                    ((org-agenda-overriding-header "\nWaiting")
-                     (org-agenda-prefix-format "\t"))))
-             ((org-agenda-compact-blocks t)))))
-
-    (eval-after-load "org" '(require 'ox-md nil t))
-    (require 'ox-latex)
-
-    ;; (setq org-latex-pdf-process
-    ;;       '("xelatex -interaction nonstopmode -output-directory %o %f"
-    ;;         "xelatex -interaction nonstopmode -output-directory %o %f"
-    ;;         "xelatex -interaction nonstopmode -output-directory %o %f"))
-
-    (add-to-list 'org-latex-classes
-                 '("mybeamer"
-                   "\\documentclass[presentation,smaller,12pt]{beamer}
-                    \\usepackage{polyglossia}
-                    \\setmainlanguage{russian}
-                    [NO-DEFAULT-PACKAGES]
-                    [NO-PACKAGES]
-                    [EXTRA]"
-                   org-beamer-sectioning))))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)"
+                    "|" "DONE(d!)" "CANCELED(c@)"))))
 
 (use-package deft
   :bind
@@ -367,64 +286,45 @@
                                  (case-fn . downcase)))
   (setq deft-text-mode 'org-mode))
 
-(use-package helm
-  :diminish helm-mode
-  :bind
-  (("M-x" . undefined)
-   ("M-x" . helm-M-x)
-   ("C-x r b" . helm-filtered-bookmarks)
-   ("C-x C-f" . helm-find-files))
-  :init
-  (progn
-    (require 'helm-config)
-    (helm-mode 1)
-    (helm-autoresize-mode 1)))
-
 (use-package smooth-scrolling
-  :init
-  (progn
-    (setq smooth-scroll-margin 5))
   :config
-  (progn
-    (smooth-scrolling-mode 1)))
+  (setq smooth-scroll-margin 5)
+  (smooth-scrolling-mode 1))
 
 (use-package ibuffer
   :commands ibuffer
   :bind
   ("C-x C-b" . ibuffer)
   :config
-  (progn
-    (use-package ibuf-ext)
-    (setq ibuffer-show-empty-filter-groups nil)
-    (setq ibuffer-saved-filter-groups
-          '(("default"
-             ("planner"
-              (or (filename . "gtd.org")
-                  (filename . "someday.org")
-                  (filename . "journal.org")
-                  (filename . "inbox.org")
-                  (mode . org-agenda-mode)
-                  (name . "^\\*Calendar\\*$")
-                  (name . "^diary$")))
-             ("dired" (mode . dired-mode))
-             ("text"
-              (or (name . "\\.\\(tex\\|bib\\|csv\\)")
-                  (mode . org-mode)
-                  (mode . markdown-mode)
-                  (mode . text-mode)))
-             ("emacs"
-              (or (name . "^\\*scratch\\*$")
-                  (name . "^\\*Messages\\*$")
-                  (name . "^\\*Help\\*$")
-                  (name . "^\\*info\\*$")
-                  (name . "\*.*\*")))
-             )))
-    (add-hook 'ibuffer-mode-hook
-              '(lambda ()
-                 (hl-line-mode 1)
-                 (ibuffer-auto-mode 1)
-                 (ibuffer-switch-to-saved-filter-groups "default")))
-    (add-to-list 'ibuffer-never-show-predicates "^\\*helm")))
+  (use-package ibuf-ext)
+  (setq ibuffer-show-empty-filter-groups nil)
+  (setq ibuffer-saved-filter-groups
+        '(("default"
+           ("planner"
+            (or (filename . "gtd.org")
+                (filename . "someday.org")
+                (filename . "journal.org")
+                (filename . "inbox.org")
+                (mode . org-agenda-mode)
+                (name . "^\\*Calendar\\*$")
+                (name . "^diary$")))
+           ("text"
+            (or (name . "\\.\\(tex\\|bib\\|csv\\)")
+                (mode . org-mode)
+                (mode . markdown-mode)
+                (mode . text-mode)))
+           ("dired" (mode . dired-mode))
+           ("emacs"
+            (or (name . "^\\*scratch\\*$")
+                (name . "^\\*Messages\\*$")
+                (name . "^\\*Help\\*$")
+                (name . "^\\*info\\*$")
+                (name . "\*.*\*"))))))
+  (add-hook 'ibuffer-mode-hook
+            '(lambda ()
+               (hl-line-mode 1)
+               (ibuffer-auto-mode 1)
+               (ibuffer-switch-to-saved-filter-groups "default"))))
 
 (use-package ledger-mode
   :mode "\\.ledger\\'")
@@ -442,52 +342,41 @@
 
 (use-package flyspell
   :bind
-  ("<f8>" . flyspell-buffer)
-  ("<f7>" . ispell-word)
-  ;; :init
-  ;; (progn
-  ;;   (dolist (hook '(text-mode-hook org-mode-hook))
-  ;;     (add-hook hook (lambda () (flyspell-mode 1))))
-  ;;   (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+  (("<f8>" . flyspell-buffer)
+   ("<f7>" . ispell-word))
   :config
-  (progn
-    (when (eq system-type 'windows-nt)
-      (setq ispell-program-name
-            "C:/Users/nga/Applications/Hunspell/bin/hunspell.exe"))
-    (setq ispell-really-hunspell t)
-    (setq ispell-dictionary "english")
+  (when (eq system-type 'windows-nt)
+    (setq ispell-program-name "hunspell.exe"))
+  (setq ispell-really-hunspell t)
+  (setq ispell-dictionary "english")
 
-    (add-to-list 'ispell-local-dictionary-alist
-                 '("english"
-                   "[[:alpha:]]"
-                   "[^[:alpha:]]"
-                   "[']"
-                   t
-                   ("-d" "en_US")
-                   nil
-                   utf-8))
-    (add-to-list 'ispell-local-dictionary-alist
-                 '("russian"
-                   "[[:alpha:]]"
-                   "[^[:alpha:]]"
-                   "[']"
-                   t
-                   ("-d" "ru")
-                   nil
-                   utf-8))
-    (global-set-key
-     [f3]
-     (lambda ()
-       (interactive)
-       (ispell-change-dictionary "russian")))
-    (global-set-key
-     [f4]
-     (lambda ()
-       (interactive)
-       (ispell-change-dictionary "english")))
+  (add-to-list 'ispell-local-dictionary-alist
+               '("english"
+                 "[[:alpha:]]"
+                 "[^[:alpha:]]"
+                 "[']"
+                 t
+                 ("-d" "en_US")
+                 nil
+                 utf-8))
+  (add-to-list 'ispell-local-dictionary-alist
+               '("russian"
+                 "[[:alpha:]]"
+                 "[^[:alpha:]]"
+                 "[']"
+                 t
+                 ("-d" "ru")
+                 nil
+                 utf-8))
+  (global-set-key [f3] (lambda ()
+                         (interactive)
+                         (ispell-change-dictionary "russian")))
+  (global-set-key [f4] (lambda ()
+                         (interactive)
+                         (ispell-change-dictionary "english")))
 
-    (setq ispell-hunspell-dictionary-alist
-          ispell-local-dictionary-alist)))
+  (setq ispell-hunspell-dictionary-alist
+        ispell-local-dictionary-alist))
 
 (use-package dired
   :config
@@ -503,46 +392,44 @@
         ((eq system-type 'windows-nt)
          (setq dired-listing-switches "-alh"))))
 
-;; (setq tex-compile-commands '(("xelatex %r")))
-;; (setq tex-command "xelatex")
-;; (setq-default TeX-engine 'xelatex)
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-global-mode 1))
 
 (cond ((eq system-type 'gnu/linux)
-       ;; Frame size, position, font
-       (add-to-list 'default-frame-alist '(width . 140))
+       (add-to-list 'default-frame-alist '(width . 160))
        (add-to-list 'default-frame-alist '(height . 50))
-       (add-to-list 'default-frame-alist '(top . 100))
-       (add-to-list 'default-frame-alist '(left . 300))
+       (add-to-list 'default-frame-alist '(top . 90))
+       (add-to-list 'default-frame-alist '(left . 240))
        (add-to-list 'default-frame-alist '(font . "Meslo LG M 11"))
        (use-package zenburn-theme
          :config
          (load-theme 'zenburn t)))
 
-      ;; Windows specific setup for office
       ((eq system-type 'windows-nt)
-
-       ;; Window size & position; font settings
        (add-to-list 'default-frame-alist '(width  . 120))
        (add-to-list 'default-frame-alist '(height . 40))
        (add-to-list 'default-frame-alist '(top . 90))
        (add-to-list 'default-frame-alist '(left . 290))
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
 
-       ;; default directory
-       (setq default-directory "C:/Users/nga/Documents/")
+       (setq default-directory (concat "C:/Users/" 'user-login-name))
+       (add-to-list 'exec-path (concat default-directory "Applications/bin"))
 
-       ;; exec-path for Windows 7 installation at office
-       (add-to-list 'exec-path "C:/Users/nga/Applications/bin")
-
-       ;; hotkeys for quick opening working dirs
        (global-set-key (kbd "S-<f1>")
-                       (lambda () (interactive) (dired "C:/Users/nga/Documents")))
+                       (lambda ()
+                         (interactive)
+                         (dired (concat default-directory "Documents"))))
        (global-set-key (kbd "S-<f2>")
-                       (lambda () (interactive) (dired "C:/Users/nga/Downloads")))
+                       (lambda ()
+                         (interactive)
+                         (dired (concat default-directory "Downloads"))))
 
        (use-package w32-browser)))
 
 (setq custom-file "~/.emacs.d/custom.el")
+(load-file "~/.emacs.d/custom.el")
 (load-file "~/.emacs.d/personal.el")
 
 ;;; init.el ends here
