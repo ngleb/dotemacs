@@ -35,7 +35,6 @@
         (org-plus-contrib . "org")))
 
 (when (equal (system-name) "lenovo")
-
   ;; ESS
   (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable"))
@@ -149,25 +148,6 @@
   :config
   (bind-key "C-<tab>" 'company-complete)
   (add-hook 'prog-mode-hook 'global-company-mode))
-
-(use-package company-jedi
-  :config
-  (add-to-list 'company-backends 'company-jedi))
-
-(use-package flycheck
-  :defer t)
-
-(use-package python
-  :config
-  (add-hook 'python-mode-hook 'flycheck-mode)
-  (setq-default python-indent 4)
-  (bind-key "M-n" #'flycheck-next-error python-mode-map)
-  (bind-key "M-p" #'flycheck-previous-error python-mode-map)
-  (when (executable-find "ipython2.7")
-    (setq python-shell-interpreter "ipython2.7"
-          python-shell-interpreter-args "-i"))
-  (setq flycheck-python-flake8-executable
-        "/usr/lib/python-exec/python2.7/flake8"))
 
 (use-package magit
   :bind
