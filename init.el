@@ -30,6 +30,7 @@
         (dired+ . "melpa")
         (smooth-scrolling . "melpa")
         (use-package . "melpa")
+        (elfeed . "melpa-stable")
 
         (org-plus-contrib . "org")))
 
@@ -254,6 +255,9 @@
   (setq org-outline-path-complete-in-steps nil)
   (setq org-fontify-emphasized-text nil)
 
+  (setq org-mobile-directory "~/ownCloud/MobileOrg")
+  (setq org-mobile-inbox-for-pull "~/my/org/mobile.org")
+
   (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
 
   (setq org-tag-alist '(("@home" . ?h)
@@ -290,6 +294,11 @@
   :config
   (setq smooth-scroll-margin 5)
   (smooth-scrolling-mode 1))
+
+(use-package elfeed
+  :config
+  (setq elfeed-feeds
+        '("https://www.smashingmagazine.com/feed/")))
 
 (use-package ibuffer
   :commands ibuffer
