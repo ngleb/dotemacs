@@ -27,15 +27,14 @@
         (yasnippet . "melpa-stable")
         (nlinum . "gnu")
 
+        (zenburn-theme . "melpa")
         (dired+ . "melpa")
         (smooth-scrolling . "melpa")
         (use-package . "melpa")
-        (elfeed . "melpa-stable")
 
         (org-plus-contrib . "org")))
 
 (when (equal (system-name) "lenovo")
-  (add-to-list 'package-pinned-packages '(zenburn-theme . "melpa-stable"))
 
   ;; ESS
   (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
@@ -46,17 +45,7 @@
   (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(async . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(git-commit . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(with-editor . "melpa-stable"))
-
-  ;; company-jedi
-  (add-to-list 'package-pinned-packages '(epc . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(python-environment . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(jedi-core . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(company-jedi . "melpa-stable"))
-
-  ;; flycheck (elpa: seq, pkg-info)
-  (add-to-list 'package-pinned-packages '(pkg-info . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(flycheck . "melpa-stable")))
+  (add-to-list 'package-pinned-packages '(with-editor . "melpa-stable")))
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
@@ -294,11 +283,6 @@
   :config
   (setq smooth-scroll-margin 5)
   (smooth-scrolling-mode 1))
-
-(use-package elfeed
-  :config
-  (setq elfeed-feeds
-        '("https://www.smashingmagazine.com/feed/")))
 
 (use-package ibuffer
   :commands ibuffer
