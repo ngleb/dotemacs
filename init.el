@@ -84,7 +84,7 @@
 (show-paren-mode 1)
 (setq visible-bell t)
 (setq x-underline-at-descent-line t)
-(add-hook 'prog-mode-hook 'nlinum-mode)
+;;(add-hook 'prog-mode-hook 'nlinum-mode)
 
 ;; Truncate lines
 (setq-default truncate-lines t)
@@ -153,15 +153,15 @@
   :bind
   (("C-c m" . magit-status)))
 
-(use-package whitespace
-  :diminish whitespace-mode
-  :init
-  (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-    (add-hook hook #'whitespace-mode))
-  (add-hook 'before-save-hook #'whitespace-cleanup)
-  :config
-  (setq whitespace-line-column 80) ;; limit line length
-  (setq whitespace-style '(face tabs tab-mark trailing)))
+;; (use-package whitespace
+;;   :diminish whitespace-mode
+;;   :init
+;;   (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+;;     (add-hook hook #'whitespace-mode))
+;;   (add-hook 'before-save-hook #'whitespace-cleanup)
+;;   :config
+;;   (setq whitespace-line-column 80) ;; limit line length
+;;   (setq whitespace-style '(face tabs tab-mark trailing)))
 
 (use-package org
   :mode (("\\.org$" . org-mode))
@@ -192,24 +192,24 @@
   (setq org-use-fast-todo-selection t)
   (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
   (setq org-archive-save-context-info nil)
-
+  (setq org-habit-show-habits-only-for-today nil)
   (cond ((eq system-type 'gnu/linux)
          (setq org-directory "~/my/org"))
         ((eq system-type 'windows-nt)
          (setq org-directory "C:/Users/nga/Documents/org")))
 
   (setq org-agenda-files
-        (list (concat org-directory "/gtd.org")
+        (list (concat org-directory "/todo.org")
               (concat org-directory "/someday.org")))
 
   (setq org-capture-templates
         '(("x" "New inbound entry"
            entry
-           (file+headline (concat org-directory "/gtd.org") "Inbox")
+           (file+headline (concat org-directory "/todo.org") "Inbox")
            "* %?\n%U\n")
           ("t" "New TODO entry"
            entry
-           (file+headline (concat org-directory "/gtd.org") "Actions")
+           (file+headline (concat org-directory "/todo.org") "Actions")
            "* TODO %?\n%U\n")))
 
   (define-key global-map "\C-cx"
@@ -229,12 +229,6 @@
 
   (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
 
-  (setq org-tag-alist '(("@home" . ?h)
-                        ("@laptop" . ?l)
-                        ("@anna" . ?a)
-                        ("@errands" . ?e)
-                        ("@office" .?o)))
-
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)"
                     "|" "DONE(d!)" "CANCELED(c@)"))))
@@ -250,7 +244,6 @@
          (setq deft-directory "~/Reference"))
         ((eq system-type 'windows-nt)
          (setq deft-directory "c:/Users/nga/Documents/Reference")))
-  ;; (setq deft-directory "~/Reference")
   (setq deft-recursive t)
   (setq deft-use-filename-as-title t)
   (setq deft-use-filter-string-for-filename t)
@@ -274,10 +267,12 @@
   (setq ibuffer-saved-filter-groups
         '(("default"
            ("planner"
-            (or (filename . "gtd.org")
+            (or (filename . "todo.org")
                 (filename . "someday.org")
                 (filename . "journal.org")
-                (filename . "inbox.org")
+                (filename . "journal.org.gpg")
+                (filename . "mobile.org")
+                (filename . "archive.org")
                 (mode . org-agenda-mode)
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")))
@@ -313,43 +308,43 @@
     (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
     (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode)))
 
-(use-package flyspell
-  :bind
-  (("<f8>" . flyspell-buffer)
-   ("<f7>" . ispell-word))
-  :config
-  (when (eq system-type 'windows-nt)
-    (setq ispell-program-name "hunspell.exe"))
-  (setq ispell-really-hunspell t)
-  (setq ispell-dictionary "english")
+;; (use-package flyspell
+;;   :bind
+;;   (("<f8>" . flyspell-buffer)
+;;    ("<f7>" . ispell-word))
+;;   :config
+;;   (when (eq system-type 'windows-nt)
+;;     (setq ispell-program-name "hunspell.exe"))
+;;   (setq ispell-really-hunspell t)
+;;   (setq ispell-dictionary "english")
 
-  (add-to-list 'ispell-local-dictionary-alist
-               '("english"
-                 "[[:alpha:]]"
-                 "[^[:alpha:]]"
-                 "[']"
-                 t
-                 ("-d" "en_US")
-                 nil
-                 utf-8))
-  (add-to-list 'ispell-local-dictionary-alist
-               '("russian"
-                 "[[:alpha:]]"
-                 "[^[:alpha:]]"
-                 "[']"
-                 t
-                 ("-d" "ru")
-                 nil
-                 utf-8))
-  (global-set-key [f3] (lambda ()
-                         (interactive)
-                         (ispell-change-dictionary "russian")))
-  (global-set-key [f4] (lambda ()
-                         (interactive)
-                         (ispell-change-dictionary "english")))
+;;   (add-to-list 'ispell-local-dictionary-alist
+;;                '("english"
+;;                  "[[:alpha:]]"
+;;                  "[^[:alpha:]]"
+;;                  "[']"
+;;                  t
+;;                  ("-d" "en_US")
+;;                  nil
+;;                  utf-8))
+;;   (add-to-list 'ispell-local-dictionary-alist
+;;                '("russian"
+;;                  "[[:alpha:]]"
+;;                  "[^[:alpha:]]"
+;;                  "[']"
+;;                  t
+;;                  ("-d" "ru")
+;;                  nil
+;;                  utf-8))
+;;   (global-set-key [f3] (lambda ()
+;;                          (interactive)
+;;                          (ispell-change-dictionary "russian")))
+;;   (global-set-key [f4] (lambda ()
+;;                          (interactive)
+;;                          (ispell-change-dictionary "english")))
 
-  (setq ispell-hunspell-dictionary-alist
-        ispell-local-dictionary-alist))
+;;   (setq ispell-hunspell-dictionary-alist
+;;         ispell-local-dictionary-alist))
 
 (use-package dired
   :config
@@ -370,15 +365,16 @@
   (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-global-mode 1))
 
+(use-package zenburn-theme
+  :config
+  (load-theme 'zenburn t))
+
 (cond ((eq system-type 'gnu/linux)
        (add-to-list 'default-frame-alist '(width . 160))
        (add-to-list 'default-frame-alist '(height . 50))
        (add-to-list 'default-frame-alist '(top . 90))
        (add-to-list 'default-frame-alist '(left . 240))
-       (add-to-list 'default-frame-alist '(font . "Meslo LG M 11"))
-       (use-package zenburn-theme
-         :config
-         (load-theme 'zenburn t)))
+       (add-to-list 'default-frame-alist '(font . "Meslo LG M 11")))
 
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(width  . 120))
