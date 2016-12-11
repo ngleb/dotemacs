@@ -1,7 +1,6 @@
 (require 'package)
 
 (setq package-enable-at-startup nil)
-
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
@@ -27,24 +26,23 @@
         (yasnippet . "melpa-stable")
         (nlinum . "gnu")
 
-        (zenburn-theme . "melpa")
         (dired+ . "melpa")
         (smooth-scrolling . "melpa")
         (use-package . "melpa")
+        (zenburn-theme . "melpa")
+        (org-plus-contrib . "org")
 
-        (org-plus-contrib . "org")))
+        ;; magit
+        (magit . "melpa-stable")
+        (magit-popup . "melpa-stable")
+        (async . "melpa-stable")
+        (git-commit . "melpa-stable")
+        (with-editor . "melpa-stable")))
 
 (when (equal (system-name) "lenovo")
   ;; ESS
   (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable"))
-
-  ;; Magit
-  (add-to-list 'package-pinned-packages '(magit . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(magit-popup . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(async . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(git-commit . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(with-editor . "melpa-stable")))
+  (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable")))
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
@@ -89,7 +87,7 @@
 ;; Truncate lines
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
-;(define-key global-map [f5] 'toggle-truncate-lines)
+(define-key global-map [f5] 'toggle-truncate-lines)
 
 ;; Tab & indent setup
 (setq-default tab-width 4)
@@ -105,6 +103,7 @@
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq visible-bell t)
 (setq ring-bell-function 'ignore)
+(setq sentence-end-double-space nil)
 
 ;; MULE & encoding setup
 (set-terminal-coding-system 'utf-8)
@@ -122,19 +121,28 @@
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
 (setq ad-redefinition-action 'accept)
 
-(setq-default c-default-style "linux"
-              c-basic-offset 4)
+;;keep cursor at same position when scrolling
+(setq scroll-preserve-screen-position 1)
+;;scroll window up/down by one line
+(global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
+(global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
 
 (use-package swiper
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
+  (setq ivy-display-style 'fancy) ;; TODO
   (setq ivy-count-format "(%d/%d) ")
 
   (global-set-key (kbd "C-s") 'swiper)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  ;; (global-set-key (kbd "<f1> l") 'counsel-load-library)
+  ;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  ;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
@@ -149,19 +157,25 @@
   (bind-key "C-<tab>" 'company-complete)
   (add-hook 'prog-mode-hook 'global-company-mode))
 
+(use-package flycheck
+  :defer t)
+
+(setq elfeed-feeds
+      '("https://www.smashingmagazine.com/feed/"))
+
 (use-package magit
   :bind
   (("C-c m" . magit-status)))
 
-;; (use-package whitespace
-;;   :diminish whitespace-mode
-;;   :init
-;;   (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-;;     (add-hook hook #'whitespace-mode))
-;;   (add-hook 'before-save-hook #'whitespace-cleanup)
-;;   :config
-;;   (setq whitespace-line-column 80) ;; limit line length
-;;   (setq whitespace-style '(face tabs tab-mark trailing)))
+(use-package whitespace
+  :diminish whitespace-mode
+  :init
+  (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+    (add-hook hook #'whitespace-mode))
+  (add-hook 'before-save-hook #'whitespace-cleanup)
+  :config
+  (setq whitespace-line-column 80) ;; limit line length
+  (setq whitespace-style '(face tabs tab-mark trailing)))
 
 (use-package org
   :mode (("\\.org$" . org-mode))
@@ -176,7 +190,6 @@
    org-mode
    org-store-link)
   :config
-  (use-package org-protocol)
   (setq org-modules '(org-habit))
   (add-hook 'org-mode-hook 'turn-on-font-lock)
   (add-hook 'org-mode-hook
@@ -210,7 +223,12 @@
           ("t" "New TODO entry"
            entry
            (file+headline (concat org-directory "/todo.org") "Actions")
-           "* TODO %?\n%U\n")))
+           "* TODO %?\n%U\n")
+          ("w" "Log Work Task" entry
+           (file+datetree (concat org-directory "/worklog.org"))
+           "* TODO %^{Description}  %^g\n%?\n\nAdded: %U"
+           :clock-in t
+           :clock-keep t)))
 
   (define-key global-map "\C-cx"
     (lambda () (interactive) (org-capture nil "x")))
@@ -231,7 +249,22 @@
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)"
-                    "|" "DONE(d!)" "CANCELED(c@)"))))
+                    "|" "DONE(d!)" "CANCELED(c@)")))
+
+  ;; (setq org-latex-pdf-process
+  ;;       '("xelatex -interaction nonstopmode -output-directory %o %f"
+  ;;         "xelatex -interaction nonstopmode -output-directory %o %f"
+  ;;         "xelatex -interaction nonstopmode -output-directory %o %f"))
+
+  (add-to-list 'org-latex-classes
+               '("mybeamer"
+                 "\\documentclass[presentation,smaller,12pt]{beamer}
+                  \\usepackage{polyglossia}
+                  \\setmainlanguage{russian}
+                  [NO-DEFAULT-PACKAGES]
+                  [NO-PACKAGES]
+                  [EXTRA]"
+                 org-beamer-sectioning)))
 
 (use-package deft
   :bind
@@ -304,60 +337,55 @@
 (use-package markdown-mode
   :mode ("\\.md\\'" "\\.markdown\\'")
   :config
-  (progn
-    (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
-    (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode)))
+  (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
+  (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
 
-;; (use-package flyspell
-;;   :bind
-;;   (("<f8>" . flyspell-buffer)
-;;    ("<f7>" . ispell-word))
-;;   :config
-;;   (when (eq system-type 'windows-nt)
-;;     (setq ispell-program-name "hunspell.exe"))
-;;   (setq ispell-really-hunspell t)
-;;   (setq ispell-dictionary "english")
+(use-package flyspell
+  :bind
+  (("<f8>" . flyspell-buffer)
+   ("<f7>" . ispell-word))
+  ;; auto spellchecking everywhere after startup
+  ;; currently disabled because doesn't work well
+  ;; poor performance
+  ;; :init
+  ;; (progn
+  ;;   (dolist (hook '(text-mode-hook org-mode-hook))
+  ;;     (add-hook hook (lambda () (flyspell-mode 1))))
+  ;;   (add-hook 'prog-mode-hook 'flyspell-prog-mode))
+  :config
+  (when (eq system-type 'windows-nt)
+    (setq ispell-program-name "hunspell.exe"))
+  (setq ispell-really-hunspell t)
 
-;;   (add-to-list 'ispell-local-dictionary-alist
-;;                '("english"
-;;                  "[[:alpha:]]"
-;;                  "[^[:alpha:]]"
-;;                  "[']"
-;;                  t
-;;                  ("-d" "en_US")
-;;                  nil
-;;                  utf-8))
-;;   (add-to-list 'ispell-local-dictionary-alist
-;;                '("russian"
-;;                  "[[:alpha:]]"
-;;                  "[^[:alpha:]]"
-;;                  "[']"
-;;                  t
-;;                  ("-d" "ru")
-;;                  nil
-;;                  utf-8))
-;;   (global-set-key [f3] (lambda ()
-;;                          (interactive)
-;;                          (ispell-change-dictionary "russian")))
-;;   (global-set-key [f4] (lambda ()
-;;                          (interactive)
-;;                          (ispell-change-dictionary "english")))
+  (add-to-list 'ispell-local-dictionary-alist
+               '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8))
+  (add-to-list 'ispell-local-dictionary-alist
+               '("russian" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "ru") nil utf-8))
 
-;;   (setq ispell-hunspell-dictionary-alist
-;;         ispell-local-dictionary-alist))
+  (global-set-key [f3] (lambda ()
+                         (interactive)
+                         (ispell-change-dictionary "russian")))
+  (global-set-key [f4] (lambda ()
+                         (interactive)
+                         (ispell-change-dictionary "english")))
+
+  (setq ispell-dictionary "english")
+  (setq ispell-hunspell-dictionary-alist
+        ispell-local-dictionary-alist))
 
 (use-package dired
-  :config
-  (use-package dired-x)
-  (use-package dired+
-    :config
-    (setq diredp-hide-details-initially-flag nil)
-    (diredp-toggle-find-file-reuse-dir 1))
-  (add-hook 'dired-mode-hook '(lambda () (hl-line-mode 1)))
-  (cond ((eq system-type 'gnu/linux)
-         (setq dired-listing-switches
-               "-aBhl --group-directories-first"))
-        ((eq system-type 'windows-nt)
+ :config
+ (use-package dired-x)
+ (use-package dired+
+   :config
+   (setq diredp-hide-details-initially-flag nil)
+   (diredp-toggle-find-file-reuse-dir 1))
+
+ (add-hook 'dired-mode-hook '(lambda () (hl-line-mode 1)))
+ (cond ((eq system-type 'gnu/linux)
+        (setq dired-listing-switches
+              "-aBhl --group-directories-first"))
+       ((eq system-type 'windows-nt)
          (setq dired-listing-switches "-alh"))))
 
 (use-package yasnippet
@@ -383,8 +411,13 @@
        (add-to-list 'default-frame-alist '(left . 290))
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
 
-       (setq default-directory (concat "C:/Users/" 'user-login-name))
+       (setq my-work-dir (concat "C:/Users/" user-login-name))
+       (setq default-directory (file-name-as-directory my-work-dir))
+
        (add-to-list 'exec-path (concat default-directory "Applications/bin"))
+       (add-to-list 'exec-path "c:/Program Files (x86)/GNU/GnuPG")
+       (add-to-list 'exec-path "c:/Program Files (x86)/GNU/GnuPG/bin")
+       (add-to-list 'exec-path "c:/Program Files (x86)/Git/bin")
 
        (global-set-key (kbd "S-<f1>")
                        (lambda ()
@@ -398,7 +431,7 @@
        (use-package w32-browser)))
 
 (setq custom-file "~/.emacs.d/custom.el")
-(load-file "~/.emacs.d/custom.el")
+;;(load-file "~/.emacs.d/custom.el")
 (load-file "~/.emacs.d/personal.el")
 
 ;;; init.el ends here
