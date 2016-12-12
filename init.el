@@ -40,7 +40,6 @@
         (with-editor . "melpa-stable")))
 
 (when (equal (system-name) "lenovo")
-  ;; ESS
   (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
   (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable")))
 
@@ -68,11 +67,9 @@
 
 ;; open init.el via hotkey
 (global-set-key (kbd "C-c e")
-                (lambda ()
-                  (interactive)
-                  (find-file user-init-file)))
+                (lambda () (interactive) (find-file user-init-file)))
 
-;; window elements
+;; frame elements
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (menu-bar-mode -1)
@@ -84,7 +81,10 @@
 (setq x-underline-at-descent-line t)
 ;;(add-hook 'prog-mode-hook 'nlinum-mode)
 
-;; Truncate lines
+;; Truncate lines: do not enable truncate lines by default, but enable
+;; word wrapping by default for easier reading. By default,
+;; truncate-lines is disabled, visual-line-mode is disabled (globally).
+;; visual-line-mode will be enabled later for org-mode and markdown-mode
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
 (define-key global-map [f5] 'toggle-truncate-lines)
@@ -123,6 +123,7 @@
 
 ;;keep cursor at same position when scrolling
 (setq scroll-preserve-screen-position 1)
+
 ;;scroll window up/down by one line
 (global-set-key (kbd "M-n") (kbd "C-u 1 C-v"))
 (global-set-key (kbd "M-p") (kbd "C-u 1 M-v"))
@@ -157,8 +158,8 @@
   (bind-key "C-<tab>" 'company-complete)
   (add-hook 'prog-mode-hook 'global-company-mode))
 
-(use-package flycheck
-  :defer t)
+;; (use-package flycheck
+;;   :defer t)
 
 (setq elfeed-feeds
       '("https://www.smashingmagazine.com/feed/"))
@@ -190,93 +191,79 @@
    org-mode
    org-store-link)
   :config
+  ;; org-mode modules
   (setq org-modules '(org-habit))
-  (add-hook 'org-mode-hook 'turn-on-font-lock)
+
+  ;; enable visual-line-mode and show line fringe indicators
   (add-hook 'org-mode-hook
-            (lambda ()
-              (visual-line-mode 1)))
-  (add-hook 'org-agenda-mode-hook
-            (lambda ()
-              (visual-line-mode -1)
-              (toggle-truncate-lines 1)))
-  (setq org-startup-indented t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-use-fast-todo-selection t)
+            (lambda () (visual-line-mode 1)))
   (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+
+  ;; some settings
   (setq org-archive-save-context-info nil)
   (setq org-habit-show-habits-only-for-today nil)
-  (cond ((eq system-type 'gnu/linux)
-         (setq org-directory "~/my/org"))
-        ((eq system-type 'windows-nt)
-         (setq org-directory "C:/Users/nga/Documents/org")))
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-startup-indented t)
+  (setq org-use-fast-todo-selection t)
 
-  (setq org-agenda-files
-        (list (concat org-directory "/todo.org")
-              (concat org-directory "/someday.org")))
-
-  (setq org-capture-templates
-        '(("x" "New inbound entry"
-           entry
-           (file+headline (concat org-directory "/todo.org") "Inbox")
-           "* %?\n%U\n")
-          ("t" "New TODO entry"
-           entry
-           (file+headline (concat org-directory "/todo.org") "Actions")
-           "* TODO %?\n%U\n")
-          ("w" "Log Work Task" entry
-           (file+datetree (concat org-directory "/worklog.org"))
-           "* TODO %^{Description}  %^g\n%?\n\nAdded: %U"
-           :clock-in t
-           :clock-keep t)))
-
-  (define-key global-map "\C-cx"
-    (lambda () (interactive) (org-capture nil "x")))
-  (define-key global-map "\C-ct"
-    (lambda () (interactive) (org-capture nil "t")))
-
+  ;; org-refile setup
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9)))
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-outline-path-complete-in-steps nil)
-  (setq org-fontify-emphasized-text nil)
 
-  (setq org-mobile-directory "~/ownCloud/MobileOrg")
-  (setq org-mobile-inbox-for-pull "~/my/org/mobile.org")
+  ;; setting org-directory
+  (cond ((eq system-type 'gnu/linux)
+         (setq org-directory "~/my/org"))
+        ((eq system-type 'windows-nt)
+         (setq org-directory (concat "C:/Users/" user-login-name "/Documents/org"))))
+
+  ;; agenda files
+  (setq org-agenda-files '("todo.org" "someday.org"))
+
+  ;; capture templates
+  (setq org-capture-templates
+        '(("x" "New inbound entry" entry
+           (file+headline "todo.org" "Inbox")
+           "* %?\n%U\n")
+          ("t" "New TODO entry" entry
+           (file+headline "todo.org" "Actions")
+           "* TODO %?\n%U\n")
+          ("w" "Log Work Task" entry
+           (file+datetree "worklog.org")
+           "* TODO %^{Description}  %^g\n%?\n\nAdded: %U"
+           :clock-in t
+           :clock-keep t)))
+
+  ;; quick capture templates selection
+  (define-key global-map "\C-cx"
+    (lambda () (interactive) (org-capture nil "x")))
+  (define-key global-map "\C-ct"
+    (lambda () (interactive) (org-capture nil "t")))
+
+  ;; org-mobile setup
+  ;;(setq org-mobile-directory "~/Nextcloud/MobileOrg")
+  ;;(setq org-mobile-inbox-for-pull "~/my/org/mobile.org")
 
   (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)"
-                    "|" "DONE(d!)" "CANCELED(c@)")))
-
-  ;; (setq org-latex-pdf-process
-  ;;       '("xelatex -interaction nonstopmode -output-directory %o %f"
-  ;;         "xelatex -interaction nonstopmode -output-directory %o %f"
-  ;;         "xelatex -interaction nonstopmode -output-directory %o %f"))
-
-  (add-to-list 'org-latex-classes
-               '("mybeamer"
-                 "\\documentclass[presentation,smaller,12pt]{beamer}
-                  \\usepackage{polyglossia}
-                  \\setmainlanguage{russian}
-                  [NO-DEFAULT-PACKAGES]
-                  [NO-PACKAGES]
-                  [EXTRA]"
-                 org-beamer-sectioning)))
+                    "|" "DONE(d!)" "CANCELED(c@)"))))
 
 (use-package deft
   :bind
   (("<f9>" . deft)
-   ("C-x C-g" . deft-find-file))
+   ("C-c C-g" . deft-find-file))
   :config
   (setq deft-default-extension "org")
   (setq deft-extensions '("org" "txt" "text" "md" "text" "markdown"))
   (cond ((eq system-type 'gnu/linux)
          (setq deft-directory "~/Reference"))
         ((eq system-type 'windows-nt)
-         (setq deft-directory "c:/Users/nga/Documents/Reference")))
+         (setq deft-directory (concat "c:/Users/" user-login-name "/Documents/Reference"))))
   (setq deft-recursive t)
   (setq deft-use-filename-as-title t)
   (setq deft-use-filter-string-for-filename t)
@@ -374,18 +361,18 @@
         ispell-local-dictionary-alist))
 
 (use-package dired
- :config
- (use-package dired-x)
- (use-package dired+
-   :config
-   (setq diredp-hide-details-initially-flag nil)
-   (diredp-toggle-find-file-reuse-dir 1))
+  :config
+  (use-package dired-x)
+  (use-package dired+
+    :config
+    (setq diredp-hide-details-initially-flag nil)
+    (diredp-toggle-find-file-reuse-dir 1))
 
- (add-hook 'dired-mode-hook '(lambda () (hl-line-mode 1)))
- (cond ((eq system-type 'gnu/linux)
-        (setq dired-listing-switches
-              "-aBhl --group-directories-first"))
-       ((eq system-type 'windows-nt)
+  (add-hook 'dired-mode-hook '(lambda () (hl-line-mode 1)))
+  (cond ((eq system-type 'gnu/linux)
+         (setq dired-listing-switches
+               "-aBhl --group-directories-first"))
+        ((eq system-type 'windows-nt)
          (setq dired-listing-switches "-alh"))))
 
 (use-package yasnippet
@@ -405,33 +392,30 @@
        (add-to-list 'default-frame-alist '(font . "Meslo LG M 11")))
 
       ((eq system-type 'windows-nt)
-       (add-to-list 'default-frame-alist '(width  . 120))
-       (add-to-list 'default-frame-alist '(height . 40))
-       (add-to-list 'default-frame-alist '(top . 90))
-       (add-to-list 'default-frame-alist '(left . 290))
+       (add-to-list 'default-frame-alist '(width  . 140))
+       (add-to-list 'default-frame-alist '(height . 48))
+       (add-to-list 'default-frame-alist '(top . 10))
+       (add-to-list 'default-frame-alist '(left . 200))
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
 
-       (setq my-work-dir (concat "C:/Users/" user-login-name))
-       (setq default-directory (file-name-as-directory my-work-dir))
+       (setq default-directory (file-name-as-directory (concat "C:/Users/" user-login-name)))
 
        (add-to-list 'exec-path (concat default-directory "Applications/bin"))
        (add-to-list 'exec-path "c:/Program Files (x86)/GNU/GnuPG")
        (add-to-list 'exec-path "c:/Program Files (x86)/GNU/GnuPG/bin")
        (add-to-list 'exec-path "c:/Program Files (x86)/Git/bin")
 
+       (setq my-docs-dir (file-name-as-directory (concat default-directory "Documents")))
+       (setq my-dls-dir (file-name-as-directory (concat default-directory "Downloads")))
        (global-set-key (kbd "S-<f1>")
-                       (lambda ()
-                         (interactive)
-                         (dired (concat default-directory "Documents"))))
+                       (lambda () (interactive) (dired my-docs-dir)))
        (global-set-key (kbd "S-<f2>")
-                       (lambda ()
-                         (interactive)
-                         (dired (concat default-directory "Downloads"))))
+                       (lambda () (interactive) (dired my-dls-dir)))
 
        (use-package w32-browser)))
 
 (setq custom-file "~/.emacs.d/custom.el")
-;;(load-file "~/.emacs.d/custom.el")
+(load-file "~/.emacs.d/custom.el")
 (load-file "~/.emacs.d/personal.el")
 
 ;;; init.el ends here
