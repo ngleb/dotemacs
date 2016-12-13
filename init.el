@@ -235,7 +235,10 @@
            (file+datetree "worklog.org")
            "* TODO %^{Description}  %^g\n%?\n\nAdded: %U"
            :clock-in t
-           :clock-keep t)))
+           :clock-keep t)
+          ("p" "Item" entry
+           (file+datetree "plog.org")
+           "* %^{Description}  %^g\n%?\n\nAdded: %U")))
 
   ;; quick capture templates selection
   (define-key global-map "\C-cx"
@@ -288,6 +291,8 @@
         '(("default"
            ("planner"
             (or (filename . "todo.org")
+                (filename . "plog.org")
+                (filename . "worklog.org")
                 (filename . "someday.org")
                 (filename . "journal.org")
                 (filename . "journal.org.gpg")
@@ -295,7 +300,8 @@
                 (filename . "archive.org")
                 (mode . org-agenda-mode)
                 (name . "^\\*Calendar\\*$")
-                (name . "^diary$")))
+                (name . "^diary$")
+                (name . "^org$")))
            ("text"
             (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                 (mode . org-mode)
@@ -415,7 +421,7 @@
        (use-package w32-browser)))
 
 (setq custom-file "~/.emacs.d/custom.el")
-(load-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
 (load-file "~/.emacs.d/personal.el")
 
 ;;; init.el ends here
