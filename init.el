@@ -154,6 +154,7 @@
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-flip-when-above t)
+  (global-company-mode)
   :config
   (bind-key "C-<tab>" 'company-complete)
   (add-hook 'prog-mode-hook 'global-company-mode))
@@ -273,7 +274,8 @@
   (setq deft-file-naming-rules '((noslash . "-")
                                  (nospace . "-")
                                  (case-fn . downcase)))
-  (setq deft-text-mode 'org-mode))
+  (setq deft-text-mode 'org-mode)
+  (setq deft-auto-save-interval 5.0))
 
 (use-package smooth-scrolling
   :config
