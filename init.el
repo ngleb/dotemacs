@@ -26,9 +26,12 @@
         (yasnippet . "melpa-stable")
         (nlinum . "gnu")
 
+        (bind-key . "melpa")
+        (diminish . "melpa")
+        (use-package . "melpa")
+
         (dired+ . "melpa")
         (smooth-scrolling . "melpa")
-        (use-package . "melpa")
         (zenburn-theme . "melpa")
         (org-plus-contrib . "org")
 
@@ -37,11 +40,11 @@
         (magit-popup . "melpa-stable")
         (async . "melpa-stable")
         (git-commit . "melpa-stable")
-        (with-editor . "melpa-stable")))
+        (with-editor . "melpa-stable")
 
-(when (equal (system-name) "lenovo")
-  (add-to-list 'package-pinned-packages '(ess . "melpa-stable"))
-  (add-to-list 'package-pinned-packages '(julia-mode . "melpa-stable")))
+        ;; ess + julia
+        (ess . "melpa-stable")
+        (julia-mode . "melpa-stable")))
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
@@ -162,9 +165,6 @@
 ;; (use-package flycheck
 ;;   :defer t)
 
-(setq elfeed-feeds
-      '("https://www.smashingmagazine.com/feed/"))
-
 (use-package magit
   :bind
   (("C-c m" . magit-status)))
@@ -217,9 +217,9 @@
 
   ;; setting org-directory
   (cond ((eq system-type 'gnu/linux)
-         (setq org-directory "~/my/org"))
+         (setq org-directory "~/Sync/org"))
         ((eq system-type 'windows-nt)
-         (setq org-directory (concat "C:/Users/" user-login-name "/Documents/org"))))
+         (setq org-directory (concat "C:/Users/" user-login-name "/Sync/org"))))
 
   ;; agenda files
   (setq org-agenda-files '("todo.org" "someday.org"))
@@ -422,7 +422,7 @@
 
        (use-package w32-browser)))
 
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 (load-file "~/.emacs.d/personal.el")
 
