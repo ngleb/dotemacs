@@ -241,6 +241,15 @@
            (file+datetree "plog.org")
            "* %^{Description}  %^g\n%?\n\nAdded: %U")))
 
+  (defun air-pop-to-org-agenda (split)
+    "Visit the org agenda, in the current window or a SPLIT."
+    (interactive "P")
+    (org-agenda-list)
+    (when (not split)
+      (delete-other-windows)))
+
+  (define-key global-map (kbd "C-c r a") 'air-pop-to-org-agenda)
+
   ;; quick capture templates selection
   (define-key global-map "\C-cx"
     (lambda () (interactive) (org-capture nil "x")))
@@ -393,10 +402,10 @@
   (load-theme 'zenburn t))
 
 (cond ((eq system-type 'gnu/linux)
-       (add-to-list 'default-frame-alist '(width . 160))
+       (add-to-list 'default-frame-alist '(width . 150))
        (add-to-list 'default-frame-alist '(height . 50))
        (add-to-list 'default-frame-alist '(top . 90))
-       (add-to-list 'default-frame-alist '(left . 240))
+       (add-to-list 'default-frame-alist '(left . 280))
        (add-to-list 'default-frame-alist '(font . "Meslo LG M 11")))
 
       ((eq system-type 'windows-nt)
