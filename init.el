@@ -444,7 +444,15 @@
        (add-to-list 'default-frame-alist '(height . 50))
        (add-to-list 'default-frame-alist '(top . 90))
        (add-to-list 'default-frame-alist '(left . 280))
-       (add-to-list 'default-frame-alist '(font . "Meslo LG M 11")))
+
+       ;; FIXME fix the font changing in GUI on Linux
+       ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
+       ;; (add-to-list 'initial-frame-alist '(font . "Meslo LG M 11"))
+       ;; (add-to-list 'default-frame-alist '(font . "Meslo LG M 11"))
+       (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
+       (set-face-attribute 'default nil
+                           :family "Meslo LG M"
+                           :height 115)
 
        (use-package zenburn-theme
          :config
