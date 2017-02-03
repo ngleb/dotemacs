@@ -115,6 +115,10 @@
 (setq ring-bell-function 'ignore)
 (setq sentence-end-double-space nil)
 
+(autoload 'zap-up-to-char "misc"
+  "Kill up to, but not including ARGth occurrence of CHAR." t)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+
 ;; ediff
 ;; use existing frame instead of creating a new one
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
