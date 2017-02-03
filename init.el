@@ -44,7 +44,14 @@
 
         ;; ess + julia
         (ess . "melpa-stable")
-        (julia-mode . "melpa-stable")))
+        (julia-mode . "melpa-stable")
+
+        (flycheck . "melpa-stable")
+
+        (elpy . "melpa-stable")
+        (find-file-in-project . "melpa-stable")
+        (highlight-indentation . "melpa-stable")
+        (pyvenv . "melpa-stable")))
 
 (when (eq system-type 'windows-nt)
   (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
@@ -162,8 +169,25 @@
   (bind-key "C-<tab>" 'company-complete)
   (add-hook 'prog-mode-hook 'global-company-mode))
 
-;; (use-package flycheck
-;;   :defer t)
+(use-package flycheck
+  :defer t)
+
+(setq python-shell-interpreter "ipython3.5"
+      python-shell-interpreter-args "--simple-prompt -i")
+
+(use-package elpy
+  :bind (("C-c t" . elpy-test-django-runner)
+         ("C-c C-f" . elpy-find-file))
+  :init
+  (elpy-enable)
+  (defalias 'workon 'pyvenv-workon)
+  :config
+  (delete 'elpy-module-highlight-indentation elpy-modules)
+  (delete 'elpy-module-flymake elpy-modules)
+  (setq elpy-rpc-python-command "python3.5")
+  (setq elpy-rpc-backend "jedi")
+;;  (add-hook 'elpy-mode-hook 'flycheck-mode)
+  (elpy-use-ipython))
 
 (use-package magit
   :bind
