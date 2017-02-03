@@ -115,6 +115,10 @@
 (setq ring-bell-function 'ignore)
 (setq sentence-end-double-space nil)
 
+;; ediff
+;; use existing frame instead of creating a new one
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
 ;; MULE & encoding setup
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
