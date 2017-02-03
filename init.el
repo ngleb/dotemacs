@@ -75,6 +75,9 @@
 (require 'diminish)
 (require 'bind-key)
 
+;;(require 'dot-org)
+(load-file "~/.emacs.d/dot-org.el")
+
 ;; open init.el via hotkey
 (global-set-key (kbd "C-c e")
                 (lambda () (interactive) (find-file user-init-file)))
@@ -221,93 +224,6 @@
   :config
   (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs tab-mark trailing)))
-
-(use-package org
-  :mode (("\\.org$" . org-mode))
-  :bind
-  (("C-c a" . org-agenda)
-   ("C-c l" . org-store-link)
-   ("C-c b" . org-iswitchb)
-   ("C-c c" . org-capture))
-  :commands
-  (org
-   org-capture
-   org-mode
-   org-store-link)
-  :config
-  ;; org-mode modules
-  (setq org-modules '(org-habit))
-
-  ;; enable visual-line-mode and show line fringe indicators
-  (add-hook 'org-mode-hook
-            (lambda () (visual-line-mode 1)))
-  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-
-  ;; some settings
-  (setq org-archive-save-context-info nil)
-  (setq org-habit-show-habits-only-for-today nil)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-startup-indented t)
-  (setq org-use-fast-todo-selection t)
-
-  ;; org-refile setup
-  (setq org-refile-targets '((nil :maxlevel . 9)
-                             (org-agenda-files :maxlevel . 9)))
-  (setq org-refile-use-outline-path 'file)
-  (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-outline-path-complete-in-steps nil)
-
-  ;; setting org-directory
-  (cond ((eq system-type 'gnu/linux)
-         (setq org-directory "~/Sync/org"))
-        ((eq system-type 'windows-nt)
-         (setq org-directory (concat "C:/Users/" user-login-name "/Sync/org"))))
-
-  ;; agenda files
-  (setq org-agenda-files '("todo.org" "someday.org"))
-
-  ;; capture templates
-  (setq org-capture-templates
-        '(("x" "New inbound entry" entry
-           (file+headline "todo.org" "Inbox")
-           "* %?\n%U\n")
-          ("t" "New TODO entry" entry
-           (file+headline "todo.org" "Actions")
-           "* TODO %?\n%U\n")
-          ("w" "Log Work Task" entry
-           (file+datetree "worklog.org")
-           "* TODO %^{Description}  %^g\n%?\n\nAdded: %U"
-           :clock-in t
-           :clock-keep t)
-          ("p" "Item" entry
-           (file+datetree "plog.org")
-           "* %^{Description}  %^g\n%?\n\nAdded: %U")))
-
-  (defun air-pop-to-org-agenda (split)
-    "Visit the org agenda, in the current window or a SPLIT."
-    (interactive "P")
-    (org-agenda-list)
-    (when (not split)
-      (delete-other-windows)))
-
-  (define-key global-map (kbd "C-c r a") 'air-pop-to-org-agenda)
-
-  ;; quick capture templates selection
-  (define-key global-map "\C-cx"
-    (lambda () (interactive) (org-capture nil "x")))
-  (define-key global-map "\C-ct"
-    (lambda () (interactive) (org-capture nil "t")))
-
-  ;; org-mobile setup
-  ;;(setq org-mobile-directory "~/Nextcloud/MobileOrg")
-  ;;(setq org-mobile-inbox-for-pull "~/my/org/mobile.org")
-
-  (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
-
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)"
-                    "|" "DONE(d!)" "CANCELED(c@)"))))
 
 (use-package deft
   :bind
