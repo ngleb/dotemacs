@@ -319,7 +319,7 @@
   (cond ((eq system-type 'gnu/linux)
          (setq deft-directory "~/Reference/"))
         ((eq system-type 'windows-nt)
-         (setq deft-directory (concat "c:/Users/" user-login-name "/Documents/Reference/"))))
+         (setq deft-directory "c:/Users/nga/Documents/Reference/")))
   (setq deft-recursive t)
   (setq deft-use-filename-as-title t)
   (setq deft-use-filter-string-for-filename t)
