@@ -343,26 +343,25 @@
   (setq ibuffer-show-empty-filter-groups nil)
   (setq ibuffer-saved-filter-groups
         '(("default"
-           ("planner"
+           ("Planner"
             (or (filename . "todo.org")
-                (filename . "plog.org")
-                (filename . "worklog.org")
+                (filename . "inbox.org")
                 (filename . "someday.org")
                 (filename . "journal.org")
                 (filename . "journal.org.gpg")
                 (filename . "mobile.org")
-                (filename . "archive.org")
+                (filename . "archive\*.org")
                 (mode . org-agenda-mode)
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")
                 (name . "^org$")))
-           ("text"
+           ("Text"
             (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                 (mode . org-mode)
                 (mode . markdown-mode)
                 (mode . text-mode)))
-           ("dired" (mode . dired-mode))
-           ("emacs"
+           ("Dired" (mode . dired-mode))
+           ("Emacs"
             (or (name . "^\\*scratch\\*$")
                 (name . "^\\*Messages\\*$")
                 (name . "^\\*Help\\*$")
