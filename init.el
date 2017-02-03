@@ -439,10 +439,6 @@
   (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-global-mode 1))
 
-(use-package zenburn-theme
-  :config
-  (load-theme 'zenburn t))
-
 (cond ((eq system-type 'gnu/linux)
        (add-to-list 'default-frame-alist '(width . 150))
        (add-to-list 'default-frame-alist '(height . 50))
@@ -450,12 +446,27 @@
        (add-to-list 'default-frame-alist '(left . 280))
        (add-to-list 'default-frame-alist '(font . "Meslo LG M 11")))
 
+       (use-package zenburn-theme
+         :config
+         (load-theme 'zenburn t)))
+
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(width  . 140))
        (add-to-list 'default-frame-alist '(height . 48))
        (add-to-list 'default-frame-alist '(top . 10))
        (add-to-list 'default-frame-alist '(left . 200))
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
+
+       (use-package monokai-theme
+         :config
+         (setq monokai-user-variable-pitch t)
+         (setq monokai-height-minus-1 1.0
+               monokai-height-plus-1 1.0
+               monokai-height-plus-2 1.0
+               monokai-height-plus-3 1.0
+               monokai-height-plus-4 1.0)
+         (setq monokai-background "#2F343F")
+         (load-theme 'monokai t))
 
        (setq default-directory (file-name-as-directory (concat "C:/Users/" user-login-name)))
 
