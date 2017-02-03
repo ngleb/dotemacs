@@ -119,6 +119,9 @@
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
+;; replace dabbrev-expand with hippie-expand
+(global-set-key (kbd "M-/") 'hippie-expand)
+
 ;; ediff
 ;; use existing frame instead of creating a new one
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
