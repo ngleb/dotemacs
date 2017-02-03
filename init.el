@@ -463,7 +463,7 @@
        (add-to-list 'default-frame-alist '(height . 48))
        (add-to-list 'default-frame-alist '(top . 10))
        (add-to-list 'default-frame-alist '(left . 200))
-       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
+       (add-to-list 'default-frame-alist '(font . "Hack 11"))
 
        (use-package monokai-theme
          :config
