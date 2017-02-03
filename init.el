@@ -89,7 +89,7 @@
 (show-paren-mode 1)
 (setq visible-bell t)
 (setq x-underline-at-descent-line t)
-;;(add-hook 'prog-mode-hook 'nlinum-mode)
+(add-hook 'prog-mode-hook 'nlinum-mode)
 
 ;; Truncate lines: do not enable truncate lines by default, but enable
 ;; word wrapping by default for easier reading. By default,
