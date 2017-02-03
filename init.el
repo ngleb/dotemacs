@@ -165,6 +165,10 @@
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'forward))
+
 (use-package company
   :diminish company-mode
   :init
