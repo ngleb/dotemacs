@@ -199,8 +199,8 @@
       python-shell-interpreter-args "--simple-prompt -i")
 
 (use-package elpy
-  :bind (("C-c t" . elpy-test-django-runner)
-         ("C-c C-f" . elpy-find-file))
+  ;; :bind (("C-c t" . elpy-test-django-runner)
+  ;;        ("C-c C-f" . elpy-find-file))
   :init
   (elpy-enable)
   (defalias 'workon 'pyvenv-workon)
