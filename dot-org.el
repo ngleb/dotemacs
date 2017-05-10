@@ -32,10 +32,10 @@
 (setq org-capture-templates
       '(("x" "New note" entry
          (file "inbox.org")
-         "* %?\n%U\n")
+         "* %?\n%U\n\n")
         ("t" "New task" entry
-         (file+headline "todo.org" "Actions")
-         "* TODO %?\n%U\n")))
+         (file+headline "todo.org" "Tasks")
+         "* TODO %?\n%U\n\n")))
 
 (setq org-agenda-custom-commands
       '(;; Calendar
