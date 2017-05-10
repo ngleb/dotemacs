@@ -49,8 +49,7 @@
                 ((org-agenda-overriding-header "\nWaiting: "))))
          ;; options for entire block calendar
          ((org-agenda-compact-blocks t)
-          (org-agenda-remove-tags t))
-         )
+          (org-agenda-remove-tags t)))
         ("o" "Office" tags-todo "office")
         ("j" "H/A/L" tags-todo "a")
         ))
