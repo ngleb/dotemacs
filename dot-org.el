@@ -51,8 +51,11 @@
          ((org-agenda-compact-blocks t)
           (org-agenda-remove-tags t)))
         ("o" "Office" tags-todo "office")
-        ("j" "H/A/L" tags-todo "a")
-        ))
+        ("h" "Home" tags-todo "home")
+        ("j" "A" tags-todo "a")
+        ("n" "Laptop" tags-todo "laptop")
+        ("m" "Anywhere, errands, agendas" tags-todo "anywhere|errands|agendas")
+        ("r" "Reading" tags-todo "reading")))
 
 (defun gn/open-agenda (&optional arg split)
   "Visit the org agenda, in the current window or a SPLIT."
