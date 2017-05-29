@@ -4,7 +4,9 @@
           (lambda () (visual-line-mode 1)))
 
 (setq org-export-backends '(html latex))
-(setq org-modules '(org-habit))
+(setq org-modules '(org-habit org-protocol))
+
+(require 'org-protocol)
 
 (setq org-archive-save-context-info nil)
 (setq org-habit-show-habits-only-for-today nil)
