@@ -63,23 +63,40 @@
 
 (setq org-agenda-custom-commands
       '(;; Calendar
-        ("c" "Calendar"
-         ((agenda "" ((org-agenda-ndays 7)
-                      (org-agenda-time-grid nil)
-                      (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))
-                      (org-agenda-repeating-timestamp-show-all t)
-                      (org-agenda-start-on-weekday nil)))
+        (" " "Agenda"
+         ((agenda ""
+                  ((org-agenda-ndays 7)
+                   (org-agenda-time-grid nil)
+                   (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))
+                   (org-agenda-repeating-timestamp-show-all t)
+                   (org-agenda-start-on-weekday 1)))
+          (tags "REFILE"
+                ((org-agenda-overriding-header "Tasks to Refile")
+                 (org-tags-match-list-sublevels nil)))
           (todo "WAITING"
-                ((org-agenda-overriding-header "\nWaiting: "))))
+                ((org-agenda-overriding-header "Waiting")))
+          (tags-todo "-CANCELLED/!"
+                     ((org-agenda-overriding-header "Stuck Projects")
+                      (org-agenda-skip-function 'bh/skip-non-stuck-projects)
+                      (org-agenda-sorting-strategy
+                       '(category-keep))))
+          (tags-todo "-CANCELLED/!"
+                     ((org-agenda-overriding-header "Projects")
+                      (org-agenda-skip-function 'bh/skip-non-projects)
+                      (org-agenda-sorting-strategy
+                       '(category-keep))))
+          (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                     ((org-agenda-overriding-header "Tasks")
+                      (org-agenda-skip-function 'bh/skip-non-tasks2)
+                      (org-agenda-todo-ignore-scheduled 'all)
+                      (org-agenda-todo-ignore-deadlines 'all)
+                      (org-agenda-todo-ignore-with-date 'all)
+                      (org-agenda-sorting-strategy
+                       '(tag-up effort-up))))
+          )
          ;; options for entire block calendar
-         ((org-agenda-compact-blocks t)
-          (org-agenda-remove-tags t)))
-        ("o" "Office" tags-todo "office")
-        ("h" "Home" tags-todo "home")
-        ("j" "A" tags-todo "a")
-        ("n" "Laptop" tags-todo "laptop")
-        ("m" "Anywhere, errands, agendas" tags-todo "anywhere|errands|agendas")
-        ("r" "Reading" tags-todo "reading")))
+         ((org-agenda-remove-tags nil)))))
+
 
 (defun gn/open-agenda (&optional arg split)
   "Visit the org agenda, in the current window or a SPLIT."
