@@ -387,7 +387,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (defun gn/open-agenda-a ()
   (interactive)
-  (gn/open-agenda "a" nil))
+  (gn/open-agenda " " nil))
 
 (defun gn/open-agenda-c ()
   (interactive)
