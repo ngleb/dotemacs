@@ -46,12 +46,13 @@
        (setq org-agenda-files '("C:/Users/nga/Sync/org"))))
 
 (setq org-capture-templates
-      '(("x" "New note" entry
-         (file "inbox.org")
-         "* %?\n%U\n\n")
-        ("t" "New task" entry
-         (file+headline "todo.org" "Tasks")
-         "* TODO %?\n%U\n\n")))
+      '(("x" "note" entry (file "refile.org")
+         "* %?\n%U\n")
+        ("t" "todo" entry (file "refile.org")
+         "* TODO %?\n%U\n")
+        ("w" "org-protocol" entry (file "refile.org")
+         "* TODO Review [[%:link][%:description]]\n%U\n" :immediate-finish t)))
+
 
 (setq org-agenda-custom-commands
       '(;; Calendar
