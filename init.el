@@ -357,10 +357,10 @@
   (yas-global-mode 1))
 
 (cond ((eq system-type 'gnu/linux)
-       (add-to-list 'default-frame-alist '(width . 150))
-       (add-to-list 'default-frame-alist '(height . 50))
-       (add-to-list 'default-frame-alist '(top . 90))
-       (add-to-list 'default-frame-alist '(left . 280))
+       (add-to-list 'default-frame-alist '(width . 160))
+       (add-to-list 'default-frame-alist '(height . 52))
+       (add-to-list 'default-frame-alist '(top . 20))
+       (add-to-list 'default-frame-alist '(left . 220))
 
        ;; FIXME fix the font changing in GUI on Linux
        ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
