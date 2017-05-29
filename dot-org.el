@@ -14,6 +14,8 @@
 (setq org-log-into-drawer t)
 (setq org-startup-indented t)
 (setq org-use-fast-todo-selection t)
+
+;; Refile setup
 (setq org-refile-targets '((nil :maxlevel . 9)
                            (org-agenda-files :maxlevel . 9)))
 (setq org-refile-use-outline-path 'file)
