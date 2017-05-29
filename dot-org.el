@@ -53,6 +53,13 @@
         ("w" "org-protocol" entry (file "refile.org")
          "* TODO Review [[%:link][%:description]]\n%U\n" :immediate-finish t)))
 
+;; Compact the block agenda view
+(setq org-agenda-compact-blocks t)
+(setq org-agenda-tags-todo-honor-ignore-options t)
+(setq org-agenda-tags-column -102)
+
+;; Do not dim blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
 
 (setq org-agenda-custom-commands
       '(;; Calendar
