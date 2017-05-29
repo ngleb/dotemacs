@@ -117,6 +117,7 @@
 (setq visible-bell t)
 (setq ring-bell-function 'ignore)
 (setq sentence-end-double-space nil)
+(setq require-final-newline t)
 
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
