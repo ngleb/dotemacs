@@ -21,10 +21,22 @@
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-outline-path-complete-in-steps nil)
+
 (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
+(setq org-fast-tag-selection-single-key (quote t))
+
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)"
-                  "|" "DONE(d!)" "CANCELED(c@)")))
+      (quote ((sequence "TODO(t)" "NEXT(n)"  "|" "DONE(d!)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)"))))
+
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
 (cond ((eq system-type 'gnu/linux)
        (setq org-directory "~/Sync/org")
