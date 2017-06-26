@@ -17,7 +17,7 @@
      ("regaccount" "ledger -f %(ledger-file) --strict -p \"from last week\" --start-of-week=1 reg %(account)"))))
  '(package-selected-packages
    (quote
-    (zenburn-theme use-package smooth-scrolling org-plus-contrib olivetti nyan-mode nlinum markdown-mode magit ledger-mode flyspell-popup flycheck ess elpy dired+ deft counsel))))
+    (zenburn-theme use-package smooth-scrolling org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode flyspell-popup flycheck elpy dired+ deft counsel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

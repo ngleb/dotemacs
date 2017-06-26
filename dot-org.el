@@ -1,7 +1,11 @@
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
-(add-hook 'org-mode-hook
-          (lambda () (visual-line-mode 1)))
+(add-hook 'org-mode-hook (lambda () (visual-line-mode 1)))
+(add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ledger . t)))
 
 (setq org-export-backends '(html latex))
 (setq org-modules '(org-habit org-protocol))
@@ -39,42 +43,48 @@
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
 (cond ((eq system-type 'gnu/linux)
-       (setq org-directory "~/Sync/org")
-       (setq org-agenda-files '("~/Sync/org")))
+       (setq org-directory "~/tmporg/")
+       (setq org-agenda-files '("~/tmporg/")))
       ((eq system-type 'windows-nt)
-       (setq org-directory "C:/Users/nga/Sync/org")
-       (setq org-agenda-files '("C:/Users/nga/Sync/org"))))
+       (setq org-directory "C:/Users/nga/Sync/org/")
+       (setq org-agenda-files '("C:/Users/nga/Sync/org/"))))
 
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
          "* %?\n%U\n")
         ("t" "todo" entry (file "refile.org")
          "* TODO %?\n%U\n")
+        ("j" "Journal" entry (file+datetree "diary.org")
+         "* %?\n%U\n" :clock-in t :clock-resume t)
         ("w" "org-protocol" entry (file "refile.org")
-         "* TODO Review [[%:link][%:description]]\n%U\n" :immediate-finish t)))
+         "* TODO Review [[%:link][%:description]]\n%U\n" :immediate-finish t)
+         ("h" "Habit" entry (file "refile.org")
+          "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
 ;; Compact the block agenda view
 (setq org-agenda-compact-blocks t)
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-agenda-tags-column -102)
 
+(setq org-enforce-todo-dependencies t)
+
 ;; Do not dim blocked tasks
 (setq org-agenda-dim-blocked-tasks nil)
 
 (setq org-agenda-custom-commands
-      '(;; Calendar
+      '(("h" "Habits" tags-todo "STYLE=\"habit\""
+         ((org-agenda-overriding-header "Habits")
+          (org-agenda-sorting-strategy
+           '(todo-state-down effort-up category-keep))))
         (" " "Agenda"
          ((agenda ""
                   ((org-agenda-ndays 7)
                    (org-agenda-time-grid nil)
                    (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))
-                   (org-agenda-repeating-timestamp-show-all t)
                    (org-agenda-start-on-weekday 1)))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")
                  (org-tags-match-list-sublevels nil)))
-          (todo "WAITING"
-                ((org-agenda-overriding-header "Waiting")))
           (tags-todo "-CANCELLED/!"
                      ((org-agenda-overriding-header "Stuck Projects")
                       (org-agenda-skip-function 'bh/skip-non-stuck-projects)
@@ -82,6 +92,7 @@
                        '(category-keep))))
           (tags-todo "-CANCELLED/!"
                      ((org-agenda-overriding-header "Projects")
+                      (org-tags-match-list-sublevels 'indented)
                       (org-agenda-skip-function 'bh/skip-non-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
@@ -93,9 +104,31 @@
                       (org-agenda-todo-ignore-with-date 'all)
                       (org-agenda-sorting-strategy
                        '(tag-up effort-up))))
+          (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                     ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+                      (org-agenda-skip-function 'bh/skip-non-tasks)
+                      (org-tags-match-list-sublevels nil)
+                      (org-agenda-todo-ignore-scheduled 'all)
+                      (org-agenda-todo-ignore-deadlines 'all)))
+          (tags "-REFILE-MAYBE/"
+                ((org-agenda-overriding-header "Tasks to Archive")
+                 (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                 (org-tags-match-list-sublevels nil)))
           )
          ;; options for entire block calendar
          ((org-agenda-remove-tags nil)))))
+
+(defun bh/org-auto-exclude-function (tag)
+  "Automatic task exclusion in the agenda with / RET"
+  (and (cond
+        ((string= tag "office")
+         t)
+        ((string= tag "home")
+         t))
+       (concat "-" tag)))
+
+(setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
+
 
 (defun bh/is-project-p ()
   "Any task with a todo keyword subtask"
@@ -251,22 +284,6 @@ Skip project and sub-project tasks, habits, and project related tasks."
        (t
         next-headline)))))
 
-(defun bh/skip-non-tasks2 ()
-  "Show non-project tasks.
-Skip project and sub-project tasks, habits, and project related tasks."
-  (save-restriction
-    (widen)
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      (cond
-       ((bh/is-project-p)
-        next-headline)
-       ((org-is-habit-p)
-        next-headline)
-       ((and (bh/is-project-subtree-p) (not (member (org-get-todo-state) (list "NEXT"))))
-        next-headline)
-       (t
-        nil)))))
-
 (defun bh/skip-project-trees-and-habits ()
   "Skip trees that are projects"
   (save-restriction
@@ -378,6 +395,47 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         nil
       next-headline)))
 
+(defun bh/skip-non-tasks2 ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        next-headline)
+       ((and (bh/is-project-subtree-p) (not (member (org-get-todo-state) (list "NEXT"))))
+        next-headline)
+       (t
+        nil)))))
+
+(defun make-capture-frame (&optional capture-url)
+  "Create a new frame and run org-capture."
+  (interactive)
+  (make-frame '((name . "capture")
+                (width . 120)
+                (height . 15)))
+  (select-frame-by-name "capture")
+  (org-capture nil "x"))
+;;  (delete-other-windows))
+
+(defadvice org-capture-finalize (after delete-capture-frame activate)
+  "Advise capture-finalize to close the frame if it is the capture frame"
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-frame)))
+
+(defadvice org-capture-destroy (after delete-capture-frame activate)
+  "Advise capture-destroy to close the frame if it is the rememeber frame"
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-frame)))
+
+(defadvice org-capture (after make-full-window-frame activate)
+  "Advise capture to be the only window when used as a popup"
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-other-windows)))
+
 (defun gn/open-agenda (&optional arg split)
   "Visit the org agenda, in the current window or a SPLIT."
   (interactive "P")
@@ -385,15 +443,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   (when (not split)
     (delete-other-windows)))
 
-(defun gn/open-agenda-a ()
+(defun gn/open-agenda-all ()
   (interactive)
   (gn/open-agenda " " nil))
 
-(defun gn/open-agenda-c ()
-  (interactive)
-  (gn/open-agenda "c" nil))
-
-(defun gn/org-capture-new-note ()
+(defun gn/org-capture-note ()
   (interactive)
   (org-capture nil "x"))
 
@@ -403,13 +457,13 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (bind-key "C-c l" #'org-store-link)
 (bind-key "C-c a" #'org-agenda)
+(bind-key "<f12>" #'org-agenda)
 (bind-key "C-c c" #'org-capture)
 (bind-key "C-c b" #'org-iswitchb)
-(bind-key "C-c x" #'gn/org-capture-new-note)
+
+(bind-key "C-c x" #'gn/org-capture-note)
 (bind-key "C-c t" #'gn/org-capture-task)
-(bind-key "<f10>" #'gn/open-agenda)
-(bind-key "<f11>" #'gn/open-agenda-c)
-(bind-key "<f12>" #'gn/open-agenda-a)
+(bind-key "<f11>" #'gn/open-agenda-all)
 
 (provide 'dot-org)
 

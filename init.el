@@ -1,5 +1,11 @@
 (require 'package)
 
+(require 'server)
+;; Start a server if (server-running-p) does not return t (e.g. if it
+;; returns nil or :other)
+(or (eq (server-running-p) t)
+    (server-start))
+
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -20,10 +26,9 @@
 
         (company . "melpa-stable")
         (deft . "melpa-stable")
-        (ledger-mode . "melpa-stable")
+        (ledger-mode . "melpa")
         (markdown-mode . "melpa-stable")
         (olivetti . "melpa-stable")
-        (yasnippet . "melpa-stable")
         (nlinum . "gnu")
 
         (bind-key . "melpa")
@@ -41,10 +46,6 @@
         (async . "melpa-stable")
         (git-commit . "melpa-stable")
         (with-editor . "melpa-stable")
-
-        ;; ess + julia
-        (ess . "melpa-stable")
-        (julia-mode . "melpa-stable")
 
         (flycheck . "melpa-stable")
 
@@ -75,14 +76,14 @@
 (require 'diminish)
 (require 'bind-key)
 
-;;(require 'dot-org)
-(load-file "~/.emacs.d/dot-org.el")
+(cond ((eq system-type 'gnu/linux)
+       (setq gn-home-dir (file-name-as-directory "~/")))
+      ((eq system-type 'windows-nt)
+       (setq gn-home-dir (file-name-as-directory (concat "C:/Users/" user-login-name)))))
 
 ;; open init.el via hotkey
-(global-set-key (kbd "C-c e")
-                (lambda () (interactive) (find-file user-init-file)))
+(global-set-key (kbd "C-c e") (lambda () (interactive) (find-file user-init-file)))
 
-;; frame elements
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (menu-bar-mode -1)
@@ -90,9 +91,16 @@
 (blink-cursor-mode -1)
 (column-number-mode 1)
 (show-paren-mode 1)
-(setq visible-bell t)
-(setq x-underline-at-descent-line t)
 (add-hook 'prog-mode-hook 'nlinum-mode)
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq x-underline-at-descent-line t)
+(setq visible-bell t)
+(setq ring-bell-function 'ignore)
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+(setq confirm-kill-emacs 'y-or-n-p)
+(setq require-final-newline t)
+(setq sentence-end-double-space nil)
 
 ;; Truncate lines: do not enable truncate lines by default, but enable
 ;; word wrapping by default for easier reading. By default,
@@ -107,24 +115,25 @@
 (setq-default indent-tabs-mode nil)
 (setq tab-always-indent 'complete)
 
-;; Startup tweaks
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
-
-;; Other tweaks
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq confirm-kill-emacs 'y-or-n-p)
-(setq visible-bell t)
-(setq ring-bell-function 'ignore)
-(setq sentence-end-double-space nil)
-(setq require-final-newline t)
-
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
 ;; replace dabbrev-expand with hippie-expand
 (global-set-key (kbd "M-/") 'hippie-expand)
+
+(defun fill-sentence ()
+  (interactive)
+  (save-excursion
+    (or (eq (point) (point-max)) (forward-char))
+    (forward-sentence -1)
+    (indent-relative t)
+    (let ((beg (point))
+          (ix (string-match "LaTeX" mode-name)))
+      (forward-sentence)
+      (if (and ix (equal "LaTeX" (substring mode-name ix)))
+          (LaTeX-fill-region-as-paragraph beg (point))
+        (fill-region-as-paragraph beg (point))))))
 
 ;; ediff
 ;; use existing frame instead of creating a new one
@@ -234,10 +243,11 @@
   :config
   (setq deft-default-extension "org")
   (setq deft-extensions '("org" "txt" "text" "md" "text" "markdown"))
-  (cond ((eq system-type 'gnu/linux)
-         (setq deft-directory "~/Reference/"))
-        ((eq system-type 'windows-nt)
-         (setq deft-directory "c:/Users/nga/Documents/Reference/")))
+  (setq deft-directory (concat gn-home-dir "doc/reference/"))
+  ;; (cond ((eq system-type 'gnu/linux)
+  ;;        (setq deft-directory "~/doc/reference/"))
+  ;;       ((eq system-type 'windows-nt)
+  ;;        (setq deft-directory "c:/Users/nga/Documents/Reference/")))
   (setq deft-recursive t)
   (setq deft-use-filename-as-title t)
   (setq deft-use-filter-string-for-filename t)
@@ -245,7 +255,7 @@
                                  (nospace . "-")
                                  (case-fn . downcase)))
   (setq deft-text-mode 'org-mode)
-  (setq deft-auto-save-interval 5.0))
+  (setq deft-auto-save-interval 0.0))
 
 (use-package smooth-scrolling
   :config
@@ -259,11 +269,12 @@
   :config
   (use-package ibuf-ext)
   (setq ibuffer-show-empty-filter-groups nil)
+  (setq ibuffer-expert t)
   (setq ibuffer-saved-filter-groups
         '(("default"
            ("Planner"
             (or (filename . "todo.org")
-                (filename . "inbox.org")
+                (filename . "refile.org")
                 (filename . "someday.org")
                 (filename . "journal.org")
                 (filename . "journal.org.gpg")
@@ -277,7 +288,8 @@
             (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                 (mode . org-mode)
                 (mode . markdown-mode)
-                (mode . text-mode)))
+                (mode . text-mode)
+                (mode . ledger-mode)))
            ("Dired" (mode . dired-mode))
            ("Emacs"
             (or (name . "^\\*scratch\\*$")
@@ -299,8 +311,12 @@
   ("<f6>" . olivetti-mode))
 
 (use-package markdown-mode
-  :mode ("\\.md\\'" "\\.markdown\\'")
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
   :config
+  (setq markdown-command "multimarkdown.exe")
   (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
 
@@ -335,7 +351,13 @@
 
   (setq ispell-dictionary "english")
   (setq ispell-hunspell-dictionary-alist
-        ispell-local-dictionary-alist))
+        ispell-local-dictionary-alist)
+  (defun flyspell-check-next-highlighted-word ()
+    "Custom function to spell check next highlighted word"
+    (interactive)
+    (flyspell-goto-next-error)
+    (ispell-word))
+  (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word))
 
 (use-package dired
   :config
@@ -345,17 +367,14 @@
     (setq diredp-hide-details-initially-flag nil)
     (diredp-toggle-find-file-reuse-dir 1))
 
-  (add-hook 'dired-mode-hook '(lambda () (hl-line-mode 1)))
+  (add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
+  (setq dired-omit-files "^\\...+$")
+  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
   (cond ((eq system-type 'gnu/linux)
          (setq dired-listing-switches
                "-aBhl --group-directories-first"))
         ((eq system-type 'windows-nt)
          (setq dired-listing-switches "-alh"))))
-
-(use-package yasnippet
-  :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-global-mode 1))
 
 (cond ((eq system-type 'gnu/linux)
        (add-to-list 'default-frame-alist '(width . 160))
@@ -383,35 +402,22 @@
        (add-to-list 'default-frame-alist '(left . 200))
        (add-to-list 'default-frame-alist '(font . "Hack 11"))
 
-       (use-package monokai-theme
+       (use-package leuven-theme
          :config
-         (setq monokai-user-variable-pitch t)
-         (setq monokai-height-minus-1 1.0
-               monokai-height-plus-1 1.0
-               monokai-height-plus-2 1.0
-               monokai-height-plus-3 1.0
-               monokai-height-plus-4 1.0)
-         (setq monokai-background "#2F343F")
-         (load-theme 'monokai t))
+         (setq leuven-scale-org-agenda-structure nil)
+         (setq leuven-scale-outline-headlines nil)
+         (load-theme 'leuven t))
 
        (setq default-directory (file-name-as-directory (concat "C:/Users/" user-login-name)))
 
-       (add-to-list 'exec-path (concat default-directory "Applications/bin"))
-       (add-to-list 'exec-path "c:/Program Files (x86)/GNU/GnuPG")
-       (add-to-list 'exec-path "c:/Program Files (x86)/GNU/GnuPG/bin")
-       (add-to-list 'exec-path "c:/Program Files (x86)/Git/bin")
-
-       (setq my-docs-dir (file-name-as-directory (concat default-directory "Documents")))
-       (setq my-dls-dir (file-name-as-directory (concat default-directory "Downloads")))
-       (global-set-key (kbd "S-<f1>")
-                       (lambda () (interactive) (dired my-docs-dir)))
-       (global-set-key (kbd "S-<f2>")
-                       (lambda () (interactive) (dired my-dls-dir)))
-
        (use-package w32-browser)))
+
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 (load-file "~/.emacs.d/personal.el")
+(load-file "~/.emacs.d/dot-org.el")
+
+(push "~/.emacs.d/lisp" load-path)
 
 ;;; init.el ends here
