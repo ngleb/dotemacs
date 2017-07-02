@@ -160,6 +160,7 @@
 (setq make-backup-files nil) ; stop creating those backup~ files
 (setq auto-save-default nil) ; stop creating those #autosave# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
+(global-auto-revert-mode 1)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
