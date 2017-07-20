@@ -52,10 +52,9 @@
         (elpy . "melpa-stable")
         (find-file-in-project . "melpa-stable")
         (highlight-indentation . "melpa-stable")
-        (pyvenv . "melpa-stable")))
-
-(when (eq system-type 'windows-nt)
-  (add-to-list 'package-pinned-packages '(w32-browser . "melpa")))
+        (pyvenv . "melpa-stable")
+        (w32-browser . "melpa")
+        (leuven-theme . "melpa")))
 
 (package-initialize)
 (setq package-contents-refreshed nil)
@@ -77,7 +76,7 @@
 (require 'bind-key)
 
 (cond ((eq system-type 'gnu/linux)
-       (setq gn-home-dir (file-name-as-directory "~/")))
+       (setq gn-home-dir "~/"))
       ((eq system-type 'windows-nt)
        (setq gn-home-dir (file-name-as-directory (concat "C:/Users/" user-login-name)))))
 
@@ -235,7 +234,10 @@
   (add-hook 'before-save-hook #'whitespace-cleanup)
   :config
   (setq whitespace-line-column 80) ;; limit line length
-  (setq whitespace-style '(face tabs tab-mark trailing)))
+  (setq whitespace-style '(face tabs tab-mark trailing))
+
+  (custom-set-faces
+   '(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))))
 
 (use-package deft
   :bind

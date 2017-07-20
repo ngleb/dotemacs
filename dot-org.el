@@ -42,12 +42,8 @@
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
-(cond ((eq system-type 'gnu/linux)
-       (setq org-directory "~/tmporg/")
-       (setq org-agenda-files '("~/tmporg/")))
-      ((eq system-type 'windows-nt)
-       (setq org-directory "C:/Users/nga/Sync/org/")
-       (setq org-agenda-files '("C:/Users/nga/Sync/org/"))))
+(setq org-directory (concat gn-home-dir "Sync/org"))
+(setq org-agenda-files (list (concat gn-home-dir "Sync/org")))
 
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
