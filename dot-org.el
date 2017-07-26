@@ -7,7 +7,7 @@
  'org-babel-load-languages
  '((ledger . t)))
 
-(setq org-export-backends '(html latex))
+(setq org-export-backends '(html latex ascii))
 (setq org-modules '(org-habit org-protocol))
 
 (require 'org-protocol)
