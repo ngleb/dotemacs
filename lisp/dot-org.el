@@ -1,3 +1,7 @@
+(require 'cl)
+(require 'org)
+(require 'org-protocol)
+
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
 (add-hook 'org-mode-hook (lambda () (visual-line-mode 1)))
@@ -9,8 +13,6 @@
 
 (setq org-export-backends '(html latex ascii))
 (setq org-modules '(org-habit org-protocol))
-
-(require 'org-protocol)
 
 (setq org-archive-save-context-info nil)
 (setq org-habit-show-habits-only-for-today nil)
@@ -42,8 +44,8 @@
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
-(setq org-directory (concat gn-home-dir "Sync/org"))
-(setq org-agenda-files (list (concat gn-home-dir "Sync/org")))
+(setq org-directory (expand-file-name "Sync/org/" gn/default-dir))
+(setq org-agenda-files (list (expand-file-name "Sync/org/" gn/default-dir)))
 
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
@@ -117,14 +119,11 @@
 (defun bh/org-auto-exclude-function (tag)
   "Automatic task exclusion in the agenda with / RET"
   (and (cond
-        ((string= tag "office")
-         t)
-        ((string= tag "home")
-         t))
+        ((string= tag "office") t)
+        ((string= tag "home") t))
        (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
-
 
 (defun bh/is-project-p ()
   "Any task with a todo keyword subtask"
@@ -415,7 +414,6 @@ Skip project and sub-project tasks, habits, and project related tasks."
                 (height . 15)))
   (select-frame-by-name "capture")
   (org-capture nil "x"))
-;;  (delete-other-windows))
 
 (defadvice org-capture-finalize (after delete-capture-frame activate)
   "Advise capture-finalize to close the frame if it is the capture frame"
@@ -439,27 +437,15 @@ Skip project and sub-project tasks, habits, and project related tasks."
   (when (not split)
     (delete-other-windows)))
 
-(defun gn/open-agenda-all ()
-  (interactive)
-  (gn/open-agenda " " nil))
-
-(defun gn/org-capture-note ()
-  (interactive)
-  (org-capture nil "x"))
-
-(defun gn/org-capture-task ()
-  (interactive)
-  (org-capture nil "t"))
-
 (bind-key "C-c l" #'org-store-link)
 (bind-key "C-c a" #'org-agenda)
-(bind-key "<f12>" #'org-agenda)
 (bind-key "C-c c" #'org-capture)
 (bind-key "C-c b" #'org-iswitchb)
 
-(bind-key "C-c x" #'gn/org-capture-note)
+(bind-key "<f12>" (lambda () (interactive) (gn/open-agenda " " nil)))
+(bind-key "C-c x" (lambda () (interactive) (org-capture nil "x")))
+(bind-key "C-c t" (lambda () (interactive) (org-capture nil "t")))
 (bind-key "C-c t" #'gn/org-capture-task)
-(bind-key "<f11>" #'gn/open-agenda-all)
 
 (provide 'dot-org)
 
