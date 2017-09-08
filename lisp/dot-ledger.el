@@ -11,6 +11,11 @@
 (setq ledger-report-links-in-register nil)
 (setq ledger-report-use-header-line t)
 
+;; (eval-after-load 'flycheck
+;;   '(require 'flycheck-ledger))
+
+(use-package flycheck-ledger)
+
 (defun gn/ledger-report (&optional arg split)
   "Open ledger-report"
   (interactive "P")

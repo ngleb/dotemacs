@@ -49,6 +49,7 @@
         (with-editor . "melpa-stable")
 
         (flycheck . "melpa-stable")
+        (flycheck-ledger . "melpa")
 
         (elpy . "melpa-stable")
         (find-file-in-project . "melpa-stable")
@@ -254,7 +255,8 @@
   (add-hook 'prog-mode-hook 'global-company-mode))
 
 (use-package flycheck
-  :defer t)
+  :defer 5
+  :init (global-flycheck-mode))
 
 (use-package elpy
   :init
