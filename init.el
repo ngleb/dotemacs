@@ -2,6 +2,8 @@
 (require 'package)
 (require 'server)
 
+(setq debug-on-error t)
+
 (or (eq (server-running-p) t)
     (server-start))
 
@@ -104,9 +106,8 @@
 (setq scroll-preserve-screen-position 1)
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq tab-always-indent 'complete)
+;;(setq-default tab-width 4)
+;;(setq-default indent-tabs-mode t)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
@@ -160,7 +161,8 @@
                     (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
                     (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
 (defun add-d-to-ediff-mode-map ()
-  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+  (bind-key "d" #'ediff-copy-both-to-C ediff-mode-map))
+;;  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
 (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
 
 (eval-when-compile
@@ -224,13 +226,17 @@
       (emacs-min)
     (emacs-max)))
 
+(use-package eldoc
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
+
 (use-package swiper
   :config
-  (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
-  (setq ivy-display-style 'fancy) ;; TODO
+  (setq ivy-display-style 'fancy)
   (setq ivy-count-format "(%d/%d) ")
-
+  (setq ivy-do-completion-in-region nil)
+  (ivy-mode 1)
   (bind-key "C-s" #'swiper)
   (bind-key "M-x" #'counsel-M-x)
   (bind-key "C-x C-f" #'counsel-find-file)
@@ -243,20 +249,20 @@
   (setq uniquify-buffer-name-style 'forward))
 
 (use-package company
-  :diminish company-mode
+  :bind
+  (("C-<tab>" . company-complete))
   :init
   (setq company-idle-delay 0.5)
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-flip-when-above t)
-  (global-company-mode)
   :config
-  (bind-key "C-<tab>" #'company-complete)
   (add-hook 'prog-mode-hook 'global-company-mode))
 
 (use-package flycheck
-  :defer 5
-  :init (global-flycheck-mode))
+  :defer 5)
+
+(use-package dot-ledger)
 
 (use-package elpy
   :init
@@ -288,8 +294,7 @@
                   (memq last-command '(keyboard-quit)))
         (let ((msg (langtool-details-error-message overlays)))
           (popup-tip msg)))))
-  (setq langtool-autoshow-message-function
-        'langtool-autoshow-detail-popup))
+  (setq langtool-autoshow-message-function 'langtool-autoshow-detail-popup))
 
 (use-package hydra)
 
@@ -342,6 +347,13 @@
   (setq ibuffer-expert t)
   (setq ibuffer-saved-filter-groups
         '(("default"
+           ("Dired" (mode . dired-mode))
+           ("Text"
+            (or (name . "\\.\\(tex\\|bib\\|csv\\)")
+                (mode . org-mode)
+                (mode . markdown-mode)
+                (mode . text-mode)
+                (mode . ledger-mode)))
            ("Planner"
             (or (filename . "todo.org")
                 (filename . "refile.org")
@@ -354,29 +366,17 @@
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")
                 (name . "^org$")))
-           ("Text"
-            (or (name . "\\.\\(tex\\|bib\\|csv\\)")
-                (mode . org-mode)
-                (mode . markdown-mode)
-                (mode . text-mode)
-                (mode . ledger-mode)))
-           ("Dired" (mode . dired-mode))
            ("Emacs"
             (or (name . "^\\*scratch\\*$")
                 (name . "^\\*Messages\\*$")
                 (name . "^\\*Help\\*$")
                 (name . "^\\*info\\*$")
                 (name . "\*.*\*"))))))
-  (add-hook 'ibuffer-mode-hook
-            '(lambda ()
-               (hl-line-mode 1)
-               (ibuffer-auto-mode 1)
-               (ibuffer-switch-to-saved-filter-groups "default"))))
-
-(use-package ledger-mode
-  :mode "\\.ledger\\'"
-  :config
-  (use-package dot-ledger))
+  (defun my-ibuffer-mode-hook ()
+    (hl-line-mode 1)
+    (ibuffer-auto-mode 1)
+    (ibuffer-switch-to-saved-filter-groups "default"))
+  (add-hook 'ibuffer-mode-hook 'my-ibuffer-mode-hook))
 
 (use-package olivetti
   :bind
