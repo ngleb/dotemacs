@@ -35,7 +35,11 @@
   (bind-key "p" #'previous-line ledger-report-mode-map)
   (add-hook 'ledger-report-mode-hook (lambda () (hl-line-mode 1)))
 
-  (add-hook 'ledger-mode-hook 'flycheck-mode)
+  (defun my-ledger-mode-hook ()
+    (flycheck-mode)
+    (setq pcomplete-ignore-case t)
+    (setq completion-ignore-case t))
+  (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
   (use-package flycheck-ledger)
 
   (defun gn/ledger-report (&optional arg split)

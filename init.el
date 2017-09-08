@@ -2,8 +2,6 @@
 (require 'package)
 (require 'server)
 
-(setq debug-on-error t)
-
 (or (eq (server-running-p) t)
     (server-start))
 
@@ -21,7 +19,7 @@
         (ivy . "melpa-stable")
         (swiper . "melpa-stable")
         (counsel . "melpa-stable")
-
+        (flx . "melpa")
         (popup . "melpa-stable")
         (flyspell-popup . "melpa-stable")
 
@@ -106,8 +104,8 @@
 (setq scroll-preserve-screen-position 1)
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
-;;(setq-default tab-width 4)
-;;(setq-default indent-tabs-mode t)
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
@@ -226,15 +224,21 @@
       (emacs-min)
     (emacs-max)))
 
-(use-package eldoc
+(use-package elisp-mode
   :config
-  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
+  (use-package eldoc
+    :config
+    (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
+
+(use-package flx)
 
 (use-package swiper
   :config
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
   (setq ivy-use-virtual-buffers t)
   (setq ivy-display-style 'fancy)
   (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-initial-inputs-alist nil)
   (setq ivy-do-completion-in-region nil)
   (ivy-mode 1)
   (bind-key "C-s" #'swiper)
@@ -242,6 +246,7 @@
   (bind-key "C-x C-f" #'counsel-find-file)
   (bind-key "C-c C-r" #'ivy-resume)
   (bind-key "C-c j" #'counsel-imenu)
+  (bind-key "C-x l" #'counsel-locate)
   (bind-key "C-r" #'counsel-expression-history read-expression-map))
 
 (use-package uniquify
@@ -252,6 +257,7 @@
   :bind
   (("C-<tab>" . company-complete))
   :init
+  (setq company-require-match nil)
   (setq company-idle-delay 0.5)
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 2)
