@@ -254,6 +254,7 @@
   (setq uniquify-buffer-name-style 'forward))
 
 (use-package company
+  :commands company-mode
   :bind
   (("C-<tab>" . company-complete))
   :init

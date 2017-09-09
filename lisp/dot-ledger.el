@@ -37,6 +37,7 @@
 
   (defun my-ledger-mode-hook ()
     (flycheck-mode)
+    (company-mode 1)
     (setq pcomplete-ignore-case t)
     (setq completion-ignore-case t))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
