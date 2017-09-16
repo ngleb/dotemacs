@@ -20,7 +20,6 @@
         (ivy . "melpa-stable")
         (swiper . "melpa-stable")
         (counsel . "melpa-stable")
-        (flx . "melpa")
         (popup . "melpa-stable")
         (flyspell-popup . "melpa-stable")
 
@@ -210,20 +209,21 @@
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width))
 
+(defun emacs-maximize ()
+  (add-to-list 'default-frame-alist '(fullscreen . maximized)))
+
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
 
-(defun emacs-max ()
-  (interactive)
-  (set-frame-parameter (selected-frame) 'fullscreen 'fullboth)
-  (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
-  (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil))
+(when (eq system-type 'windows-nt)
+  (add-hook 'after-init-hook 'emacs-maximize))
 
-(defun emacs-toggle-size ()
-  (interactive)
-  (if (> (cdr (assq 'width (frame-parameters))) 161)
-      (emacs-min)
-    (emacs-max)))
+(use-package eudc
+  :config
+  (with-eval-after-load "message"
+    (define-key message-mode-map (kbd "TAB") 'eudc-expand-inline))
+  (when (eq system-type 'windows-nt)
+    (load-file (expand-file-name "conf-eudc.el" user-emacs-directory))))
 
 (use-package elisp-mode
   :config
@@ -231,11 +231,8 @@
     :config
     (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
 
-(use-package flx)
-
 (use-package swiper
   :config
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
   (setq ivy-use-virtual-buffers t)
   (setq ivy-display-style 'fancy)
   (setq ivy-count-format "(%d/%d) ")
@@ -265,7 +262,7 @@
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-flip-when-above t)
   :config
-  (add-hook 'prog-mode-hook 'global-company-mode))
+  (global-company-mode))
 
 (use-package flycheck
   :defer 5)
@@ -356,12 +353,6 @@
   (setq ibuffer-saved-filter-groups
         '(("default"
            ("Dired" (mode . dired-mode))
-           ("Text"
-            (or (name . "\\.\\(tex\\|bib\\|csv\\)")
-                (mode . org-mode)
-                (mode . markdown-mode)
-                (mode . text-mode)
-                (mode . ledger-mode)))
            ("Planner"
             (or (filename . "todo.org")
                 (filename . "refile.org")
@@ -374,6 +365,12 @@
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")
                 (name . "^org$")))
+           ("Text"
+            (or (name . "\\.\\(tex\\|bib\\|csv\\)")
+                (mode . org-mode)
+                (mode . markdown-mode)
+                (mode . text-mode)
+                (mode . ledger-mode)))
            ("Emacs"
             (or (name . "^\\*scratch\\*$")
                 (name . "^\\*Messages\\*$")
@@ -488,16 +485,8 @@
          (load-theme 'zenburn t)))
 
       ((eq system-type 'windows-nt)
-       (add-to-list 'default-frame-alist '(font . "Hack 11"))
-
-       (use-package leuven-theme
-         :config
-         (setq leuven-scale-org-agenda-structure nil)
-         (setq leuven-scale-outline-headlines nil)
-         (load-theme 'leuven t))
-
+       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq default-directory gn/default-dir)
-
        (use-package w32-browser)))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

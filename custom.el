@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (elpy company zenburn-theme yasnippet w32-browser use-package smooth-scrolling s pyvenv org-plus-contrib olivetti nlinum markdown-mode magit leuven-theme ledger-mode langtool hydra highlight-indentation flyspell-popup flycheck-ledger flx find-file-in-project dired+ deft counsel))))
+    (bbdb elpy company zenburn-theme yasnippet w32-browser use-package smooth-scrolling s pyvenv org-plus-contrib olivetti nlinum markdown-mode magit leuven-theme ledger-mode langtool hydra highlight-indentation flyspell-popup flycheck-ledger flx find-file-in-project dired+ deft counsel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
