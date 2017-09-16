@@ -24,3 +24,4 @@ savefile
 session*
 tramp
 abbrev_defs
+lisp/conf-eudc.el

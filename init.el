@@ -223,7 +223,7 @@
   (with-eval-after-load "message"
     (define-key message-mode-map (kbd "TAB") 'eudc-expand-inline))
   (when (eq system-type 'windows-nt)
-    (load-file (expand-file-name "conf-eudc.el" user-emacs-directory))))
+    (load-file (expand-file-name "lisp/conf-eudc.el" user-emacs-directory))))
 
 (use-package elisp-mode
   :config
