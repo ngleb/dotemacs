@@ -398,6 +398,8 @@
   (add-hook 'ibuffer-mode-hook 'my-ibuffer-mode-hook))
 
 (use-package olivetti
+  :commands
+  (olivetti-mode)
   :bind
   ("<f6>" . olivetti-mode))
 
