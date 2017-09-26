@@ -8,7 +8,6 @@
 
 (setq gc-cons-threshold 100000000)
 
-
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -228,16 +227,17 @@
 (use-package server
   :config (or (server-running-p) (server-mode)))
 
-;; (require 'server)
-;; (or (eq (server-running-p) t)
-;;     (server-start))
+(use-package dot-gnus
+  :init
+  (setq gnus-init-file (expand-file-name "lisp/dot-gnus" user-emacs-directory)
+        gnus-home-directory "~/Gnus"))
 
 (use-package eudc
   :config
   (with-eval-after-load "message"
     (define-key message-mode-map (kbd "TAB") 'eudc-expand-inline))
   (when (eq system-type 'windows-nt)
-    (load-file (expand-file-name "lisp/conf-eudc.el" user-emacs-directory))))
+    (load-file (expand-file-name "lisp/dot-eudc.el" user-emacs-directory))))
 
 (use-package elisp-mode
   :config
@@ -395,7 +395,7 @@
     (hl-line-mode 1)
     (ibuffer-auto-mode 1)
     (ibuffer-switch-to-saved-filter-groups "default"))
-  (add-hook 'ibuffer-mode-hook 'my-ibuffer-mode-hook))
+  (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook))
 
 (use-package olivetti
   :commands

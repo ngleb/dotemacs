@@ -24,4 +24,6 @@ savefile
 session*
 tramp
 abbrev_defs
-lisp/conf-eudc.el
+lisp/dot-eudc.el
+lisp/dot-gnus-work.el
+lisp/dot-gnus-personal.el
