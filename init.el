@@ -301,7 +301,7 @@
 (use-package langtool
   :config
   (defvar gn/langtool-path
-    (cond ((eq system-type 'windows-nt) (expand-file-name "Applications/LanguageTool/languagetool-commandline.jar" gn/default-dir))
+    (cond ((eq system-type 'windows-nt) (expand-file-name "Applications/langtool/languagetool-commandline.jar" gn/default-dir))
           ((eq system-type 'gnu/linux) (expand-file-name "my/bin/langtool/languagetool-commandline.jar" gn/default-dir))))
   (setq langtool-language-tool-jar gn/langtool-path)
   (setq langtool-default-language "en-US")
