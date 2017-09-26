@@ -227,7 +227,7 @@
 (use-package server
   :config (or (server-running-p) (server-mode)))
 
-(use-package dot-gnus
+(use-package gnus
   :init
   (setq gnus-init-file (expand-file-name "lisp/dot-gnus" user-emacs-directory)
         gnus-home-directory "~/Gnus"))

@@ -39,7 +39,7 @@
 (setq gnus-posting-styles
       '((".*" ;; default style
          (organization "Acme LLC")
-         (signature-file "~/.signature") ; text file
+         (signature "Yours sincerely,\nFirst Last")
          )))
 
 (setq gnus-message-archive-group "nnimap+name:Sent Items")

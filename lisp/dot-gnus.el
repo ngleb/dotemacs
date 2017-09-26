@@ -47,9 +47,9 @@
  gnus-summary-display-arrow t)
 
 (cond ((string= (system-name) "lenovo")
-       (load-file "~/.emacs.d/lisp/dot-gnus-personal.el")
+       (load-file "~/.emacs.d/lisp/dot-gnus-personal.el"))
       ((string= (system-name) "nga2")
-       (load-file "~/.emacs.d/lisp/dot-gnus-work.el"))))
+       (load-file "~/.emacs.d/lisp/dot-gnus-work.el")))
 
 
 (provide 'dot-gnus)
