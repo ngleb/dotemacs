@@ -1,11 +1,15 @@
+;;; init.el
+
+(defvar before-user-init-time (current-time)
+  "Value of `current-time' when Emacs begins loading `user-init-file'.")
+(message "Loading Emacs...done (%.3fs)"
+         (float-time (time-subtract before-user-init-time
+                                    before-init-time)))
+
 (setq gc-cons-threshold 100000000)
 
+
 (require 'package)
-(require 'server)
-
-(or (eq (server-running-p) t)
-    (server-start))
-
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -48,6 +52,9 @@
         (git-commit . "melpa-stable")
         (with-editor . "melpa-stable")
 
+        (dockerfile-mode . "melpa")
+        (docker-compose-mode . "melpa")
+
         (flycheck . "melpa-stable")
         (flycheck-ledger . "melpa")
 
@@ -72,6 +79,7 @@
             (package-install package))))
       package-pinned-packages)
 
+(setq use-package-verbose t)
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
@@ -214,9 +222,15 @@
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
-
 (when (eq system-type 'windows-nt)
   (add-hook 'after-init-hook 'emacs-maximize))
+
+(use-package server
+  :config (or (server-running-p) (server-mode)))
+
+;; (require 'server)
+;; (or (eq (server-running-p) t)
+;;     (server-start))
 
 (use-package eudc
   :config
