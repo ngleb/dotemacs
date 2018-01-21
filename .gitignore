@@ -5,6 +5,7 @@
 .org-id-locations
 .python-environments
 .smex-items
+.#recentf
 auto-save-list
 backup
 backups

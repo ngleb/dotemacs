@@ -15,7 +15,7 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("org" . "http://orgmode.org/elpa/") t)
+             '("org" . "https://orgmode.org/elpa/") t)
 
 (setq package-pinned-packages
       '((dash . "melpa-stable")
@@ -35,7 +35,6 @@
         (langtool . "melpa")
 
         (bind-key . "melpa")
-        (diminish . "melpa")
         (use-package . "melpa")
         (hydra . "melpa")
 
@@ -50,9 +49,6 @@
         (async . "melpa-stable")
         (git-commit . "melpa-stable")
         (with-editor . "melpa-stable")
-
-        (dockerfile-mode . "melpa")
-        (docker-compose-mode . "melpa")
 
         (flycheck . "melpa-stable")
         (flycheck-ledger . "melpa")
@@ -227,23 +223,16 @@
 (use-package server
   :config (or (server-running-p) (server-mode)))
 
-(use-package gnus
-  :init
-  (setq gnus-init-file (expand-file-name "lisp/dot-gnus" user-emacs-directory)
-        gnus-home-directory "~/Gnus"))
-
-(use-package eudc
-  :config
-  (with-eval-after-load "message"
-    (define-key message-mode-map (kbd "TAB") 'eudc-expand-inline))
-  (when (eq system-type 'windows-nt)
-    (load-file (expand-file-name "lisp/dot-eudc.el" user-emacs-directory))))
-
 (use-package elisp-mode
   :config
   (use-package eldoc
     :config
     (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
+
+(use-package man
+  :config
+  (bind-key "j" (kbd "C-u 1 C-v") Man-mode-map)
+  (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package swiper
   :config

@@ -317,7 +317,6 @@ Skip project and sub-project tasks, habits, and project related tasks."
 (bind-key "<f12>" (lambda () (interactive) (gn/open-agenda " " nil)))
 (bind-key "C-c x" (lambda () (interactive) (org-capture nil "x")))
 (bind-key "C-c t" (lambda () (interactive) (org-capture nil "t")))
-(bind-key "C-c t" #'gn/org-capture-task)
 
 (provide 'dot-org)
 
