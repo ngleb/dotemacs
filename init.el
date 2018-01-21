@@ -77,7 +77,6 @@
 (setq use-package-verbose t)
 (eval-when-compile
   (require 'use-package))
-(require 'diminish)
 (require 'bind-key)
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
@@ -311,7 +310,6 @@
   (("C-c m" . magit-status)))
 
 (use-package whitespace
-  :diminish whitespace-mode
   :init
   (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
     (add-hook hook #'whitespace-mode))
