@@ -6,6 +6,7 @@
 .python-environments
 .smex-items
 .#recentf
+server/*
 auto-save-list
 backup
 backups
