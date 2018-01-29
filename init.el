@@ -43,6 +43,9 @@
         (zenburn-theme . "melpa")
         (org-plus-contrib . "org")
 
+        (docker-compose-mode . "melpa")
+        (dockerfile-mode . "melpa")
+
         ;; magit
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -220,7 +223,8 @@
   (add-hook 'after-init-hook 'emacs-maximize))
 
 (use-package server
-  :config (or (server-running-p) (server-mode)))
+  :no-require
+  :hook (after-init . server-start))
 
 (use-package elisp-mode
   :config
