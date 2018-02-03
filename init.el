@@ -27,10 +27,10 @@
         (flyspell-popup . "melpa-stable")
 
         (company . "melpa-stable")
-        (deft . "melpa-stable")
+        (deft . "melpa")
         (ledger-mode . "melpa")
-        (markdown-mode . "melpa-stable")
-        (olivetti . "melpa-stable")
+        (markdown-mode . "melpa")
+        (olivetti . "melpa")
         (nlinum . "gnu")
         (langtool . "melpa")
 
@@ -42,6 +42,7 @@
         (smooth-scrolling . "melpa")
         (zenburn-theme . "melpa")
         (org-plus-contrib . "org")
+        (web-mode . "melpa")
 
         (docker-compose-mode . "melpa")
         (dockerfile-mode . "melpa")
@@ -215,7 +216,7 @@
   (set-frame-parameter (selected-frame) 'width emacs-min-width))
 
 (defun emacs-maximize ()
-  (add-to-list 'default-frame-alist '(fullscreen . maximized)))
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
