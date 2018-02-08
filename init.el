@@ -23,6 +23,7 @@
         (ivy . "melpa-stable")
         (swiper . "melpa-stable")
         (counsel . "melpa-stable")
+        (avy . "melpa")
         (popup . "melpa-stable")
         (flyspell-popup . "melpa-stable")
 
@@ -78,7 +79,6 @@
             (package-install package))))
       package-pinned-packages)
 
-(setq use-package-verbose t)
 (eval-when-compile
   (require 'use-package))
 (require 'bind-key)
@@ -86,8 +86,10 @@
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
 (defvar gn/default-dir-tmp
-  (cond ((eq system-type 'gnu/linux) (expand-file-name "~"))
-        ((eq system-type 'windows-nt) (expand-file-name user-login-name "C:/Users"))))
+  (cond ((eq system-type 'gnu/linux)
+         (expand-file-name "~"))
+        ((eq system-type 'windows-nt)
+         (expand-file-name user-login-name "C:/Users"))))
 (setq gn/default-dir (file-name-as-directory gn/default-dir-tmp))
 
 (when (fboundp 'tool-bar-mode)
@@ -227,6 +229,11 @@
 (use-package server
   :no-require
   :hook (after-init . server-start))
+
+(use-package avy
+  :bind* ("C-." . avy-goto-char-timer)
+  :config
+  (avy-setup-default))
 
 (use-package elisp-mode
   :config
