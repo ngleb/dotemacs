@@ -26,13 +26,19 @@
           ("reg-03" "%(binary) -f %(ledger-file) --strict -d \"d>=[last 45 days]\" reg assets:checking:g")
           ("reg-04" "%(binary) -f %(ledger-file) --strict -d \"d>=[last 45 days]\" reg assets:checking:v"))))
 
+  (defun gn/quick-calc ()
+    (interactive)
+    (setq current-prefix-arg '(4)) ; C-u
+    (call-interactively 'quick-calc))
+
   (when (string= (system-name) "ACER")
-    (bind-key "<f7>" #'quick-calc ledger-mode-map)
+    (bind-key "<f7>" #'gn/quick-calc ledger-mode-map)
+    (bind-key "C-<f7>" #'quick-calc ledger-mode-map)
     (bind-key "<f8>" #'my-ledger-report/body ledger-mode-map)
     (bind-key "<f9>" #'ledger-mode-clean-buffer ledger-mode-map))
 
-  (bind-key "M-<f7>" #'quick-calc ledger-mode-map)
-  (bind-key "M-<f8>" #'my-ledger-report/body ledger-mode-map)
+  (bind-key "C-<f7>" #'gn/quick-calc ledger-mode-map)
+  (bind-key "C-<f8>" #'my-ledger-report/body ledger-mode-map)
   (bind-key "n" #'next-line ledger-report-mode-map)
   (bind-key "p" #'previous-line ledger-report-mode-map)
   (add-hook 'ledger-report-mode-hook (lambda () (hl-line-mode 1)))
