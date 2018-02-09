@@ -27,9 +27,11 @@
           ("reg-04" "%(binary) -f %(ledger-file) --strict -d \"d>=[last 45 days]\" reg assets:checking:v"))))
 
   (when (string= (system-name) "ACER")
+    (bind-key "<f7>" #'quick-calc ledger-mode-map)
     (bind-key "<f8>" #'my-ledger-report/body ledger-mode-map)
     (bind-key "<f9>" #'ledger-mode-clean-buffer ledger-mode-map))
 
+  (bind-key "M-<f7>" #'quick-calc ledger-mode-map)
   (bind-key "M-<f8>" #'my-ledger-report/body ledger-mode-map)
   (bind-key "n" #'next-line ledger-report-mode-map)
   (bind-key "p" #'previous-line ledger-report-mode-map)

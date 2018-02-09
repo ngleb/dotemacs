@@ -7,10 +7,6 @@
 (add-hook 'org-mode-hook (lambda () (visual-line-mode 1)))
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((ledger . t)))
-
 (setq org-export-backends '(html latex ascii))
 (setq org-modules '(org-habit org-protocol))
 
@@ -45,8 +41,10 @@
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
-(setq org-directory (expand-file-name "Sync/org/" gn/default-dir))
-(setq org-agenda-files (list (expand-file-name "Sync/org/" gn/default-dir)))
+(setq org-directory
+      (expand-file-name "Sync/org/" gn/default-dir))
+(setq org-agenda-files
+      (list (expand-file-name "Sync/org/" gn/default-dir)))
 
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
@@ -86,6 +84,7 @@
                  (org-tags-match-list-sublevels nil)))
           (tags-todo "-CANCELLED/!"
                      ((org-agenda-overriding-header "Stuck Projects")
+                      (org-tags-match-list-sublevels 'indented)
                       (org-agenda-skip-function 'bh/skip-non-stuck-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
@@ -194,7 +193,6 @@ Callers of this function already widen the buffer view."
 
 (defun bh/skip-non-stuck-projects ()
   "Skip trees that are not stuck projects"
-  ;; (bh/list-sublevels-for-projects-indented)
   (save-restriction
     (widen)
     (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
