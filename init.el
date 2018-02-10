@@ -184,19 +184,19 @@
 (defconst emacs-min-left
   (pcase display-name
     (`lenovo 100)
-    (`lenovo-m 220)
-    (`office 200)))
+    (`lenovo-m 210)
+    (`office 100)))
 
 (defconst emacs-min-height
   (pcase display-name
     (`lenovo 40)
-    (`lenovo-m 52)
-    (`office 52)))
+    (`lenovo-m 53)
+    (`office 40)))
 
 (defconst emacs-min-width
   (pcase display-name
     (`lenovo 140)
-    (`lenovo-m 160)
+    (`lenovo-m 164)
     (`office 160)))
 
 (defun emacs-min ()
@@ -208,13 +208,20 @@
   (set-frame-position (selected-frame) emacs-min-left emacs-min-top)
   (set-frame-size (selected-frame) emacs-min-width emacs-min-height))
 
-(defun emacs-maximize ()
-  (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
+(defun emacs-max ()
+  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
+    (set-param 'fullscreen 'maximized)
+    (set-param 'vertical-scroll-bars nil)
+    (set-param 'horizontal-scroll-bars nil)))
+
+(defun emacs-toggle-size ()
+  (interactive)
+  (if (alist-get 'fullscreen (frame-parameters))
+      (emacs-min)
+    (emacs-max)))
 
 (add-hook 'emacs-startup-hook #'emacs-min t)
-
-(when (eq system-type 'windows-nt)
-  (add-hook 'after-init-hook 'emacs-maximize))
+(bind-key "C-<f12>" #'emacs-toggle-size)
 
 (use-package server
   :no-require
