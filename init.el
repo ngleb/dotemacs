@@ -8,6 +8,12 @@
 
 (setq gc-cons-threshold 100000000)
 
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -120,11 +126,6 @@
 (setq ad-redefinition-action 'accept)
 
 ;; MULE & encoding setup
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-language-environment "UTF-8")
 (setq default-input-method "russian-computer")
 
 ;; Stop creating backub and autosave files
