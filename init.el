@@ -173,57 +173,46 @@
 ;;  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
 (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
 
-(eval-when-compile
-  (defvar emacs-min-height)
-  (defvar emacs-min-width))
+(defconst display-name
+  (pcase (display-pixel-height)
+    (`768 'lenovo)
+    (`1200 'lenovo-m)
+    (`1080 'office)))
 
-(defvar display-name
-  (let ((height (display-pixel-height)))
-    (cond ((= height 1200) 'lenovo-vga)
-          ((= height 768) 'lenovo)
-          ((= height 1080) 'office))))
+(defconst emacs-min-top 20)
 
-(defvar emacs-min-top 20)
-(defvar emacs-min-left
-  (cond ((eq display-name 'office) 200)
-        ((eq display-name 'lenovo) 100)
-        ((eq display-name 'lenovo-vga) 220)
-        (t 220)))
-(defvar emacs-min-height
-  (cond ((eq display-name 'office) 52)
-        ((eq display-name 'lenovo) 40)
-        ((eq display-name 'lenovo-vga) 52)
-        (t 40)))
-(defvar emacs-min-width
-  (cond ((eq display-name 'office) 160)
-        ((eq display-name 'lenovo) 140)
-        ((eq display-name 'lenovo-vga) 160)
-        (t 100)))
+(defconst emacs-min-left
+  (pcase display-name
+    (`lenovo 100)
+    (`lenovo-m 220)
+    (`office 200)))
 
-(let ((frame-alist
-       (list (cons 'top    emacs-min-top)
-             (cons 'left   emacs-min-left)
-             (cons 'height emacs-min-height)
-             (cons 'width  emacs-min-width))))
-  (setq initial-frame-alist frame-alist))
+(defconst emacs-min-height
+  (pcase display-name
+    (`lenovo 40)
+    (`lenovo-m 52)
+    (`office 52)))
+
+(defconst emacs-min-width
+  (pcase display-name
+    (`lenovo 140)
+    (`lenovo-m 160)
+    (`office 160)))
 
 (defun emacs-min ()
   (interactive)
-
-  (set-frame-parameter (selected-frame) 'fullscreen nil)
-  (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
-  (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil)
-
-  (set-frame-parameter (selected-frame) 'top emacs-min-top)
-  (set-frame-parameter (selected-frame) 'left emacs-min-left)
-  (set-frame-parameter (selected-frame) 'height emacs-min-height)
-  (set-frame-parameter (selected-frame) 'width emacs-min-width))
+  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
+    (set-param 'fullscreen nil)
+    (set-param 'vertical-scroll-bars nil)
+    (set-param 'horizontal-scroll-bars nil))
+  (set-frame-position (selected-frame) emacs-min-left emacs-min-top)
+  (set-frame-size (selected-frame) emacs-min-width emacs-min-height))
 
 (defun emacs-maximize ()
   (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
 
-(if window-system
-    (add-hook 'after-init-hook 'emacs-min))
+(add-hook 'emacs-startup-hook #'emacs-min t)
+
 (when (eq system-type 'windows-nt)
   (add-hook 'after-init-hook 'emacs-maximize))
 
