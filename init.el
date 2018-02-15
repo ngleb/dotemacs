@@ -469,7 +469,11 @@
   (remove-hook 'display-time-hook 'sml/propertize-time-string))
 
 (use-package smartparens-config
-  :commands smartparens-mode)
+  :commands smartparens-mode
+  :config
+  (smartparens-global-mode t)
+  (show-smartparens-global-mode t)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode))
 
 (use-package dired
   :config
