@@ -6,7 +6,7 @@
          (float-time (time-subtract before-user-init-time
                                     before-init-time)))
 
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 10 1024 1024))
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
