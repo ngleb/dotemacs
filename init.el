@@ -284,10 +284,8 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (setq elpy-rpc-python-command "python3.5")
   (setq elpy-rpc-backend "jedi")
-  (when (executable-find "ipython")
-    (setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "--simple-prompt -i")
-    (elpy-use-ipython)))
+  (setq python-shell-interpreter "python"
+        python-shell-interpreter-args "-i"))
 
 (use-package langtool
   :config
