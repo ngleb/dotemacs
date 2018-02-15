@@ -282,7 +282,7 @@
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
-  (setq elpy-rpc-python-command "python3.5")
+  (setq elpy-rpc-python-command "python3.6")
   (setq elpy-rpc-backend "jedi")
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i"))
