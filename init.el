@@ -357,17 +357,10 @@
         '(("default"
            ("Dired" (mode . dired-mode))
            ("Planner"
-            (or (filename . "todo.org")
-                (filename . "refile.org")
-                (filename . "someday.org")
-                (filename . "journal.org")
-                (filename . "journal.org.gpg")
-                (filename . "mobile.org")
-                (filename . "archive\*.org")
+            (or (filename . "\\(todo\\|refile\\|someday\\|archive\*\\).org")
                 (mode . org-agenda-mode)
                 (name . "^\\*Calendar\\*$")
-                (name . "^diary$")
-                (name . "^org$")))
+                (name . "^diary$")))
            ("Text"
             (or (name . "\\.\\(tex\\|bib\\|csv\\)")
                 (mode . org-mode)
