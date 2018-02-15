@@ -45,6 +45,8 @@
         (olivetti . "melpa")
         (org-plus-contrib . "org")
         (popup . "melpa-stable")
+        (smart-mode-line . "melpa")
+        (smartparens . "melpa")
         (smooth-scrolling . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
@@ -456,6 +458,18 @@
       (ispell-word))
     (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
     (bind-key "M-<f8>" #'flyspell-check-next-highlighted-word)))
+
+(use-package smart-mode-line
+  :config
+  ;; See https://github.com/Malabarba/smart-mode-line/issues/217
+  (setq mode-line-format (delq 'mode-line-position mode-line-format))
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
+  (sml/apply-theme 'light)
+  (remove-hook 'display-time-hook 'sml/propertize-time-string))
+
+(use-package smartparens-config
+  :commands smartparens-mode)
 
 (use-package dired
   :config
