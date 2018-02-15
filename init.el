@@ -470,7 +470,7 @@
 
 (use-package smartparens-config
   :commands smartparens-mode
-  :config
+  :init
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
   (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode))
