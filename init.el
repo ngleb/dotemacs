@@ -217,10 +217,6 @@
 (add-hook 'emacs-startup-hook #'emacs-min t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
-(use-package server
-  :no-require
-  :hook (after-init . server-start))
-
 (use-package avy
   :bind* ("C-." . avy-goto-char-timer)
   :config
@@ -255,7 +251,9 @@
 
 (use-package uniquify
   :config
-  (setq uniquify-buffer-name-style 'forward))
+  (setq uniquify-buffer-name-style 'reverse)
+  (setq uniquify-separator "/")
+  (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package company
   :commands company-mode
@@ -265,8 +263,9 @@
   (setq company-require-match nil)
   (setq company-idle-delay 0.5)
   (setq company-tooltip-limit 10)
-  (setq company-minimum-prefix-length 2)
+  (setq company-minimum-prefix-length 3)
   (setq company-tooltip-flip-when-above t)
+  (setq company-show-numbers t)
   :config
   (global-company-mode))
 
@@ -310,6 +309,7 @@
 (use-package hydra)
 
 (use-package magit
+  :commands magit-status
   :bind
   (("C-c m" . magit-status)))
 
@@ -517,5 +517,8 @@
 (load-file "~/.emacs.d/personal.el")
 
 (use-package dot-org)
+
+(require 'server)
+(or (server-running-p) (server-start))
 
 ;;; init.el ends here
