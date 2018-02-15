@@ -250,7 +250,7 @@
   (bind-key "C-r" #'counsel-expression-history read-expression-map))
 
 (use-package uniquify
-  :config
+  :init
   (setq uniquify-buffer-name-style 'reverse)
   (setq uniquify-separator "/")
   (setq uniquify-ignore-buffers-re "^\\*"))
