@@ -114,6 +114,7 @@
 (setq-default word-wrap t)
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
+(put 'narrow-to-region 'disabled nil)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
