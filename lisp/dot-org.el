@@ -48,15 +48,17 @@
 
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
-         "* %?\n%U\n")
+         "* %?\nAdded on: %U\n")
         ("t" "todo" entry (file "refile.org")
-         "* TODO %?\n%U\n")
+         "* TODO %?\nAdded on: %U\n")
+        ("n" "todo clocked" entry (file "refile.org")
+         "* TODO %?\nAdded on: %U\n" :clock-in t :clock-resume t)
         ("j" "Journal" entry (file+olp+datetree "diary.org")
-         "* %?\n%U\n" :clock-in t :clock-resume t)
+         "* %?\nAdded on: %U\n" :clock-in t :clock-resume t)
         ("w" "org-protocol" entry (file "refile.org")
-         "* TODO Review [[%:link][%:description]]\n%U\n" :immediate-finish t)
+         "* TODO Review [[%:link][%:description]]\nAdded on: %U\n" :immediate-finish t)
         ("h" "Habit" entry (file "refile.org")
-         "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
+         "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
 ;; Compact the block agenda view
 (setq org-agenda-compact-blocks t)

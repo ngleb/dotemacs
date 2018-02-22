@@ -6,7 +6,7 @@
          (float-time (time-subtract before-user-init-time
                                     before-init-time)))
 
-(setq gc-cons-threshold (* 10 1024 1024))
+(setq gc-cons-threshold (* 500 1024 1024))
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -47,6 +47,7 @@
         (popup . "melpa-stable")
         (smart-mode-line . "melpa")
         (smartparens . "melpa")
+        (smex . "melpa")
         (smooth-scrolling . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
@@ -465,6 +466,8 @@
   :init
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
+  :config
+  (sp-pair "'" nil :actions :rem)
   (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode))
 
 (use-package dired
