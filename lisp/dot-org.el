@@ -64,8 +64,13 @@
 (setq org-agenda-compact-blocks t)
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-agenda-tags-column -102)
+(setq org-agenda-span 'day)
 
 (setq org-enforce-todo-dependencies t)
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
 ;; Do not dim blocked tasks
 (setq org-agenda-dim-blocked-tasks nil)
@@ -76,35 +81,53 @@
           (org-agenda-sorting-strategy
            '(todo-state-down effort-up category-keep))))
         (" " "Agenda"
-         ((agenda ""
-                  ((org-agenda-ndays 7)
-                   (org-agenda-time-grid nil)
-                   (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))
-                   (org-agenda-start-on-weekday 1)))
+         ((agenda "" nil)
+                  ;; (;;(org-agenda-ndays 7)
+                  ;;  (org-agenda-time-grid nil)
+                  ;;  (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))))
+                  ;;  ;;(org-agenda-start-on-weekday 1)))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")
                  (org-tags-match-list-sublevels nil)))
-          (tags-todo "-CANCELLED/!"
+          (tags-todo "-MAYBE-CANCELLED/!"
                      ((org-agenda-overriding-header "Stuck Projects")
                       (org-tags-match-list-sublevels 'indented)
                       (org-agenda-skip-function 'bh/skip-non-stuck-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-CANCELLED/!"
+          (tags-todo "-MAYBE-CANCELLED/!"
                      ((org-agenda-overriding-header "Projects")
                       (org-tags-match-list-sublevels 'indented)
                       (org-agenda-skip-function 'bh/skip-non-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
-                     ((org-agenda-overriding-header "Tasks")
-                      (org-agenda-skip-function 'bh/skip-non-tasks2)
+          (tags-todo "-CANCELLED/!NEXT"
+                     ((org-agenda-overriding-header "Project Next Tasks")
+                      (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
+                      (org-tags-match-list-sublevels t)
+                      (org-agenda-todo-ignore-scheduled 'all)
+                      (org-agenda-todo-ignore-deadlines 'all)
+                      (org-agenda-todo-ignore-with-date 'all)
+                      (org-agenda-sorting-strategy
+                       '(todo-state-down effort-up category-keep))))
+          (tags-todo "-MAYBE-REFILE-CANCELLED-WAITING-HOLD/!"
+                     ((org-agenda-overriding-header "Project Tasks")
+                      ;;(org-agenda-skip-function 'bh/skip-non-tasks2)
+                      (org-agenda-skip-function 'bh/skip-non-project-tasks)
                       (org-agenda-todo-ignore-scheduled 'all)
                       (org-agenda-todo-ignore-deadlines 'all)
                       (org-agenda-todo-ignore-with-date 'all)
                       (org-agenda-sorting-strategy
                        '(tag-up effort-up))))
-          (tags-todo "-CANCELLED+WAITING|HOLD/!"
+          (tags-todo "-MAYBE-REFILE-CANCELLED-WAITING/!"
+                     ((org-agenda-overriding-header "Tasks")
+                      (org-agenda-skip-function 'bh/skip-project-tasks)
+                      (org-agenda-todo-ignore-scheduled 'all)
+                      (org-agenda-todo-ignore-deadlines 'all)
+                      (org-agenda-todo-ignore-with-date 'all)
+                      (org-agenda-sorting-strategy
+                       '(tag-up effort-up))))
+          (tags-todo "-MAYBE-CANCELLED+WAITING|HOLD/!"
                      ((org-agenda-overriding-header "Waiting and Postponed Tasks")
                       (org-agenda-skip-function 'bh/skip-non-tasks)
                       (org-tags-match-list-sublevels nil)
@@ -226,6 +249,60 @@ Callers of this function already widen the buffer view."
            (t
             subtree-end))))
     (save-excursion (org-end-of-subtree t))))
+
+(defun bh/skip-project-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       ((bh/is-project-subtree-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-project-tasks ()
+  "Show project tasks.
+Skip project and sub-project tasks, habits, and loose non-project tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       ((not (bh/is-project-subtree-p))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits-and-single-tasks ()
+  "Skip trees that are projects, tasks that are habits, single non-project tasks"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((org-is-habit-p)
+        next-headline)
+       ((and bh/hide-scheduled-and-waiting-next-tasks
+             (member "WAITING" (org-get-tags-at)))
+        next-headline)
+       ((bh/is-project-p)
+        next-headline)
+       ((and (bh/is-task-p) (not (bh/is-project-subtree-p)))
+        next-headline)
+       (t
+        nil)))))
 
 (defun bh/skip-non-tasks ()
   "Show non-project tasks.
