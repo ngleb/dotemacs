@@ -85,19 +85,19 @@
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")
                  (org-tags-match-list-sublevels nil)))
-          (tags-todo "-MAYBE-CANCELLED/!"
+          (tags-todo "-MAYBE-CANCELLED-REFILE/!"
                      ((org-agenda-overriding-header "Stuck Projects")
                       (org-tags-match-list-sublevels 'indented)
                       (org-agenda-skip-function 'bh/skip-non-stuck-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-MAYBE-CANCELLED/!"
+          (tags-todo "-MAYBE-CANCELLED-REFILE/!"
                      ((org-agenda-overriding-header "Projects")
                       (org-tags-match-list-sublevels 'indented)
                       (org-agenda-skip-function 'bh/skip-non-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-CANCELLED/!NEXT"
+          (tags-todo "-CANCELLED-REFILE/!NEXT"
                      ((org-agenda-overriding-header "Project Next Tasks")
                       (org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
                       (org-tags-match-list-sublevels t)
@@ -108,7 +108,6 @@
                        '(todo-state-down effort-up category-keep))))
           (tags-todo "-MAYBE-REFILE-CANCELLED-WAITING-HOLD/!"
                      ((org-agenda-overriding-header "Project Tasks")
-                      ;;(org-agenda-skip-function 'bh/skip-non-tasks2)
                       (org-agenda-skip-function 'bh/skip-non-project-tasks)
                       (org-agenda-todo-ignore-scheduled 'all)
                       (org-agenda-todo-ignore-deadlines 'all)

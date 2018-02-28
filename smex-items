@@ -1,19 +1,19 @@
 
 ;; ----- smex-history -----
 (
+ revert-buffer
  org-reload
  org-agenda-todo-yesterday
  append-to-file
  sort-lines
  grep
- revert-buffer
  append-to-buffer
 )
 
 ;; ----- smex-data -----
 (
  (append-to-buffer . 16)
- (revert-buffer . 3)
+ (revert-buffer . 4)
  (org-agenda-todo-yesterday . 9)
  (make-directory . 1)
  (grep . 1)
