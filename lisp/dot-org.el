@@ -68,10 +68,6 @@
 
 (setq org-enforce-todo-dependencies t)
 
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-
 ;; Do not dim blocked tasks
 (setq org-agenda-dim-blocked-tasks nil)
 
