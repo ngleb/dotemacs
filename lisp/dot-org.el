@@ -77,11 +77,9 @@
           (org-agenda-sorting-strategy
            '(todo-state-down effort-up category-keep))))
         (" " "Agenda"
-         ((agenda "" nil)
-                  ;; (;;(org-agenda-ndays 7)
-                  ;;  (org-agenda-time-grid nil)
-                  ;;  (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))))
-                  ;;  ;;(org-agenda-start-on-weekday 1)))
+         ((agenda ""
+                  ((org-agenda-time-grid nil)
+                   (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")
                  (org-tags-match-list-sublevels nil)))
@@ -136,11 +134,10 @@
          ;; options for entire block calendar
          ((org-agenda-remove-tags nil)))))
 
-(defun bh/org-auto-exclude-function (tag)
+(defun gn/org-auto-exclude-function (tag)
   "Automatic task exclusion in the agenda with / RET"
   (and (cond
-        ((string= tag "office") t)
-        ((string= tag "home") t))
+        ((string= tag "office") t))
        (concat "-" tag)))
 
 (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
