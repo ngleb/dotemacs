@@ -137,10 +137,13 @@
 (defun gn/org-auto-exclude-function (tag)
   "Automatic task exclusion in the agenda with / RET"
   (and (cond
-        ((string= tag "office") t))
+        ((string= tag "office")
+         t)
+        ((string= tag "hold")
+         t))
        (concat "-" tag)))
 
-(setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
+(setq org-agenda-auto-exclude-function 'gn/org-auto-exclude-function)
 
 (defun bh/is-project-p ()
   "Any task with a todo keyword subtask"
