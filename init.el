@@ -393,7 +393,8 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :config
-  (setq markdown-command "multimarkdown.exe")
+  (when (eq system-type 'windows-nt)
+    (setq markdown-command "multimarkdown.exe"))
   (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
 
