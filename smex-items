@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
+ ispell-complete-word
  ispell-buffer
  ispell
  org-reload
  revert-buffer
  append-to-file
  sort-lines
- grep
 )
 
 ;; ----- smex-data -----
@@ -23,5 +23,6 @@
  (append-to-file . 1)
  (org-reload . 3)
  (ispell . 1)
- (ispell-buffer . 1)
+ (ispell-buffer . 2)
+ (ispell-complete-word . 1)
 )

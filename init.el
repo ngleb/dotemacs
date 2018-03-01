@@ -6,7 +6,14 @@
          (float-time (time-subtract before-user-init-time
                                     before-init-time)))
 
-(setq gc-cons-threshold (* 500 1024 1024))
+(setq gc-cons-threshold (* 500 1024 1024)
+      gc-cons-percentage 0.6)
+
+(add-hook 'after-init-hook
+          `(lambda ()
+             (setq gc-cons-threshold 800000
+                   gc-cons-percentage 0.1)
+             (garbage-collect)) t)
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
