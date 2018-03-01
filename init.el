@@ -398,15 +398,14 @@
   (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
 
 (use-package ispell
-  :bind
-  ("<f7>" . ispell-word)
+  :bind ("<f7>" . ispell-word)
   :commands
   (ispell-word)
   :config
   (add-to-list 'ispell-local-dictionary-alist
                '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8))
   (add-to-list 'ispell-local-dictionary-alist
-               '("russian" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "ru") nil koi8-r))
+               '("russian" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "ru_RU") nil koi8-r))
   (setq ispell-dictionary "english")
   (setq ispell-silently-savep t)
   (when (executable-find "hunspell")
@@ -423,34 +422,22 @@
       (ispell-change-dictionary new)
       (message "Switched dictionary from %s to %s" dict new)))
 
-  (bind-key "C-c i d" #'gn-toggle-ispell-dictionary)
+  (bind-key "C-c i d" #'gn-toggle-ispell-dictionary))
 
-  (use-package flyspell
-    :bind
-    (("C-c i b" . flyspell-buffer)
-     ("C-c i m" . flyspell-mode))
-    ;; :init
-    ;; (progn
-    ;;   (dolist (hook '(text-mode-hook org-mode-hook))
-    ;;     (add-hook hook (lambda () (flyspell-mode 1))))
-    ;;   (add-hook 'prog-mode-hook 'flyspell-prog-mode))
-    :config
-    ;; Flyspell signals an error if there is no spell-checking tool is
-    ;; installed. We can advice `turn-on-flyspell' and `flyspell-prog-mode'
-    ;; to try to enable flyspell only if a spell-checking tool is available.
-    (defun modi/ispell-not-avail-p (&rest args)
-      "Return `nil' if `ispell-program-name' is available; `t' otherwise."
-      (not (executable-find ispell-program-name)))
-    (advice-add 'turn-on-flyspell   :before-until #'modi/ispell-not-avail-p)
-    (advice-add 'flyspell-prog-mode :before-until #'modi/ispell-not-avail-p)
+(use-package flyspell
+  :bind (("C-c i b" . flyspell-buffer)
+         ("C-c i m" . flyspell-mode))
+  :config
+  (defun flyspell-check-next-highlighted-word ()
+    "Custom function to spell check next highlighted word"
+    (interactive)
+    (flyspell-goto-next-error)
+    (flyspell-popup-correct))
+  (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
+  (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
 
-    (defun flyspell-check-next-highlighted-word ()
-      "Custom function to spell check next highlighted word"
-      (interactive)
-      (flyspell-goto-next-error)
-      (ispell-word))
-    (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
-    (bind-key "M-<f8>" #'flyspell-check-next-highlighted-word)))
+(use-package flyspell-popup
+  :defer t)
 
 (use-package smart-mode-line
   :config
