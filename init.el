@@ -6,7 +6,7 @@
          (float-time (time-subtract before-user-init-time
                                     before-init-time)))
 
-(setq gc-cons-threshold (* 500 1024 1024)
+(setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 
 (add-hook 'after-init-hook
