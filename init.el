@@ -124,9 +124,9 @@
 ;; MULE & encoding setup
 (setq default-input-method "russian-computer")
 
-;; Stop creating backub and autosave files
+;; Stop creating backup and auto-save files
 (setq make-backup-files nil) ; stop creating those backup~ files
-(setq auto-save-default nil) ; stop creating those #autosave# files
+(setq auto-save-default nil) ; stop creating those #auto-save# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
 (global-auto-revert-mode 1)
 
@@ -398,7 +398,11 @@
   (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
 
 (use-package ispell
-  :bind ("<f7>" . ispell-word)
+  :bind (("C-c i c" . ispell-comments-and-strings)
+         ("C-c i d" . gn/toggle-ispell-dictionary)
+         ("C-c i k" . ispell-kill-ispell)
+         ("C-c i r" . ispell-region)
+         ("C-c i v" . ispell-buffer))
   :commands (ispell-word)
   :config
   (add-to-list 'ispell-local-dictionary-alist
@@ -412,16 +416,14 @@
     (setq ispell-really-hunspell t)
     (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
 
-  (defun gn-toggle-ispell-dictionary ()
+  (defun gn/toggle-ispell-dictionary ()
     "Switch russian and english dictionaries."
     (interactive)
     (let* ((dict ispell-current-dictionary)
            (new (if (string= dict "russian") "english"
                   "russian")))
       (ispell-change-dictionary new)
-      (message "Switched dictionary from %s to %s" dict new)))
-
-  (bind-key "C-c i d" #'gn-toggle-ispell-dictionary))
+      (message "Switched dictionary from %s to %s" dict new))))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -431,7 +433,7 @@
     "Custom function to spell check next highlighted word"
     (interactive)
     (flyspell-goto-next-error)
-    (flyspell-popup-correct))
+    (ispell-word))
   (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
   (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
 

@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
+ ispell-buffer
+ ispell
  org-reload
  revert-buffer
- org-agenda-todo-yesterday
  append-to-file
  sort-lines
  grep
- append-to-buffer
 )
 
 ;; ----- smex-data -----
@@ -22,4 +22,6 @@
  (ledger-post-align-dwim . 1)
  (append-to-file . 1)
  (org-reload . 3)
+ (ispell . 1)
+ (ispell-buffer . 1)
 )
