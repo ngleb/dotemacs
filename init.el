@@ -399,8 +399,7 @@
 
 (use-package ispell
   :bind ("<f7>" . ispell-word)
-  :commands
-  (ispell-word)
+  :commands (ispell-word)
   :config
   (add-to-list 'ispell-local-dictionary-alist
                '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8))
@@ -436,8 +435,7 @@
   (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
   (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
 
-(use-package flyspell-popup
-  :defer t)
+(use-package flyspell-popup)
 
 (use-package smart-mode-line
   :config
