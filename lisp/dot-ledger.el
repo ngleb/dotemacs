@@ -62,11 +62,10 @@ _1_: Assets         _u_: This month  _o_: This month
 _2_: Assets (full)  _i_: Last month  _p_: Last month
 
 Expenses:           Register:
-_3_: This month     _c_: Cash
+_3_: This month     _c_: Cash        _m_: AV
 _4_: Last month     _a_: A
 _5_: This week      _g_: G
 _6_: Last week      _v_: V
-                    _m_: AV
 
 _q_ quit"
     ("q" nil)
