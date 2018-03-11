@@ -1,20 +1,20 @@
 
 ;; ----- smex-history -----
 (
+ org-agenda-todo-yesterday
  ispell-complete-word
  ispell-buffer
  ispell
  org-reload
  revert-buffer
  append-to-file
- sort-lines
 )
 
 ;; ----- smex-data -----
 (
  (append-to-buffer . 16)
  (revert-buffer . 4)
- (org-agenda-todo-yesterday . 9)
+ (org-agenda-todo-yesterday . 19)
  (make-directory . 1)
  (grep . 1)
  (sort-lines . 1)

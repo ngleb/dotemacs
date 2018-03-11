@@ -22,9 +22,10 @@
           ("bu-last-month" "%(binary) -f %(ledger-file) --strict -w -p \"last month\" bal --unbudgeted ^exp")
           ("bb-last-month" "%(binary) -f %(ledger-file) --strict -w -p \"last month\" bal --budget ^exp --invert")
           ("reg-01" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:cash")
-          ("reg-02" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:a")
+          ("reg-02" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:an")
           ("reg-03" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:g")
-          ("reg-04" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:v"))))
+          ("reg-04" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:v")
+          ("reg-05" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:av"))))
 
   (defun gn/quick-calc ()
     (interactive)
@@ -65,6 +66,7 @@ _3_: This month     _c_: Cash
 _4_: Last month     _a_: A
 _5_: This week      _g_: G
 _6_: Last week      _v_: V
+                    _m_: AV
 
 _q_ quit"
     ("q" nil)
@@ -85,6 +87,7 @@ _q_ quit"
     ("c" (gn/ledger-report "reg-01"))
     ("a" (gn/ledger-report "reg-02"))
     ("g" (gn/ledger-report "reg-03"))
-    ("v" (gn/ledger-report "reg-04"))))
+    ("v" (gn/ledger-report "reg-04"))
+    ("m" (gn/ledger-report "reg-05")))
 
 (provide 'dot-ledger)
