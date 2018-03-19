@@ -87,6 +87,6 @@ _q_ quit"
     ("a" (gn/ledger-report "reg-02"))
     ("g" (gn/ledger-report "reg-03"))
     ("v" (gn/ledger-report "reg-04"))
-    ("m" (gn/ledger-report "reg-05")))
+    ("m" (gn/ledger-report "reg-05"))))
 
 (provide 'dot-ledger)
