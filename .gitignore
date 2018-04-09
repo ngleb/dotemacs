@@ -4,7 +4,7 @@
 .cask
 .org-id-locations
 .python-environments
-.smex-items
+smex-items
 .#recentf
 server/*
 auto-save-list
