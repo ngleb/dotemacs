@@ -146,6 +146,8 @@
 (bind-key "M-/" #'hippie-expand)
 (bind-key "<f5>" #'toggle-truncate-lines)
 (bind-key "C-c e" (lambda () (interactive) (find-file user-init-file)))
+(bind-key "C-c C-e" #'pp-eval-last-sexp)
+(bind-key [remap eval-expression] #'pp-eval-expression)
 
 (defun fill-sentence ()
   (interactive)
@@ -226,6 +228,13 @@
 (add-hook 'emacs-startup-hook #'emacs-min t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
+(use-package isearch
+  :bind (:map isearch-mode-map
+              ("C-c" . isearch-toggle-case-fold)
+              ("C-t" . isearch-toggle-regexp)
+              ("C-^" . isearch-edit-string)
+              ("C-i" . isearch-complete)))
+
 (use-package avy
   :bind* ("C-." . avy-goto-char-timer)
   :config
@@ -242,21 +251,30 @@
   (bind-key "j" (kbd "C-u 1 C-v") Man-mode-map)
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
-(use-package swiper
+(use-package ivy
+  :bind ("C-c C-r" . ivy-resume)
+  :custom
+  (ivy-use-virtual-buffers t)
+  (ivy-display-style 'fancy)
+  (ivy-count-format "(%d/%d) ")
+  (ivy-initial-inputs-alist nil)
+  (ivy-do-completion-in-region nil)
   :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-display-style 'fancy)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-initial-inputs-alist nil)
-  (setq ivy-do-completion-in-region nil)
-  (ivy-mode 1)
-  (bind-key "C-s" #'swiper)
-  (bind-key "M-x" #'counsel-M-x)
-  (bind-key "C-x C-f" #'counsel-find-file)
-  (bind-key "C-c C-r" #'ivy-resume)
-  (bind-key "C-c j" #'counsel-imenu)
-  (bind-key "C-x l" #'counsel-locate)
-  (bind-key "C-r" #'counsel-expression-history read-expression-map))
+  (ivy-mode 1))
+
+(use-package counsel
+  :after ivy
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-c j" . counsel-imenu)
+         ("C-x l" . counsel-locate))
+  :bind (:map read-expression-map
+              ("C-r" . counsel-expression-history)))
+
+(use-package swiper
+  :after ivy
+  :bind (:map isearch-mode-map
+              ("C-o" . swiper-from-isearch)))
 
 (use-package uniquify
   :init
@@ -266,8 +284,7 @@
 
 (use-package company
   :commands company-mode
-  :bind
-  (("C-<tab>" . company-complete))
+  :bind ("C-<tab>" . company-complete)
   :init
   (setq company-require-match nil)
   (setq company-idle-delay 0.5)
@@ -317,8 +334,7 @@
 
 (use-package magit
   :commands magit-status
-  :bind
-  (("C-c m" . magit-status)))
+  :bind ("C-c m" . magit-status))
 
 (use-package whitespace
   :init
@@ -333,9 +349,8 @@
    '(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))))
 
 (use-package deft
-  :bind
-  (("<f9>" . deft)
-   ("C-c C-g" . deft-find-file))
+  :bind (("<f9>" . deft)
+         ("C-c C-g" . deft-find-file))
   :config
   (setq deft-default-extension "org")
   (setq deft-extensions '("org" "txt" "text" "md" "text" "markdown"))
@@ -356,8 +371,7 @@
 
 (use-package ibuffer
   :commands ibuffer
-  :bind
-  ("C-x C-b" . ibuffer)
+  :bind ("C-x C-b" . ibuffer)
   :config
   (use-package ibuf-ext)
   (setq ibuffer-show-empty-filter-groups nil)
@@ -389,10 +403,8 @@
   (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook))
 
 (use-package olivetti
-  :commands
-  (olivetti-mode)
-  :bind
-  ("<f6>" . olivetti-mode))
+  :commands olivetti-mode
+  :bind ("<f6>" . olivetti-mode))
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
@@ -411,7 +423,7 @@
          ("C-c i k" . ispell-kill-ispell)
          ("C-c i r" . ispell-region)
          ("C-c i v" . ispell-buffer))
-  :commands (ispell-word)
+  :commands ispell-word
   :config
   (add-to-list 'ispell-local-dictionary-alist
                '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8))
@@ -459,10 +471,12 @@
 (use-package smartparens-config
   :init
   (add-hook 'minibuffer-setup-hook 'turn-on-smartparens-strict-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook 'turn-on-smartparens-strict-mode)
   :config
   (smartparens-global-mode t)
-  (show-smartparens-global-mode t))
+  (show-smartparens-global-mode t)
+  (setq sp-ignore-modes-list
+      (delete 'minibuffer-inactive-mode sp-ignore-modes-list))
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
 
 (use-package dired
   :config
