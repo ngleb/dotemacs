@@ -93,12 +93,12 @@
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
-(defvar gn/default-dir-tmp
+(defvar gn-base-dir-tmp
   (cond ((eq system-type 'gnu/linux)
          (expand-file-name "~"))
         ((eq system-type 'windows-nt)
          (expand-file-name user-login-name "C:/Users"))))
-(setq gn/default-dir (file-name-as-directory gn/default-dir-tmp))
+(setq gn-base-dir (file-name-as-directory gn-base-dir-tmp))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -316,8 +316,8 @@
 (use-package langtool
   :config
   (defvar gn/langtool-path
-    (cond ((eq system-type 'windows-nt) (expand-file-name "Applications/langtool/languagetool-commandline.jar" gn/default-dir))
-          ((eq system-type 'gnu/linux) (expand-file-name "my/bin/langtool/languagetool-commandline.jar" gn/default-dir))))
+    (cond ((eq system-type 'windows-nt) (expand-file-name "Applications/langtool/languagetool-commandline.jar" gn-base-dir))
+          ((eq system-type 'gnu/linux) (expand-file-name "my/bin/langtool/languagetool-commandline.jar" gn-base-dir))))
   (setq langtool-language-tool-jar gn/langtool-path)
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
@@ -354,7 +354,7 @@
   :config
   (setq deft-default-extension "org")
   (setq deft-extensions '("org" "txt" "text" "md" "text" "markdown"))
-  (setq deft-directory (expand-file-name "doc/reference/" gn/default-dir))
+  (setq deft-directory (expand-file-name "doc/reference/" gn-base-dir))
   (setq deft-recursive t)
   (setq deft-use-filename-as-title t)
   (setq deft-use-filter-string-for-filename t)
@@ -368,6 +368,15 @@
   :config
   (setq smooth-scroll-margin 5)
   (smooth-scrolling-mode 1))
+
+(use-package calendar
+  :custom
+  (calendar-week-start-day 1)
+  (calendar-location-name "Tomsk")
+  (calendar-latitude 56.30)
+  (calendar-longitude 84.58)
+  :config
+  (setq calendar-date-display-form calendar-european-date-display-form))
 
 (use-package ibuffer
   :commands ibuffer
@@ -469,14 +478,9 @@
   (remove-hook 'display-time-hook 'sml/propertize-time-string))
 
 (use-package smartparens-config
-  :init
-  (add-hook 'minibuffer-setup-hook 'turn-on-smartparens-strict-mode)
   :config
   (smartparens-global-mode t)
-  (show-smartparens-global-mode t)
-  (setq sp-ignore-modes-list
-      (delete 'minibuffer-inactive-mode sp-ignore-modes-list))
-  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
+  (show-smartparens-global-mode t))
 
 (use-package dired
   :config
@@ -512,7 +516,7 @@
 
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
-       (setq default-directory gn/default-dir)
+       (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

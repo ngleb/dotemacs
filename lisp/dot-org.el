@@ -13,6 +13,7 @@
 (setq org-archive-save-context-info nil)
 (setq org-habit-show-habits-only-for-today nil)
 (setq org-log-done 'time)
+(setq org-log-reschedule 'time)
 (setq org-log-into-drawer t)
 (setq org-startup-indented t)
 (setq org-use-fast-todo-selection t)
@@ -20,7 +21,7 @@
 
 ;; Refile setup
 (setq org-refile-targets '((nil :maxlevel . 9)
-                           (nox-org-agenda-file :maxlevel . 2)
+                           (gn-org-agenda-file :maxlevel . 2)
                            (gn-org-someday-file :maxlevel . 1)))
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
@@ -42,11 +43,11 @@
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
-(setq org-directory (expand-file-name "Sync/org/" gn/default-dir))
-(setq nox-org-agenda-file (expand-file-name "todo.org" org-directory))
+(setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
+(setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory)
-      org-agenda-files (list org-default-notes-file nox-org-agenda-file))
+      org-agenda-files (list org-default-notes-file gn-org-agenda-file))
 
 (setq org-agenda-tags-column -102)
 (setq org-agenda-span 'day)
@@ -54,8 +55,10 @@
 (setq org-agenda-todo-ignore-scheduled 'all)
 (setq org-agenda-todo-ignore-deadlines 'all)
 (setq org-agenda-todo-ignore-with-date 'all)
+(setq org-agenda-todo-ignore-timestamp 'all)
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-timestamp-if-done t)
 (setq org-agenda-dim-blocked-tasks nil)
 (setq org-agenda-todo-list-sublevels nil)
 (setq org-agenda-block-separator "")
@@ -71,8 +74,10 @@
          "* TODO %?\nAdded on: %U\n" :clock-in t :clock-resume t)
         ("j" "Journal" entry (file+olp+datetree "diary.org")
          "* %?\nAdded on: %U\n" :clock-in t :clock-resume t)
-        ("w" "org-protocol" entry (file "refile.org")
-         "* TODO Review [[%:link][%:description]]\nAdded on: %U\n" :immediate-finish t)
+        ("p" "org-protocol" entry (file "refile.org")
+         "* Review [[%:link][%:description]]\nAdded on: %U\n" :immediate-finish t)
+        ("w" "Protocol selected" entry (file "refile.org")
+        "* %^{Title}\nSource: [[%:link][%:description]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
         ("h" "Habit" entry (file "refile.org")
          "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
@@ -82,12 +87,10 @@
           (org-agenda-sorting-strategy
            '(todo-state-down effort-up category-keep))))
         ("n" "Agenda"
-         ((agenda "" ((org-agenda-files (list org-default-notes-file nox-org-agenda-file))
-                      (org-agenda-span 3)
-                      (org-agenda-skip-scheduled-if-done t)))
+         ((agenda "" ((org-agenda-files (list org-default-notes-file gn-org-agenda-file))
+                      (org-agenda-span 3)))
           (+agenda-inbox nil ((org-agenda-files (list org-default-notes-file))))
-          (+agenda-tasks nil ((org-agenda-sorting-strategy '(tag-up effort-up))
-                              (org-agenda-todo-ignore-with-date 'all)))))
+          (+agenda-tasks nil ((org-agenda-files (list gn-org-agenda-file))))))
         (" " "Agenda"
          ((agenda ""
                   ((org-agenda-time-grid nil)
@@ -810,6 +813,8 @@ Skip project and sub-project tasks, habits, and project related tasks."
         (+agenda-render-block (nreverse +agenda-planned-tasks)    "Tarefas planeadas")
         (+agenda-render-block (nreverse +agenda-hold-tasks)       "Tarefas em espera")))))
 
+;;; Private information
+
 (defvar +agenda-show-private t
   "If non-nil, show sensitive information on the agenda.")
 
@@ -818,6 +823,27 @@ Skip project and sub-project tasks, habits, and project related tasks."
   (setq +agenda-show-private (not +agenda-show-private))
   (when  (equal major-mode 'org-agenda-mode) (org-agenda-redo))
   (message "Private tasks: %s" (if +agenda-show-private "Shown" "Hidden")))
+
+
+
+;;; Compatibility with their functions
+
+(defun +agenda*change-all-lines-fixface (newhead hdmarker &optional fixface just-this)
+  (when (org-get-at-bol 'nox-custom-agenda)
+    (let* ((inhibit-read-only t)
+           (bol (point-at-bol))
+           (eol (point-at-eol))
+           (position (next-single-property-change bol 'nox-face nil eol)))
+	  (add-text-properties bol eol `(face ,(and position (get-text-property position 'nox-face)))))))
+(advice-add 'org-agenda-change-all-lines :before '+agenda*change-all-lines-fixface)
+
+
+(use-package org-habit
+  :config
+  (setq org-habit-graph-column 75
+        org-habit-preceding-days 30
+        org-habit-following-days 1
+        org-habit-today-glyph ?@))
 
 (provide 'dot-org)
 
