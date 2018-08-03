@@ -65,6 +65,11 @@
 (setq org-agenda-prefix-format '((agenda . "  %?-12t% s")))
 (setq org-enforce-todo-dependencies t)
 
+(defun transform-square-brackets-to-round-ones(string-to-transform)
+  "Transforms [ into ( and ] into ), other chars left unchanged."
+  (concat
+   (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform)))
+
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
          "* %?\nAdded on: %U\n")
@@ -75,9 +80,9 @@
         ("j" "Journal" entry (file+olp+datetree "diary.org")
          "* %?\nAdded on: %U\n" :clock-in t :clock-resume t)
         ("p" "org-protocol" entry (file "refile.org")
-         "* Review [[%:link][%:description]]\nAdded on: %U\n" :immediate-finish t)
+         "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nAdded on: %U\n" :immediate-finish t)
         ("w" "Protocol selected" entry (file "refile.org")
-        "* %^{Title}\nSource: [[%:link][%:description]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
+        "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
         ("h" "Habit" entry (file "refile.org")
          "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
