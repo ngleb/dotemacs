@@ -61,6 +61,8 @@
         (w32-browser . "melpa")
         (web-mode . "melpa")
         (zenburn-theme . "melpa")
+        (helm . "melpa")
+        (helm-core . "melpa-stable")
 
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -259,17 +261,18 @@
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
   (ivy-do-completion-in-region nil)
-  :config
-  (ivy-mode 1))
+  ;; :config
+  ;; (ivy-mode 1)
+  )
 
 (use-package counsel
-  :after ivy
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-c j" . counsel-imenu)
-         ("C-x l" . counsel-locate))
-  :bind (:map read-expression-map
-              ("C-r" . counsel-expression-history)))
+  :after ivy)
+  ;; :bind (("M-x" . counsel-M-x)
+  ;;        ("C-x C-f" . counsel-find-file)
+  ;;        ("C-c j" . counsel-imenu)
+  ;;        ("C-x l" . counsel-locate))
+  ;; :bind (:map read-expression-map
+  ;;             ("C-r" . counsel-expression-history)))
 
 (use-package swiper
   :after ivy
@@ -312,6 +315,20 @@
   (setq elpy-rpc-backend "jedi")
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i"))
+
+(use-package helm
+  ;; :bind (:map helm-map
+  ;;             ("<tab>" . helm-execute-persistent-action)
+  ;;             ("C-i"   . helm-execute-persistent-action)
+  ;;             ("C-z"   . helm-select-action)
+  ;;             ("A-v"   . helm-previous-page))
+  :bind (("C-c j" . helm-imenu))
+  :config
+  (helm-autoresize-mode 1)
+  (global-set-key (kbd "M-x") #'helm-M-x)
+  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  (global-set-key (kbd "C-x C-f") #'helm-find-files)
+  (helm-mode 1))
 
 (use-package langtool
   :config
