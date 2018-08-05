@@ -320,6 +320,7 @@
 (use-package helm
   :bind (("C-c j" . helm-imenu)
          ("M-x" . helm-M-x)
+         ("C-x b" . helm-mini)
          ("C-x r b" . helm-filtered-bookmarks)
          ("C-x C-f" . helm-find-files))
   :config
@@ -367,7 +368,7 @@
 
 (use-package deft
   :bind (("<f9>" . deft)
-         ("C-c C-g" . deft-find-file))
+         ("C-c g" . deft-find-file))
   :config
   (setq deft-default-extension "org")
   (setq deft-extensions '("org" "txt" "text" "md" "text" "markdown"))
