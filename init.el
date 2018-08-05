@@ -126,6 +126,7 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (put 'narrow-to-region 'disabled nil)
+(setq x-wait-for-event-timeout nil)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
