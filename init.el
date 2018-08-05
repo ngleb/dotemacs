@@ -65,6 +65,7 @@
         (helm . "melpa")
         (helm-core . "melpa")
         (helm-swoop . "melpa")
+        (csv-mode . "gnu")
 
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -145,8 +146,8 @@
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 
-(bind-key "M-n" (kbd "C-u 1 C-v"))
-(bind-key "M-p" (kbd "C-u 1 M-v"))
+(bind-key "M-N" (kbd "C-u 1 C-v"))
+(bind-key "M-P" (kbd "C-u 1 M-v"))
 (bind-key "M-z" #'zap-up-to-char)
 (bind-key "M-/" #'hippie-expand)
 (bind-key "<f5>" #'toggle-truncate-lines)
@@ -302,7 +303,22 @@
   (global-company-mode))
 
 (use-package flycheck
-  :defer 5)
+  :commands (flycheck-mode
+             flycheck-next-error
+             flycheck-previous-error)
+  :init
+  (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
+                   (js2-mode-hook        . js2-mode-map)
+                   (c-mode-common-hook   . c-mode-base-map)))
+    (add-hook (car where)
+              `(lambda ()
+                 (bind-key "M-n" #'flycheck-next-error ,(cdr where))
+                 (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
+  :init
+  (global-flycheck-mode)
+  :config
+  (defalias 'show-error-at-point-soon
+    'flycheck-show-error-at-point))
 
 (use-package dot-ledger)
 

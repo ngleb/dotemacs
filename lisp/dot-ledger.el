@@ -41,7 +41,7 @@
   (add-hook 'ledger-report-mode-hook (lambda () (hl-line-mode 1)))
 
   (defun my-ledger-mode-hook ()
-    (flycheck-mode)
+    (flycheck-mode 1)
     (company-mode 1)
     (setq pcomplete-ignore-case t)
     (setq completion-ignore-case t))
