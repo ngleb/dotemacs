@@ -62,7 +62,8 @@
         (web-mode . "melpa")
         (zenburn-theme . "melpa")
         (helm . "melpa")
-        (helm-core . "melpa-stable")
+        (helm-core . "melpa")
+        (helm-swoop . "melpa")
 
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -317,18 +318,17 @@
         python-shell-interpreter-args "-i"))
 
 (use-package helm
-  ;; :bind (:map helm-map
-  ;;             ("<tab>" . helm-execute-persistent-action)
-  ;;             ("C-i"   . helm-execute-persistent-action)
-  ;;             ("C-z"   . helm-select-action)
-  ;;             ("A-v"   . helm-previous-page))
-  :bind (("C-c j" . helm-imenu))
+  :bind (("C-c j" . helm-imenu)
+         ("M-x" . helm-M-x)
+         ("C-x r b" . helm-filtered-bookmarks)
+         ("C-x C-f" . helm-find-files))
   :config
   (helm-autoresize-mode 1)
-  (global-set-key (kbd "M-x") #'helm-M-x)
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  (global-set-key (kbd "C-x C-f") #'helm-find-files)
   (helm-mode 1))
+
+(use-package helm-config)
+
+(use-package helm-swoop)
 
 (use-package langtool
   :config
