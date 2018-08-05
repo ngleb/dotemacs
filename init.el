@@ -60,6 +60,7 @@
         (use-package . "melpa")
         (w32-browser . "melpa")
         (web-mode . "melpa")
+        (js2-mode . "melpa")
         (zenburn-theme . "melpa")
         (helm . "melpa")
         (helm-core . "melpa")
@@ -396,6 +397,25 @@
   (calendar-longitude 84.58)
   :config
   (setq calendar-date-display-form calendar-european-date-display-form))
+
+(use-package csv-mode
+  :mode "\\.csv\\'")
+
+(use-package css-mode
+  :mode "\\.css\\'")
+
+(use-package mhtml-mode
+  :commands mhtml-mode)
+
+(use-package web-mode
+  :commands web-mode)
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :config
+  (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (flycheck-mode 1))
 
 (use-package ibuffer
   :commands ibuffer
