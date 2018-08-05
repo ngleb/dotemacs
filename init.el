@@ -113,6 +113,7 @@
 (add-hook 'prog-mode-hook 'nlinum-mode)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq x-underline-at-descent-line t)
+(setq x-wait-for-event-timeout nil)
 (setq visible-bell t)
 (setq ring-bell-function 'ignore)
 (setq inhibit-splash-screen t)
@@ -126,7 +127,6 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (put 'narrow-to-region 'disabled nil)
-(setq x-wait-for-event-timeout nil)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
