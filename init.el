@@ -115,7 +115,8 @@
 (add-hook 'prog-mode-hook 'nlinum-mode)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq x-underline-at-descent-line t)
-(setq x-wait-for-event-timeout nil)
+(when (eq 'window-system 'x)
+  (setq x-wait-for-event-timeout nil))
 (setq visible-bell t)
 (setq ring-bell-function 'ignore)
 (setq inhibit-splash-screen t)
@@ -579,6 +580,7 @@
 (load-file "~/.emacs.d/personal.el")
 
 (use-package dot-org)
+;;  :defer 2)
 
 (require 'server)
 (or (server-running-p) (server-start))

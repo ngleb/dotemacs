@@ -1,5 +1,12 @@
-(require 'cl)
+
+(eval-and-compile
+  (require 'cl-lib))
+
+(eval-when-compile
+  (require 'cl))
+
 (require 'org)
+(require 'org-agenda)
 (require 'org-protocol)
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
@@ -66,10 +73,10 @@
 (setq org-agenda-compact-blocks t)
 (setq org-enforce-todo-dependencies t)
 
-(defun transform-square-brackets-to-round-ones(string-to-transform)
+(defun transform-square-brackets-to-round-ones (string-to-transform)
   "Transforms [ into ( and ] into ), other chars left unchanged."
   (concat
-   (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform)))
+   (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
 
 (setq org-capture-templates
       '(("x" "note" entry (file "refile.org")
@@ -1043,4 +1050,4 @@ so change the default 'F' binding in the agenda to allow both"
 
 (provide 'dot-org)
 
-;; dot-org.el ends here
+;;; dot-org.el ends here
