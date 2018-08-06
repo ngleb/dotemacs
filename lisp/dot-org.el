@@ -8,6 +8,7 @@
 (require 'org)
 (require 'org-agenda)
 (require 'org-protocol)
+(require 'org-capture)
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
@@ -50,13 +51,15 @@
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
+(defvar gn-org-agenda-file)
+(defvar gn-org-someday-file)
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
 (setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory)
       org-agenda-files (list org-default-notes-file gn-org-agenda-file))
 
-(setq org-agenda-tags-column -102)
+(setq org-agenda-tags-column -110)
 (setq org-agenda-span 'day)
 (setq org-agenda-tags-todo-honor-ignore-options t)
 (setq org-agenda-todo-ignore-scheduled 'all)
@@ -74,7 +77,7 @@
 (setq org-enforce-todo-dependencies t)
 
 (defun transform-square-brackets-to-round-ones (string-to-transform)
-  "Transforms [ into ( and ] into ), other chars left unchanged."
+  "Transforms [ into ( and ] into ), other chars left unchanged in STRING-TO-TRANSFORM."
   (concat
    (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
 
@@ -163,7 +166,7 @@
          ((org-agenda-remove-tags nil)))))
 
 (defun gn/org-auto-exclude-function (tag)
-  "Automatic task exclusion in the agenda with / RET"
+  "Automatic task exclusion by TAG in the agenda with / RET."
   (and (cond
         ((string= tag "office")
          t)
@@ -174,7 +177,7 @@
 (setq org-agenda-auto-exclude-function 'gn/org-auto-exclude-function)
 
 (defun bh/is-project-p ()
-  "Any task with a todo keyword subtask"
+  "Any task with a todo keyword subtask."
   (save-restriction
     (widen)
     (let ((has-subtask)
@@ -190,7 +193,7 @@
       (and is-a-task has-subtask))))
 
 (defun bh/find-project-task ()
-  "Move point to the parent (project) task if any"
+  "Move point to the parent (project) task if any."
   (save-restriction
     (widen)
     (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
@@ -212,7 +215,7 @@ Callers of this function already widen the buffer view."
         t))))
 
 (defun bh/is-task-p ()
-  "Any task with a todo keyword and no subtask"
+  "Any task with a todo keyword and no subtask."
   (save-restriction
     (widen)
     (let ((has-subtask)
@@ -228,7 +231,7 @@ Callers of this function already widen the buffer view."
       (and is-a-task (not has-subtask)))))
 
 (defun bh/is-subproject-p ()
-  "Any task which is a subtask of another project"
+  "Any task which is a subtask of another project."
   (let ((is-subproject)
         (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
     (save-excursion
@@ -240,7 +243,7 @@ Callers of this function already widen the buffer view."
 (defvar bh/hide-scheduled-and-waiting-next-tasks t)
 
 (defun bh/skip-non-stuck-projects ()
-  "Skip trees that are not stuck projects"
+  "Skip trees that are not stuck projects."
   (save-restriction
     (widen)
     (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
@@ -258,7 +261,7 @@ Callers of this function already widen the buffer view."
         next-headline))))
 
 (defun bh/skip-non-projects ()
-  "Skip trees that are not projects"
+  "Skip trees that are not projects."
   ;; (bh/list-sublevels-for-projects-indented)
   (if (save-excursion (bh/skip-non-stuck-projects))
       (save-restriction
@@ -310,7 +313,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         nil)))))
 
 (defun bh/skip-projects-and-habits-and-single-tasks ()
-  "Skip trees that are projects, tasks that are habits, single non-project tasks"
+  "Skip trees that are projects, tasks that are habits, single non-project tasks."
   (save-restriction
     (widen)
     (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
@@ -356,7 +359,7 @@ Skip project and sub-project tasks, habits, and project related tasks."
         nil)))))
 
 (defun bh/skip-non-archivable-tasks ()
-  "Skip trees that are not available for archiving"
+  "Skip trees that are not available for archiving."
   (save-restriction
     (widen)
     ;; Consider only tasks with done todo headings as archivable candidates
@@ -426,6 +429,7 @@ so change the default 'F' binding in the agenda to allow both"
           'append)
 
 (defun bh/narrow-to-org-subtree ()
+  "Narrow to org subtree."
   (widen)
   (org-narrow-to-subtree)
   (save-restriction
@@ -1043,7 +1047,7 @@ so change the default 'F' binding in the agenda to allow both"
 
 (use-package org-habit
   :config
-  (setq org-habit-graph-column 75
+  (setq org-habit-graph-column 55
         org-habit-preceding-days 30
         org-habit-following-days 1
         org-habit-today-glyph ?@))

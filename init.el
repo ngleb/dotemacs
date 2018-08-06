@@ -196,7 +196,7 @@
 (defconst emacs-min-left
   (pcase display-name
     (`lenovo 100)
-    (`lenovo-m 210)
+    (`lenovo-m 190)
     (`office 100)))
 
 (defconst emacs-min-height
@@ -208,7 +208,7 @@
 (defconst emacs-min-width
   (pcase display-name
     (`lenovo 140)
-    (`lenovo-m 164)
+    (`lenovo-m 172)
     (`office 160)))
 
 (defun emacs-min ()
