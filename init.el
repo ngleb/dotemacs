@@ -66,6 +66,11 @@
         (helm-core . "melpa")
         (helm-swoop . "melpa")
         (csv-mode . "gnu")
+        (ox-clip . "melpa")
+        (ox-pandoc . "melpa")
+        (htmlize . "melpa")
+        (pandoc-mode . "melpa")
+        (ht . "melpa")
 
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -331,7 +336,7 @@
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
-  (setq elpy-rpc-python-command "python3.6")
+  (setq elpy-rpc-python-command "python")
   (setq elpy-rpc-backend "jedi")
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i"))

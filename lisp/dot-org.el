@@ -1052,6 +1052,11 @@ so change the default 'F' binding in the agenda to allow both"
         org-habit-following-days 1
         org-habit-today-glyph ?@))
 
+(use-package ox-clip
+  :commands ox-clip-formatted-copy)
+
+(use-package ox-pandoc)
+
 (provide 'dot-org)
 
 ;;; dot-org.el ends here
