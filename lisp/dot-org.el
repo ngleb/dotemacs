@@ -165,7 +165,8 @@
                  (org-tags-match-list-sublevels nil)))
           )
          ;; options for entire block calendar
-         ((org-agenda-remove-tags nil)))))
+         ((org-agenda-remove-tags nil)
+          (org-agenda-prefix-format "  %?-12t% s")))))
 
 (defun gn/org-auto-exclude-function (tag)
   "Automatic task exclusion by TAG in the agenda with / RET."
