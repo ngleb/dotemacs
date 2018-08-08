@@ -113,7 +113,9 @@
                    (org-agenda-entry-types '(:timestamp :sexp :deadline :scheduled))))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")
-                 (org-tags-match-list-sublevels nil)))
+                 (org-tags-match-list-sublevels nil)
+                 (org-agenda-prefix-format "  %b")
+                 (org-agenda-remove-tags t)))
           (tags-todo "-MAYBE-CANCELLED-REFILE/!"
                      ((org-agenda-overriding-header "Stuck Projects")
                       (org-tags-match-list-sublevels 'indented)
@@ -382,9 +384,7 @@ Skip project and sub-project tasks, habits, and project related tasks."
         next-headline))))
 
 
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
-          'append)
+;;; Narrowing to a subtree with `bh/org-todo'
 
 (global-set-key (kbd "<f5>") 'bh/org-todo)
 
@@ -546,11 +546,11 @@ so change the default 'F' binding in the agenda to allow both"
           '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
           'append)
 
-(defun bh/get-pom-from-agenda-restriction-or-point ()
-  (or (and (marker-position org-agenda-restrict-begin) org-agenda-restrict-begin)
-      (org-get-at-bol 'org-hd-marker)
-      (and (equal major-mode 'org-mode) (point))
-      org-clock-marker))
+;;; Limiting the agenda to a subtree
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
+          'append)
 
 (defun bh/set-agenda-restriction-lock (arg)
   "Set restriction lock to current task subtree or file if prefix is specified"
@@ -570,6 +570,10 @@ so change the default 'F' binding in the agenda to allow both"
           (org-with-point-at pom
             (org-agenda-set-restriction-lock restriction-type))))))))
 
+(setq org-agenda-restriction-lock-highlight-subtree nil)
+
+
+;;; Use org-capture with separate frame
 
 (defun make-capture-frame (&optional capture-url)
   "Create a new frame and run org-capture."
@@ -602,6 +606,8 @@ so change the default 'F' binding in the agenda to allow both"
   (when (not split)
     (delete-other-windows)))
 
+
+
 (bind-key "C-c l" #'org-store-link)
 (bind-key "C-c a" #'org-agenda)
 (bind-key "C-c c" #'org-capture)
@@ -613,7 +619,8 @@ so change the default 'F' binding in the agenda to allow both"
 (bind-key "C-c t" (lambda () (interactive) (org-capture nil "t")))
 
 
-;; Entry
+;;; Entry
+
 (cl-defstruct +agenda-entry todo priority text tags planned low-effort marker project-status children)
 
 (defun +agenda-entry (headline &optional tags)
@@ -628,7 +635,8 @@ so change the default 'F' binding in the agenda to allow both"
      :marker (org-agenda-new-marker (org-element-property :begin headline)))))
 
 
-;; Renderer
+;;; Renderer
+
 (defconst +agenda-projects-not-task-faces '(("NEXT" . '(:inherit org-todo :weight normal))
                                             ("TODO" . '(:inherit org-todo :weight normal))))
 
@@ -699,16 +707,6 @@ so change the default 'F' binding in the agenda to allow both"
         (pb (car (+agenda-entry-tags b))))
     (if (string-lessp pa pb) t)))
 
-;; (defsubst org-cmp-tag (a b)
-;;   "Compare the string values of the first tags of A and B."
-;;   (let ((ta (car (last (get-text-property 1 'tags a))))
-;; 	(tb (car (last (get-text-property 1 'tags b)))))
-;;     (cond ((not ta) +1)
-;; 	  ((not tb) -1)
-;; 	  ((string-lessp ta tb) -1)
-;; 	  ((string-lessp tb ta) +1))))
-
-
 (defun +agenda-flatten-list (l)
   (cond ((not l) nil)
         ((atom l) (list l))
@@ -764,7 +762,9 @@ so change the default 'F' binding in the agenda to allow both"
       (funcall (or printer #'+agenda-simple-printer) data)
       (add-text-properties begin (point-max) `(org-agenda-type tags)))))
 
-;; Inbox
+
+;;; Inbox
+
 (defun +agenda-inbox-process-headline (headline)
   (when (or +agenda-show-private
             (not (member "PRIVATE" (org-element-property :tags headline))))
@@ -800,7 +800,8 @@ so change the default 'F' binding in the agenda to allow both"
         (+agenda-render-block +agenda-inbox "Coisas a arrumar")))))
 
 
-;; Tasks
+;;; Tasks
+
 (defvar +agenda-level)
 (defvar +agenda-parent-tags)
 (defvar +agenda-project-status)

@@ -71,6 +71,7 @@
         (htmlize . "melpa")
         (pandoc-mode . "melpa")
         (ht . "melpa")
+        (which-key . "melpa")
 
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -119,6 +120,7 @@
 (show-paren-mode 1)
 (add-hook 'prog-mode-hook 'nlinum-mode)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq initial-scratch-message nil)
 (setq x-underline-at-descent-line t)
 (when (eq 'window-system 'x)
   (setq x-wait-for-event-timeout nil))
@@ -156,7 +158,7 @@
 (bind-key "M-P" (kbd "C-u 1 M-v"))
 (bind-key "M-z" #'zap-up-to-char)
 (bind-key "M-/" #'hippie-expand)
-(bind-key "<f5>" #'toggle-truncate-lines)
+(bind-key "C-c i t" #'toggle-truncate-lines)
 (bind-key "C-c e" (lambda () (interactive) (find-file user-init-file)))
 (bind-key "C-c C-e" #'pp-eval-last-sexp)
 (bind-key [remap eval-expression] #'pp-eval-expression)
@@ -348,6 +350,7 @@
          ("C-x r b" . helm-filtered-bookmarks)
          ("C-x C-f" . helm-find-files))
   :config
+  (setq helm-split-window-inside-p t)
   (helm-autoresize-mode 1)
   (helm-mode 1))
 
@@ -474,7 +477,14 @@
 
 (use-package olivetti
   :commands olivetti-mode
-  :bind ("<f6>" . olivetti-mode))
+  :bind ("C-c i o" . olivetti-mode))
+
+(use-package which-key
+  :defer 5
+  :diminish
+  :commands which-key-mode
+  :config
+  (which-key-mode))
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
@@ -543,14 +553,16 @@
   (smartparens-global-mode t)
   (show-smartparens-global-mode t))
 
+
+(use-package ls-lisp
+  :config
+  (when (eq system-type 'windows-nt)
+    (setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M"))
+    (setq ls-lisp-emulation 'MS-Windows)
+    (ls-lisp-set-options)))
+
 (use-package dired
   :config
-  (use-package dired-x)
-  (use-package dired+
-    :config
-    (setq diredp-hide-details-initially-flag nil)
-    (diredp-toggle-find-file-reuse-dir 1))
-
   (add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
   (setq dired-omit-files "^\\...+$")
   (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
@@ -558,7 +570,17 @@
          (setq dired-listing-switches
                "-aBhl --group-directories-first"))
         ((eq system-type 'windows-nt)
+         (setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M"))
          (setq dired-listing-switches "-alh"))))
+
+(use-package dired-x
+  :after dired)
+
+(use-package dired+
+  :after dired
+  :config
+  (setq diredp-hide-details-initially-flag nil)
+  (diredp-toggle-find-file-reuse-dir 1))
 
 (cond ((eq system-type 'gnu/linux)
        ;; FIXME fix the font changing in GUI on Linux
@@ -578,7 +600,8 @@
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq default-directory gn-base-dir)
-       (use-package w32-browser)))
+       (use-package w32-browser
+         :disabled t)))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
