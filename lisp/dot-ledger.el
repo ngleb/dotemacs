@@ -36,6 +36,7 @@
   (bind-key "C-<f7>" #'quick-calc ledger-mode-map)
   (bind-key "<f8>" #'my-ledger-report/body ledger-mode-map)
   (bind-key "<f9>" #'ledger-mode-clean-buffer ledger-mode-map)
+  (bind-key "<tab>" #'company-complete-common-or-cycle ledger-mode-map)
   (bind-key "n" #'next-line ledger-report-mode-map)
   (bind-key "p" #'previous-line ledger-report-mode-map)
   (add-hook 'ledger-report-mode-hook (lambda () (hl-line-mode 1)))

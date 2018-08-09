@@ -299,9 +299,9 @@
 
 (use-package company
   :commands company-mode
-  ;;:bind ("C-<tab>" . company-complete)
   :bind (:map company-mode-map
          ("C-M-i" . company-complete-common-or-cycle)
+         ("C-<tab>" . company-complete-common-or-cycle)
          :map company-active-map
          ("RET" . company-complete-selection)
          ([return] . company-complete-selection)
@@ -326,6 +326,8 @@
   (setq company-tooltip-flip-when-above t)
   (setq company-show-numbers t)
   :config
+  (advice-add 'completion-at-point
+              :override 'company-complete-common-or-cycle)
   (global-company-mode))
 
 (use-package flycheck
