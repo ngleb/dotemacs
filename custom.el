@@ -20,4 +20,4 @@
  '(ivy-use-virtual-buffers t)
  '(package-selected-packages
    (quote
-    (helm-swoop helm zenburn-theme web-mode w32-browser use-package smooth-scrolling smex smartparens smart-mode-line org-plus-contrib olivetti nlinum markdown-mode magit leuven-theme ledger-mode langtool hydra flyspell-popup flycheck-ledger elpy dockerfile-mode docker-compose-mode dired+ deft counsel avy))))
+    (pdf-tools helm-swoop helm zenburn-theme web-mode w32-browser use-package smooth-scrolling smex smartparens smart-mode-line org-plus-contrib olivetti nlinum markdown-mode magit leuven-theme ledger-mode langtool hydra flyspell-popup flycheck-ledger elpy dockerfile-mode docker-compose-mode dired+ deft counsel avy))))

@@ -299,7 +299,25 @@
 
 (use-package company
   :commands company-mode
-  :bind ("C-<tab>" . company-complete)
+  ;;:bind ("C-<tab>" . company-complete)
+  :bind (:map company-mode-map
+         ("C-M-i" . company-complete-common-or-cycle)
+         :map company-active-map
+         ("RET" . company-complete-selection)
+         ([return] . company-complete-selection)
+         ("C-j" . company-complete-selection)
+
+         ("TAB" . company-complete-common-or-cycle)
+         ("<tab>" . company-complete-common-or-cycle)
+         ("S-TAB" . company-complete-common-or-cycle-backward)
+         ("<backtab>" . company-complete-common-or-cycle-backward)
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous)
+
+         ("C-/" . company-search-candidates)
+         ("C-M-/" . company-filter-candidates)
+         ("C-d" . company-show-doc-buffer)
+         )
   :init
   (setq company-require-match nil)
   (setq company-idle-delay 0.5)
