@@ -66,6 +66,7 @@
         (helm-swoop . "melpa")
         (helm-descbinds . "melpa")
         (helm-describe-modes . "melpa")
+        (diminish . "melpa")
 
         (csv-mode . "gnu")
         (ox-clip . "melpa")
@@ -243,6 +244,10 @@
 
 (add-hook 'emacs-startup-hook #'emacs-min t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
+
+
+(use-package diminish :demand t)
+
 
 (use-package eshell
   :commands (eshell eshell-command)
@@ -449,6 +454,9 @@
   :bind ("C-c m" . magit-status))
 
 (use-package whitespace
+  :diminish (global-whitespace-mode
+             whitespace-mode
+             whitespace-newline-mode)
   :init
   (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
     (add-hook hook #'whitespace-mode))
@@ -616,6 +624,7 @@
   (remove-hook 'display-time-hook 'sml/propertize-time-string))
 
 (use-package smartparens-config
+  :diminish
   :config
   (smartparens-global-mode t)
   (show-smartparens-global-mode t))
