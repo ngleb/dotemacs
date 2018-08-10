@@ -37,7 +37,6 @@
         (counsel . "melpa-stable")
         (dash . "melpa-stable")
         (deft . "melpa")
-        (dired+ . "melpa")
         (docker-compose-mode . "melpa")
         (dockerfile-mode . "melpa")
         (flycheck . "melpa-stable")
@@ -65,6 +64,9 @@
         (helm . "melpa")
         (helm-core . "melpa")
         (helm-swoop . "melpa")
+        (helm-descbinds . "melpa")
+        (helm-describe-modes . "melpa")
+
         (csv-mode . "gnu")
         (ox-clip . "melpa")
         (ox-pandoc . "melpa")
@@ -377,6 +379,15 @@
 (use-package helm-config)
 
 (use-package helm-swoop)
+
+(use-package helm-descbinds
+  :bind ("C-h b" . helm-descbinds)
+  :init
+  (fset 'describe-bindings 'helm-descbinds))
+
+(use-package helm-describe-modes
+  :after helm
+  :bind ("C-h m" . helm-describe-modes))
 
 (use-package langtool
   :config
