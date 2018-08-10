@@ -1057,7 +1057,8 @@ so change the default 'F' binding in the agenda to allow both"
 (use-package ox-clip
   :commands ox-clip-formatted-copy)
 
-(use-package ox-pandoc)
+(use-package ox-pandoc
+  :disabled t)
 
 (provide 'dot-org)
 
