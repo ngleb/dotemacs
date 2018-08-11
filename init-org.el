@@ -18,14 +18,41 @@
 (setq org-export-backends '(html latex ascii))
 (setq org-modules '(org-habit org-protocol))
 
-(setq org-archive-save-context-info nil)
-(setq org-habit-show-habits-only-for-today nil)
+(bind-keys
+ ("C-c l" . #'org-store-link)
+ ("C-c a" . #'org-agenda)
+ ("C-c c" . #'org-capture)
+ ("C-c b" . #'org-switchb)
+ ("<f12>" . (lambda () (interactive) (gn/open-agenda " " nil))))
+
+(use-package org-habit
+  :config
+  (setq org-habit-graph-column 55
+        org-habit-preceding-days 30
+        org-habit-following-days 1
+        org-habit-today-glyph ?@)
+  (setq org-habit-show-habits-only-for-today nil))
+
+(use-package ox-clip
+  :commands ox-clip-formatted-copy)
+
+(setq org-startup-indented t)
 (setq org-log-done 'time)
 (setq org-log-reschedule 'time)
 (setq org-log-into-drawer t)
-(setq org-startup-indented t)
 (setq org-use-fast-todo-selection t)
+(setq org-archive-save-context-info nil)
 (setq org-capture-bookmark nil)
+(setq org-drawers '(("PROPERTIES" "LOGBOOK")))
+(setq org-fast-tag-selection-single-key 't)
+
+(defvar gn-org-agenda-file)
+(defvar gn-org-someday-file)
+(setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
+(setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
+(setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
+(setq org-default-notes-file (expand-file-name "refile.org" org-directory)
+      org-agenda-files (list org-default-notes-file gn-org-agenda-file))
 
 ;; Refile setup
 (setq org-refile-targets '((nil :maxlevel . 9)
@@ -34,9 +61,6 @@
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-outline-path-complete-in-steps nil)
-
-(setq org-drawers '(("PROPERTIES" "LOGBOOK")))
-(setq org-fast-tag-selection-single-key (quote t))
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)"  "|" "DONE(d!)")
@@ -50,14 +74,6 @@
               ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-
-(defvar gn-org-agenda-file)
-(defvar gn-org-someday-file)
-(setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
-(setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
-(setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
-(setq org-default-notes-file (expand-file-name "refile.org" org-directory)
-      org-agenda-files (list org-default-notes-file gn-org-agenda-file))
 
 (setq org-agenda-tags-column -110)
 (setq org-agenda-span 'day)
@@ -167,17 +183,6 @@
          ;; options for entire block calendar
          ((org-agenda-remove-tags nil)
           (org-agenda-prefix-format "  %?-12t% s")))))
-
-(defun gn/org-auto-exclude-function (tag)
-  "Automatic task exclusion by TAG in the agenda with / RET."
-  (and (cond
-        ((string= tag "office")
-         t)
-        ((string= tag "hold")
-         t))
-       (concat "-" tag)))
-
-(setq org-agenda-auto-exclude-function 'gn/org-auto-exclude-function)
 
 (defun bh/is-project-p ()
   "Any task with a todo keyword subtask."
@@ -580,8 +585,8 @@ so change the default 'F' binding in the agenda to allow both"
   "Create a new frame and run org-capture."
   (interactive)
   (make-frame '((name . "capture")
-                (width . 120)
-                (height . 15)))
+                (width . 100)
+                (height . 30)))
   (select-frame-by-name "capture")
   (org-capture nil "x"))
 
@@ -606,18 +611,6 @@ so change the default 'F' binding in the agenda to allow both"
   (org-agenda nil arg)
   (when (not split)
     (delete-other-windows)))
-
-
-
-(bind-key "C-c l" #'org-store-link)
-(bind-key "C-c a" #'org-agenda)
-(bind-key "C-c c" #'org-capture)
-(bind-key "C-c b" #'org-switchb)
-
-(bind-key "<f12>" (lambda () (interactive) (gn/open-agenda "n" nil)))
-(bind-key "<f11>" (lambda () (interactive) (gn/open-agenda " " nil)))
-(bind-key "C-c x" (lambda () (interactive) (org-capture nil "x")))
-(bind-key "C-c t" (lambda () (interactive) (org-capture nil "t")))
 
 
 ;;; Entry
@@ -1046,20 +1039,6 @@ so change the default 'F' binding in the agenda to allow both"
 	  (add-text-properties bol eol `(face ,(and position (get-text-property position 'nox-face)))))))
 (advice-add 'org-agenda-change-all-lines :before '+agenda*change-all-lines-fixface)
 
+(provide 'init-org)
 
-(use-package org-habit
-  :config
-  (setq org-habit-graph-column 55
-        org-habit-preceding-days 30
-        org-habit-following-days 1
-        org-habit-today-glyph ?@))
-
-(use-package ox-clip
-  :commands ox-clip-formatted-copy)
-
-(use-package ox-pandoc
-  :disabled t)
-
-(provide 'dot-org)
-
-;;; dot-org.el ends here
+;;; init-org.el ends here

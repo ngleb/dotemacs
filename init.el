@@ -1,9 +1,8 @@
 ;;; init.el
 
-(defvar before-user-init-time (current-time)
-  "Value of `current-time' when Emacs begins loading `user-init-file'.")
+(defconst emacs-start-time (current-time))
 (message "Loading Emacs...done (%.3fs)"
-         (float-time (time-subtract before-user-init-time
+         (float-time (time-subtract emacs-start-time
                                     before-init-time)))
 
 (setq gc-cons-threshold 402653184
@@ -31,62 +30,56 @@
              '("org" . "https://orgmode.org/elpa/") t)
 
 (setq package-pinned-packages
-      '((avy . "melpa")
+      '(;; list of packages to be installed
+        (avy . "melpa")
+        (async . "melpa-stable")
         (bind-key . "melpa")
         (company . "melpa-stable")
         (counsel . "melpa-stable")
         (dash . "melpa-stable")
         (deft . "melpa")
+        (diminish . "melpa")
         (docker-compose-mode . "melpa")
         (dockerfile-mode . "melpa")
+        (elpy . "melpa-stable")
+        (find-file-in-project . "melpa-stable")
         (flycheck . "melpa-stable")
         (flycheck-ledger . "melpa")
         (flyspell-popup . "melpa-stable")
+        (git-commit . "melpa-stable")
+        (helm . "melpa")
+        (helm-core . "melpa")
+        (helm-descbinds . "melpa")
+        (helm-describe-modes . "melpa")
+        (helm-swoop . "melpa")
+        (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
+        (js2-mode . "melpa")
         (langtool . "melpa")
         (ledger-mode . "melpa")
+        (magit . "melpa-stable")
+        (magit-popup . "melpa-stable")
         (markdown-mode . "melpa")
         (nlinum . "gnu")
         (olivetti . "melpa")
         (org-plus-contrib . "org")
+        (ox-clip . "melpa")
         (popup . "melpa-stable")
-        (smart-mode-line . "melpa")
+        (pyvenv . "melpa-stable")
         (smartparens . "melpa")
+        (smart-mode-line . "melpa")
         (smex . "melpa")
         (smooth-scrolling . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
         (w32-browser . "melpa")
         (web-mode . "melpa")
-        (js2-mode . "melpa")
-        (zenburn-theme . "melpa")
-        (helm . "melpa")
-        (helm-core . "melpa")
-        (helm-swoop . "melpa")
-        (helm-descbinds . "melpa")
-        (helm-describe-modes . "melpa")
-        (diminish . "melpa")
-
-        (csv-mode . "gnu")
-        (ox-clip . "melpa")
-        (ox-pandoc . "melpa")
-        (htmlize . "melpa")
-        (pandoc-mode . "melpa")
-        (ht . "melpa")
         (which-key . "melpa")
-        (yasnippet . "melpa")
-
-        (magit . "melpa-stable")
-        (magit-popup . "melpa-stable")
-        (async . "melpa-stable")
-        (git-commit . "melpa-stable")
         (with-editor . "melpa-stable")
-
-        (elpy . "melpa-stable")
-        (find-file-in-project . "melpa-stable")
-        (highlight-indentation . "melpa-stable")
-        (pyvenv . "melpa-stable")))
+        (yasnippet . "melpa")
+        (zenburn-theme . "melpa")
+        )) ;; end of list
 
 (package-initialize)
 (setq package-contents-refreshed nil)
@@ -106,14 +99,16 @@
   (require 'use-package))
 (require 'bind-key)
 
+(setq use-package-verbose t)
+
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
-(defvar gn-base-dir-tmp
-  (cond ((eq system-type 'gnu/linux)
-         (expand-file-name "~"))
-        ((eq system-type 'windows-nt)
-         (expand-file-name user-login-name "C:/Users"))))
-(setq gn-base-dir (file-name-as-directory gn-base-dir-tmp))
+(defvar gn-base-dir
+  (file-name-as-directory
+   (cond ((eq system-type 'gnu/linux)
+          (expand-file-name "~"))
+         ((eq system-type 'windows-nt)
+          (expand-file-name user-login-name "C:/Users")))))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -135,11 +130,13 @@
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq require-final-newline t)
 (setq sentence-end-double-space nil)
-(setq scroll-preserve-screen-position 1)
+(setq scroll-preserve-screen-position t)
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
+(global-auto-revert-mode 1)
+
 (put 'narrow-to-region 'disabled nil)
 
 ;; remove warning
@@ -153,19 +150,14 @@
 (setq make-backup-files nil) ; stop creating those backup~ files
 (setq auto-save-default nil) ; stop creating those #auto-save# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
-(global-auto-revert-mode 1)
 
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 
+(bind-key "M-z" #'zap-up-to-char)
 (bind-key "M-N" (kbd "C-u 1 C-v"))
 (bind-key "M-P" (kbd "C-u 1 M-v"))
-(bind-key "M-z" #'zap-up-to-char)
-(bind-key "M-/" #'hippie-expand)
 (bind-key "C-c i t" #'toggle-truncate-lines)
-(bind-key "C-c e" (lambda () (interactive) (find-file user-init-file)))
-(bind-key "C-c C-e" #'pp-eval-last-sexp)
-(bind-key [remap eval-expression] #'pp-eval-expression)
 
 (defun fill-sentence ()
   (interactive)
@@ -179,22 +171,6 @@
       (if (and ix (equal "LaTeX" (substring mode-name ix)))
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
-
-;; ediff
-;; use existing frame instead of creating a new one
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-(setq ediff-split-window-function 'split-window-horizontally)
-;; `d` for using A and B into C
-(defun ediff-copy-both-to-C ()
-  (interactive)
-  (ediff-copy-diff ediff-current-difference nil 'C nil
-                   (concat
-                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-                    (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
-(defun add-d-to-ediff-mode-map ()
-  (bind-key "d" #'ediff-copy-both-to-C ediff-mode-map))
-;;  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
-(add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
 
 (defconst display-name
   (pcase (display-pixel-height)
@@ -249,6 +225,30 @@
 
 (use-package diminish :demand t)
 
+
+(use-package avy
+  :bind* ("C-." . avy-goto-char-timer)
+  :config
+  (avy-setup-default))
+
+
+(use-package ediff
+  :config
+  ;; use existing frame instead of creating a new one
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-split-window-function 'split-window-horizontally)
+
+  ;; `d` for using A and B into C
+  (defun ediff-copy-both-to-C ()
+    (interactive)
+    (ediff-copy-diff ediff-current-difference nil 'C nil
+                     (concat
+                      (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                      (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+  (defun add-d-to-ediff-mode-map ()
+    (bind-key "d" #'ediff-copy-both-to-C ediff-mode-map))
+  ;;  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+  (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
 
 (use-package eshell
   :commands (eshell eshell-command)
@@ -326,15 +326,15 @@
   ;; :bind (("M-x" . counsel-M-x)
   ;;        ("C-x C-f" . counsel-find-file)
   ;;        ("C-c j" . counsel-imenu)
-  ;;        ("C-x l" . counsel-locate))
-  ;; :bind (:map read-expression-map
-  ;;             ("C-r" . counsel-minibuffer-history)))
+  ;;        ("C-x l" . counsel-locate)
+  ;;        :map read-expression-map
+  ;;        ("C-r" . counsel-minibuffer-history)))
 
 (use-package swiper
   :after ivy
-  :bind ("\C-s" . swiper)
-  :bind (:map isearch-mode-map
-              ("C-o" . swiper-from-isearch)))
+  :bind (("\C-s" . swiper)
+         :map isearch-mode-map
+         ("C-o" . swiper-from-isearch)))
 
 (use-package uniquify
   :init
@@ -389,8 +389,6 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point))
 
-(use-package dot-ledger)
-
 (use-package elpy
   :init
   (elpy-enable)
@@ -399,6 +397,7 @@
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
+  (setq python-indent-guess-indent-offset nil)
   (setq elpy-rpc-python-command "python")
   (setq elpy-rpc-backend "jedi")
   (setq python-shell-interpreter "python"
@@ -407,14 +406,15 @@
 (use-package helm
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
-         ("C-x b" . helm-buffers-list) ;;helm-mini
+         ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
          ("C-x C-f" . helm-find-files)
          ("C-x r b" . helm-filtered-bookmarks))
   :config
-  (setq helm-boring-buffer-regexp-list (list (rx "*magit-") (rx "*helm") (rx "*Echo Area") (rx "Minibuf") (rx " *code-conversion")))
   (setq helm-split-window-inside-p t)
   (helm-autoresize-mode 1)
-  (helm-mode 1))
+  (helm-mode 1)
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
 
 (use-package helm-config)
 
@@ -497,15 +497,6 @@
   :config
   (setq calendar-date-display-form calendar-european-date-display-form))
 
-(use-package csv-mode
-  :mode "\\.csv\\'")
-
-(use-package css-mode
-  :mode "\\.css\\'")
-
-(use-package mhtml-mode
-  :commands mhtml-mode)
-
 (use-package web-mode
   :commands web-mode)
 
@@ -544,9 +535,9 @@
                 (name . "^\\*info\\*$")
                 (name . "\*.*\*"))))))
   (defun my-ibuffer-mode-hook ()
-    (hl-line-mode 1)
     (ibuffer-auto-mode 1)
-    (ibuffer-switch-to-saved-filter-groups "default"))
+    (ibuffer-switch-to-saved-filter-groups "default")
+    (hl-line-mode 1))
   (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook))
 
 (use-package olivetti
@@ -613,21 +604,11 @@
 
 (use-package flyspell-popup)
 
-(use-package smart-mode-line
-  :config
-  ;; See https://github.com/Malabarba/smart-mode-line/issues/217
-  (setq mode-line-format (delq 'mode-line-position mode-line-format))
-  (setq sml/no-confirm-load-theme t)
-  (sml/setup)
-  (sml/apply-theme 'light)
-  (remove-hook 'display-time-hook 'sml/propertize-time-string))
-
 (use-package smartparens-config
-  :diminish
+  :diminish smartparens-mode
   :config
   (smartparens-global-mode t)
   (show-smartparens-global-mode t))
-
 
 (use-package ls-lisp
   :config
@@ -638,14 +619,14 @@
 
 (use-package dired
   :config
-  (add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
   (setq dired-omit-files "^\\...+$")
-  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+  (defun my-dired-mode-hook ()
+    (hl-line-mode 1)
+    (dired-omit-mode 1))
+  (add-hook 'dired-mode-hook 'my-dired-mode-hook)
   (cond ((eq system-type 'gnu/linux)
-         (setq dired-listing-switches
-               "-aBhl --group-directories-first"))
+         (setq dired-listing-switches "-aBhl --group-directories-first"))
         ((eq system-type 'windows-nt)
-         (setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M"))
          (setq dired-listing-switches "-alh"))))
 
 (use-package dired-x
@@ -657,8 +638,22 @@
   (setq diredp-hide-details-initially-flag nil)
   (diredp-toggle-find-file-reuse-dir 1))
 
+(use-package smex)
+
+(use-package recentf
+    :config
+    (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
+    (setq recentf-max-saved-items 60))
+
+(use-package smart-mode-line
+  :config
+  ;; See https://github.com/Malabarba/smart-mode-line/issues/217
+  (setq mode-line-format (delq 'mode-line-position mode-line-format))
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup))
+
 (cond ((eq system-type 'gnu/linux)
-       ;; FIXME fix the font changing in GUI on Linux
+       ;; TODO fix the font changing in GUI on Linux
        ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
        (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
        (define-key special-event-map [config-changed-event] #'ignore)
@@ -675,17 +670,28 @@
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq default-directory gn-base-dir)
-       (use-package w32-browser
-         :disabled t)))
+       (use-package w32-browser)))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file 'noerror)
-(load-file "~/.emacs.d/personal.el")
+(load custom-file t)
 
-(use-package dot-org)
-;;  :defer 2)
+(load "~/.emacs.d/personal")
+(load "~/.emacs.d/init-org")
+(load "~/.emacs.d/init-ledger")
 
 (require 'server)
-(or (server-running-p) (server-start))
+(unless (server-running-p)
+  (server-start))
+
+;;; post init.
+(when window-system
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (defconst emacs-load-time elapsed)
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)))
+            t))
 
 ;;; init.el ends here
