@@ -332,10 +332,9 @@
 
 (use-package swiper
   :after ivy
+  :bind ("\C-s" . swiper)
   :bind (:map isearch-mode-map
-              ("C-o" . swiper-from-isearch))
-  :config
-  (global-set-key "\C-s" 'swiper))
+              ("C-o" . swiper-from-isearch)))
 
 (use-package uniquify
   :init
