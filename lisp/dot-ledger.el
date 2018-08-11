@@ -42,6 +42,10 @@
   (bind-key "p" #'previous-line ledger-report-mode-map)
   (add-hook 'ledger-report-mode-hook (lambda () (hl-line-mode 1)))
 
+  (defun my-center-buffer (&rest args)
+    (recenter))
+  (advice-add 'ledger-add-transaction :after 'my-center-buffer)
+
   (defun my-ledger-mode-hook ()
     (setq company-idle-delay 0.2)
     (setq company-tooltip-limit 10)

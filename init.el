@@ -310,7 +310,7 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
-  :bind ("C-c C-r" . ivy-resume)
+  ;;:bind ("C-c C-r" . ivy-resume)
   :custom
   (ivy-use-virtual-buffers t)
   (ivy-display-style 'fancy)
@@ -328,7 +328,7 @@
   ;;        ("C-c j" . counsel-imenu)
   ;;        ("C-x l" . counsel-locate))
   ;; :bind (:map read-expression-map
-  ;;             ("C-r" . counsel-expression-history)))
+  ;;             ("C-r" . counsel-minibuffer-history)))
 
 (use-package swiper
   :after ivy
@@ -373,8 +373,6 @@
   (setq company-tooltip-flip-when-above t)
   (setq company-show-numbers t)
   :config
-  (advice-add 'completion-at-point
-              :override 'company-complete-common-or-cycle)
   (global-company-mode))
 
 (use-package flycheck
