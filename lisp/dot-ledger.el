@@ -25,7 +25,9 @@
           ("reg-02" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:an")
           ("reg-03" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:g")
           ("reg-04" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:v")
-          ("reg-05" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:av"))))
+          ("reg-05" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:av")
+          ("reg-06" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:tk")
+          ("reg-07" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg assets:checking:vt"))))
 
   (defun gn/quick-calc ()
     (interactive)
@@ -36,17 +38,20 @@
   (bind-key "C-<f7>" #'quick-calc ledger-mode-map)
   (bind-key "<f8>" #'my-ledger-report/body ledger-mode-map)
   (bind-key "<f9>" #'ledger-mode-clean-buffer ledger-mode-map)
-  (bind-key "<tab>" #'company-complete-common-or-cycle ledger-mode-map)
   (bind-key "n" #'next-line ledger-report-mode-map)
   (bind-key "p" #'previous-line ledger-report-mode-map)
   (add-hook 'ledger-report-mode-hook (lambda () (hl-line-mode 1)))
 
   (defun my-ledger-mode-hook ()
+    (setq company-idle-delay 0.2)
+    (setq company-tooltip-limit 10)
+    (setq company-minimum-prefix-length 2)
     (flycheck-mode 1)
     (company-mode 1)
     (setq pcomplete-ignore-case t)
     (setq completion-ignore-case t))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
+
   (use-package flycheck-ledger)
 
   (defun gn/ledger-report (&optional arg split)
@@ -64,8 +69,8 @@ _2_: Assets (full)  _i_: Last month  _p_: Last month
 
 Expenses:           Register:
 _3_: This month     _c_: Cash        _m_: AV
-_4_: Last month     _a_: A
-_5_: This week      _g_: G
+_4_: Last month     _a_: A           _t_: T
+_5_: This week      _g_: G           _h_: VT
 _6_: Last week      _v_: V
 
 _q_ quit"
@@ -88,6 +93,8 @@ _q_ quit"
     ("a" (gn/ledger-report "reg-02"))
     ("g" (gn/ledger-report "reg-03"))
     ("v" (gn/ledger-report "reg-04"))
-    ("m" (gn/ledger-report "reg-05"))))
+    ("m" (gn/ledger-report "reg-05"))
+    ("t" (gn/ledger-report "reg-06"))
+    ("h" (gn/ledger-report "reg-07"))))
 
 (provide 'dot-ledger)

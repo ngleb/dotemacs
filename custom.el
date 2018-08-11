@@ -13,11 +13,8 @@
  '(calendar-location-name "Tomsk" t)
  '(calendar-longitude 84.58 t)
  '(calendar-week-start-day 1)
- '(ivy-count-format "(%d/%d) ")
- '(ivy-display-style (quote fancy))
- '(ivy-do-completion-in-region nil)
+ '(ivy-count-format "(%d/%d) " t)
+ '(ivy-display-style (quote fancy) t)
+ '(ivy-do-completion-in-region nil t)
  '(ivy-initial-inputs-alist nil t)
- '(ivy-use-virtual-buffers t)
- '(package-selected-packages
-   (quote
-    (pdf-tools helm-swoop helm zenburn-theme web-mode w32-browser use-package smooth-scrolling smex smartparens smart-mode-line org-plus-contrib olivetti nlinum markdown-mode magit leuven-theme ledger-mode langtool hydra flyspell-popup flycheck-ledger elpy dockerfile-mode docker-compose-mode dired+ deft counsel avy))))
+ '(ivy-use-virtual-buffers t t))

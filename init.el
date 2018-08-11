@@ -75,6 +75,7 @@
         (pandoc-mode . "melpa")
         (ht . "melpa")
         (which-key . "melpa")
+        (yasnippet . "melpa")
 
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
@@ -332,7 +333,9 @@
 (use-package swiper
   :after ivy
   :bind (:map isearch-mode-map
-              ("C-o" . swiper-from-isearch)))
+              ("C-o" . swiper-from-isearch))
+  :config
+  (global-set-key "\C-s" 'swiper))
 
 (use-package uniquify
   :init
@@ -345,6 +348,7 @@
   :bind (:map company-mode-map
          ("C-M-i" . company-complete-common-or-cycle)
          ("C-<tab>" . company-complete-common-or-cycle)
+
          :map company-active-map
          ("RET" . company-complete-selection)
          ([return] . company-complete-selection)
@@ -407,11 +411,11 @@
         python-shell-interpreter-args "-i"))
 
 (use-package helm
-  :bind (("C-c j" . helm-imenu)
-         ("M-x" . helm-M-x)
+  :bind (("M-x" . helm-M-x)
+         ("C-c j" . helm-imenu)
          ("C-x b" . helm-mini)
-         ("C-x r b" . helm-filtered-bookmarks)
-         ("C-x C-f" . helm-find-files))
+         ("C-x C-f" . helm-find-files)
+         ("C-x r b" . helm-filtered-bookmarks))
   :config
   (setq helm-split-window-inside-p t)
   (helm-autoresize-mode 1)
@@ -428,7 +432,7 @@
 
 (use-package helm-describe-modes
   :after helm
-  :bind ("C-h m" . helm-describe-modes))
+  :bind ("C-h C-m" . helm-describe-modes))
 
 (use-package langtool
   :config
