@@ -19,10 +19,10 @@
 (setq org-modules '(org-habit org-protocol))
 
 (bind-keys
- ("C-c l" . #'org-store-link)
- ("C-c a" . #'org-agenda)
- ("C-c c" . #'org-capture)
- ("C-c b" . #'org-switchb)
+ ("C-c l" . org-store-link)
+ ("C-c a" . org-agenda)
+ ("C-c c" . org-capture)
+ ("C-c b" . org-switchb)
  ("<f12>" . (lambda () (interactive) (gn/open-agenda " " nil))))
 
 (use-package org-habit
@@ -51,12 +51,14 @@
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
 (setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
+(setq gn-org-reading-file (expand-file-name "reading.org" org-directory))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory)
       org-agenda-files (list org-default-notes-file gn-org-agenda-file))
 
 ;; Refile setup
 (setq org-refile-targets '((nil :maxlevel . 9)
                            (gn-org-agenda-file :maxlevel . 2)
+                           (gn-org-reading-file :maxlevel . 2)
                            (gn-org-someday-file :maxlevel . 1)))
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
@@ -123,6 +125,19 @@
                       (org-agenda-span 3)))
           (+agenda-inbox nil ((org-agenda-files (list org-default-notes-file))))
           (+agenda-tasks nil ((org-agenda-files (list gn-org-agenda-file))))))
+        ("r" "Reading"
+           ((tags "+readlater-books/-DONE"
+                  ((org-agenda-overriding-header "Read later")))
+            (tags "+reading+books-readlater-tosort/-DONE-NEXT"
+                  ((org-agenda-overriding-header "To read")
+                   (org-agenda-files (list gn-org-reading-file))))
+            (tags "+reading+tosort"
+                  ((org-agenda-overriding-header "Sort")
+                   (org-agenda-files (list gn-org-reading-file))))
+            (tags "+reading/DONE"
+                  ((org-agenda-overriding-header "Finished")
+                   (org-agenda-files (list gn-org-reading-file)))))
+           (org-agenda-files (list gn-org-reading-file)))
         (" " "Agenda"
          ((agenda ""
                   ((org-agenda-time-grid nil)
