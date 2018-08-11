@@ -413,10 +413,11 @@
 (use-package helm
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
-         ("C-x b" . helm-mini)
+         ("C-x b" . helm-buffers-list) ;;helm-mini
          ("C-x C-f" . helm-find-files)
          ("C-x r b" . helm-filtered-bookmarks))
   :config
+  (setq helm-boring-buffer-regexp-list (list (rx "*magit-") (rx "*helm") (rx "*Echo Area") (rx "Minibuf") (rx " *code-conversion")))
   (setq helm-split-window-inside-p t)
   (helm-autoresize-mode 1)
   (helm-mode 1))
