@@ -15,6 +15,13 @@
 (add-hook 'org-mode-hook (lambda () (visual-line-mode 1)))
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
 
+(defconst my-org-soft-red    "#fcebeb")
+(defconst my-org-soft-orange "#fcf5eb")
+(defconst my-org-soft-yellow "#fcfceb")
+(defconst my-org-soft-green  "#e9f9e8")
+(defconst my-org-soft-blue   "#e8eff9")
+(defconst my-org-soft-purple "#f3e8f9")
+
 (setq org-export-backends '(html latex ascii))
 (setq org-modules '(org-habit org-protocol))
 

@@ -336,6 +336,7 @@
     'flycheck-show-error-at-point))
 
 (use-package elpy
+  :disabled t
   :init
   (elpy-enable)
   (defalias 'workon 'pyvenv-workon)
