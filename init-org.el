@@ -619,25 +619,47 @@ so change the default 'F' binding in the agenda to allow both"
                 (width . 100)
                 (height . 30)))
   (select-frame-by-name "capture")
-  (org-capture nil "x"))
+  ;; (switch-to-buffer (get-buffer-create "*scratch*"))
+  (org-capture))
+
+;; (defadvice org-capture-finalize (after delete-capture-frame activate)
+;;   "Advise capture-finalize to close the frame if it is the capture frame."
+;;   (if (equal "capture" (frame-parameter nil 'name))
+;;       (delete-frame)))
 
 (defadvice org-capture-finalize (after delete-capture-frame activate)
-  "Advise capture-finalize to close the frame if it is the capture frame"
+  "Advise capture-finalize to close the frame if it is the capture frame."
+  (when (and (equal "capture" (frame-parameter nil 'name))
+             (not (eq this-command 'org-capture-refile)))
+    (delete-frame)))
+
+;; (defadvice org-capture-destroy (after delete-capture-frame activate)
+;;   "Advise capture-destroy to close the frame if it is the capture frame."
+;;   (if (equal "capture" (frame-parameter nil 'name))
+;;       (delete-frame)))
+
+(defadvice org-capture-kill (after delete-capture-frame activate)
+  "Advise capture-kill to close the frame if it is the capture frame."
   (if (equal "capture" (frame-parameter nil 'name))
       (delete-frame)))
 
-(defadvice org-capture-destroy (after delete-capture-frame activate)
-  "Advise capture-destroy to close the frame if it is the rememeber frame"
-  (if (equal "capture" (frame-parameter nil 'name))
-      (delete-frame)))
-
-(defadvice org-capture (after make-full-window-frame activate)
-  "Advise capture to be the only window when used as a popup"
+(defadvice org-switch-to-buffer-other-window (after supress-window-splitting activate)
+  "Delete the extra window if we're in a capture frame."
   (if (equal "capture" (frame-parameter nil 'name))
       (delete-other-windows)))
 
+(defadvice org-capture (after make-full-window-frame activate)
+  "Advise capture to be the only window when used as a popup."
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-other-windows)))
+
+(defadvice org-capture-refile (after delete-capture-frame activate)
+  "Advise org-refile to close the frame."
+  (delete-frame))
+
+
 (defun gn/open-agenda (&optional arg split)
-  "Visit the org agenda, in the current window or a SPLIT."
+  "Visit the org agenda `ARG', in the current window or a `SPLIT'."
   (interactive "P")
   (org-agenda nil arg)
   (when (not split)
