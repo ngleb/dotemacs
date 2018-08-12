@@ -94,9 +94,10 @@
 
 (eval-when-compile
   (require 'use-package))
-(require 'bind-key)
 
-;;(setq use-package-verbose t)
+
+(use-package diminish :demand t)
+
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
@@ -167,9 +168,6 @@
       (if (and ix (equal "LaTeX" (substring mode-name ix)))
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
-
-
-(use-package diminish :demand t)
 
 (use-package avy
   :bind* ("C-." . avy-goto-char-timer)
