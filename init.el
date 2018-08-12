@@ -1,9 +1,6 @@
 ;;; init.el
 
 (defconst emacs-start-time (current-time))
-(message "Loading Emacs...done (%.3fs)"
-         (float-time (time-subtract emacs-start-time
-                                    before-init-time)))
 
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
@@ -103,12 +100,11 @@
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
-(defvar gn-base-dir
+(defconst gn-base-dir
   (file-name-as-directory
-   (cond ((eq system-type 'gnu/linux)
-          (expand-file-name "~"))
-         ((eq system-type 'windows-nt)
-          (expand-file-name user-login-name "C:/Users")))))
+   (pcase system-type
+     (`gnu/linux (expand-file-name "~"))
+     (`windows-nt (expand-file-name user-login-name "C:/Users")))))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -171,56 +167,6 @@
       (if (and ix (equal "LaTeX" (substring mode-name ix)))
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
-
-(defconst display-name
-  (pcase (display-pixel-height)
-    (`768 'lenovo)
-    (`1200 'lenovo-m)
-    (`1080 'office)))
-
-(defconst emacs-min-top 20)
-
-(defconst emacs-min-left
-  (pcase display-name
-    (`lenovo 100)
-    (`lenovo-m 190)
-    (`office 100)))
-
-(defconst emacs-min-height
-  (pcase display-name
-    (`lenovo 40)
-    (`lenovo-m 53)
-    (`office 40)))
-
-(defconst emacs-min-width
-  (pcase display-name
-    (`lenovo 140)
-    (`lenovo-m 172)
-    (`office 160)))
-
-(defun emacs-min ()
-  (interactive)
-  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
-    (set-param 'fullscreen nil)
-    (set-param 'vertical-scroll-bars nil)
-    (set-param 'horizontal-scroll-bars nil))
-  (set-frame-position (selected-frame) emacs-min-left emacs-min-top)
-  (set-frame-size (selected-frame) emacs-min-width emacs-min-height))
-
-(defun emacs-max ()
-  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
-    (set-param 'fullscreen 'maximized)
-    (set-param 'vertical-scroll-bars nil)
-    (set-param 'horizontal-scroll-bars nil)))
-
-(defun emacs-toggle-size ()
-  (interactive)
-  (if (alist-get 'fullscreen (frame-parameters))
-      (emacs-min)
-    (emacs-max)))
-
-(add-hook 'emacs-startup-hook #'emacs-min t)
-(bind-key "C-<f12>" #'emacs-toggle-size)
 
 
 (use-package diminish :demand t)
@@ -431,10 +377,11 @@
 
 (use-package langtool
   :config
-  (defvar gn/langtool-path
-    (cond ((eq system-type 'windows-nt) (expand-file-name "Applications/langtool/languagetool-commandline.jar" gn-base-dir))
-          ((eq system-type 'gnu/linux) (expand-file-name "my/bin/langtool/languagetool-commandline.jar" gn-base-dir))))
-  (setq langtool-language-tool-jar gn/langtool-path)
+  (defconst gn-langtool-path
+    (pcase system-type
+     (`gnu/linux "Applications/langtool/languagetool-commandline.jar")
+     (`windows-nt "my/bin/langtool/languagetool-commandline.jar")))
+  (setq langtool-language-tool-jar (expand-file-name gn-langtool-path gn-base-dir))
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
     (when (require 'popup nil t)
@@ -624,10 +571,18 @@
     (hl-line-mode 1)
     (dired-omit-mode 1))
   (add-hook 'dired-mode-hook 'my-dired-mode-hook)
-  (cond ((eq system-type 'gnu/linux)
-         (setq dired-listing-switches "-aBhl --group-directories-first"))
-        ((eq system-type 'windows-nt)
-         (setq dired-listing-switches "-alh"))))
+
+  (defconst my-dired-listing-switches
+    (pcase system-type
+      (`gnu/linux "-aBhl --group-directories-first")
+      (`windows-nt "-alh")))
+  (setq dired-listing-switches my-dired-listing-switches))
+
+
+  ;; (cond ((eq system-type 'gnu/linux)
+  ;;        (setq dired-listing-switches "-aBhl --group-directories-first"))
+  ;;       ((eq system-type 'windows-nt)
+  ;;        (setq dired-listing-switches "-alh"))))
 
 (use-package dired-x
   :after dired)
@@ -652,13 +607,23 @@
   (setq sml/no-confirm-load-theme t)
   (sml/setup))
 
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file t)
+
+(load "~/.emacs.d/personal")
+(load "~/.emacs.d/init-org")
+(load "~/.emacs.d/init-ledger")
+
+(require 'server)
+(or (server-running-p) (server-start))
+
+
 (cond ((eq system-type 'gnu/linux)
        ;; TODO fix the font changing in GUI on Linux
        ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
        (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
        (define-key special-event-map [config-changed-event] #'ignore)
-       ;; (add-to-list 'initial-frame-alist '(font . "Meslo LG M 11"))
-       ;; (add-to-list 'default-frame-alist '(font . "Meslo LG M 11"))
        (set-face-attribute 'default nil
                            :family "Meslo LG M"
                            :height 115)
@@ -672,26 +637,67 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file t)
 
-(load "~/.emacs.d/personal")
-(load "~/.emacs.d/init-org")
-(load "~/.emacs.d/init-ledger")
+(defconst display-name
+  (pcase (display-pixel-height)
+    (`768 'lenovo)
+    (`1200 'lenovo-m)
+    (`1080 'office)))
 
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+(defconst emacs-min-top 20)
 
-;;; post init.
-(when window-system
-  (add-hook 'after-init-hook
-            `(lambda ()
-               (let ((elapsed (float-time (time-subtract (current-time)
-                                                         emacs-start-time))))
-                 (defconst emacs-load-time elapsed)
-                 (message "Loading %s...done (%.3fs) [after-init]"
-                          ,load-file-name elapsed)))
-            t))
+(defconst emacs-min-left
+  (pcase display-name
+    (`lenovo 100)
+    (`lenovo-m 190)
+    (`office 100)))
+
+(defconst emacs-min-height
+  (pcase display-name
+    (`lenovo 40)
+    (`lenovo-m 53)
+    (`office 40)))
+
+(defconst emacs-min-width
+  (pcase display-name
+    (`lenovo 140)
+    (`lenovo-m 172)
+    (`office 160)))
+
+(defun emacs-min ()
+  (interactive)
+  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
+    (set-param 'fullscreen nil)
+    (set-param 'vertical-scroll-bars nil)
+    (set-param 'horizontal-scroll-bars nil))
+  (set-frame-position (selected-frame) emacs-min-left emacs-min-top)
+  (set-frame-size (selected-frame) emacs-min-width emacs-min-height))
+
+(defun emacs-max ()
+  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
+    (set-param 'fullscreen 'maximized)
+    (set-param 'vertical-scroll-bars nil)
+    (set-param 'horizontal-scroll-bars nil)))
+
+(defun emacs-toggle-size ()
+  (interactive)
+  (if (alist-get 'fullscreen (frame-parameters))
+      (emacs-min)
+    (emacs-max)))
+
+(add-hook 'emacs-startup-hook #'emacs-min t)
+(bind-key "C-<f12>" #'emacs-toggle-size)
+
+(let ((elapsed (float-time (time-subtract (current-time)
+                                          emacs-start-time))))
+  (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+
+(add-hook 'after-init-hook
+          `(lambda ()
+             (let ((elapsed
+                    (float-time
+                     (time-subtract (current-time) emacs-start-time))))
+               (message "Loading %s...done (%.3fs) [after-init]"
+                        ,load-file-name elapsed))) t)
 
 ;;; init.el ends here
