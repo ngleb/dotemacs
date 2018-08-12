@@ -96,7 +96,7 @@
   (require 'use-package))
 (require 'bind-key)
 
-(setq use-package-verbose t)
+;;(setq use-package-verbose t)
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
@@ -171,12 +171,10 @@
 
 (use-package diminish :demand t)
 
-
 (use-package avy
   :bind* ("C-." . avy-goto-char-timer)
   :config
   (avy-setup-default))
-
 
 (use-package ediff
   :config
@@ -196,59 +194,15 @@
   ;;  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
   (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
 
+(use-package eldoc
+  :diminish
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
+
 (use-package eshell
-  :commands (eshell eshell-command)
-  :preface
-  (defvar eshell-isearch-map
-    (let ((map (copy-keymap isearch-mode-map)))
-      (define-key map [(control ?m)] 'eshell-isearch-return)
-      (define-key map [return]       'eshell-isearch-return)
-      (define-key map [(control ?r)] 'eshell-isearch-repeat-backward)
-      (define-key map [(control ?s)] 'eshell-isearch-repeat-forward)
-      (define-key map [(control ?g)] 'eshell-isearch-abort)
-      (define-key map [backspace]    'eshell-isearch-delete-char)
-      (define-key map [delete]       'eshell-isearch-delete-char)
-      map)
-    "Keymap used in isearch in Eshell.")
+  :commands (eshell eshell-command))
 
-  (defun eshell-initialize ()
-    (defun eshell-spawn-external-command (beg end)
-      "Parse and expand any history references in current input."
-      (save-excursion
-        (goto-char end)
-        (when (looking-back "&!" beg)
-          (delete-region (match-beginning 0) (match-end 0))
-          (goto-char beg)
-          (insert "spawn "))))
-
-    (add-hook 'eshell-expand-input-functions 'eshell-spawn-external-command)
-
-    (use-package em-unix
-      :defer t
-      :config
-      (unintern 'eshell/su nil)
-      (unintern 'eshell/sudo nil)))
-
-  :init
-  (add-hook 'eshell-first-time-mode-hook 'eshell-initialize))
-
-(use-package isearch
-  :bind (:map isearch-mode-map
-              ("C-c" . isearch-toggle-case-fold)
-              ("C-t" . isearch-toggle-regexp)
-              ("C-^" . isearch-edit-string)
-              ("C-i" . isearch-complete)))
-
-(use-package avy
-  :bind* ("C-." . avy-goto-char-timer)
-  :config
-  (avy-setup-default))
-
-(use-package elisp-mode
-  :config
-  (use-package eldoc
-    :config
-    (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)))
+(use-package isearch)
 
 (use-package man
   :config
@@ -262,10 +216,9 @@
   (ivy-display-style 'fancy)
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
-  (ivy-do-completion-in-region nil)
+  (ivy-do-completion-in-region nil))
   ;; :config
-  ;; (ivy-mode 1)
-  )
+  ;; (ivy-mode 1))
 
 (use-package counsel
   :after ivy)
@@ -278,7 +231,7 @@
 
 (use-package swiper
   :after ivy
-  :bind (("\C-s" . swiper)
+  :bind (;;("\C-s" . swiper)
          :map isearch-mode-map
          ("C-o" . swiper-from-isearch)))
 
@@ -289,33 +242,22 @@
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package company
-  :commands company-mode
+  :defer 5
+  :commands (company-mode
+             company-complete-common-or-cycle)
   :bind (:map company-mode-map
-         ("C-M-i" . company-complete-common-or-cycle)
-         ("C-<tab>" . company-complete-common-or-cycle)
+          ("C-M-i" . company-complete-common-or-cycle)
+          ("C-<tab>" . company-complete-common-or-cycle)
 
-         :map company-active-map
-         ("RET" . company-complete-selection)
-         ([return] . company-complete-selection)
-         ("C-j" . company-complete-selection)
-
-         ("TAB" . company-complete-common-or-cycle)
-         ("<tab>" . company-complete-common-or-cycle)
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous)
-
-         ("C-/" . company-search-candidates)
-         ("C-M-/" . company-filter-candidates)
-         ("C-d" . company-show-doc-buffer))
+          :map company-active-map
+          ("C-j" . company-complete-selection)
+          ("TAB" . company-complete-common-or-cycle)
+          ("<tab>" . company-complete-common-or-cycle))
   :init
   (setq company-require-match nil)
-  (setq company-idle-delay 0.5)
-  (setq company-tooltip-limit 10)
-  (setq company-minimum-prefix-length 3)
-  (setq company-tooltip-flip-when-above t)
-  (setq company-show-numbers t)
   :config
-  (global-company-mode))
+  (diminish 'company-mode " ❋")
+  (global-company-mode 1))
 
 (use-package flycheck
   :commands (flycheck-mode
@@ -324,7 +266,8 @@
   :init
   (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
                    (js2-mode-hook        . js2-mode-map)
-                   (c-mode-common-hook   . c-mode-base-map)))
+                   (c-mode-common-hook   . c-mode-base-map)
+                   (elpy-mode-hook       . elpy-mode-map)))
     (add-hook (car where)
               `(lambda ()
                  (bind-key "M-n" #'flycheck-next-error ,(cdr where))
@@ -335,27 +278,33 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point))
 
-(use-package elpy
-  :disabled t
+(use-package python
+  :defer t
+  :mode ("\\.py\\'" . python-mode)
+  :config
+  (setq python-shell-interpreter "python"
+        python-shell-interpreter-args "-i")
+  (setq python-indent-guess-indent-offset nil))
+
+(use-package pyvenv
+  :after python
   :init
-  (elpy-enable)
-  (defalias 'workon 'pyvenv-workon)
+  (defalias 'workon 'pyvenv-workon))
+
+(use-package elpy
+  :after python
   :config
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
-  (setq python-indent-guess-indent-offset nil)
-  (setq elpy-rpc-python-command "python")
-  (setq elpy-rpc-backend "jedi")
-  (setq python-shell-interpreter "python"
-        python-shell-interpreter-args "-i"))
+  (elpy-enable))
 
 (use-package helm
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
          ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
          ("C-x C-f" . helm-find-files)
-         ("C-x r b" . helm-filtered-bookmarks))
+         ("C-x r b" . helm-bookmarks))
   :config
   (setq helm-split-window-inside-p t)
   (helm-autoresize-mode 1)
@@ -442,6 +391,7 @@
   (calendar-location-name "Tomsk")
   (calendar-latitude 56.30)
   (calendar-longitude 84.58)
+  (calendar-mark-holidays-flag t)
   :config
   (setq calendar-date-display-form calendar-european-date-display-form))
 
@@ -555,7 +505,7 @@
 (use-package smartparens-config
   :diminish smartparens-mode
   :config
-  (smartparens-global-mode t)
+  ;;(smartparens-global-mode t)
   (show-smartparens-global-mode t))
 
 (use-package ls-lisp
@@ -579,12 +529,6 @@
       (`windows-nt "-alh")))
   (setq dired-listing-switches my-dired-listing-switches))
 
-
-  ;; (cond ((eq system-type 'gnu/linux)
-  ;;        (setq dired-listing-switches "-aBhl --group-directories-first"))
-  ;;       ((eq system-type 'windows-nt)
-  ;;        (setq dired-listing-switches "-alh"))))
-
 (use-package dired-x
   :after dired)
 
@@ -594,7 +538,9 @@
   (setq diredp-hide-details-initially-flag nil)
   (diredp-toggle-find-file-reuse-dir 1))
 
-(use-package smex)
+(use-package smex
+  :defer 5
+  :commands smex)
 
 (use-package recentf
     :config
