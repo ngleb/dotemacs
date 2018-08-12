@@ -36,6 +36,15 @@
 (use-package ox-clip
   :commands ox-clip-formatted-copy)
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (org . t)
+   (ditaa . t)
+   (ledger . t)))
+
+(setq org-ditaa-jar-path "/usr/share/ditaa/lib/ditaa.jar")
+
 (setq org-startup-indented t)
 (setq org-log-done 'time)
 (setq org-log-reschedule 'time)
