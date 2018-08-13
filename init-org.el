@@ -584,7 +584,6 @@ so change the default 'F' binding in the agenda to allow both"
           'append)
 
 ;;; Limiting the agenda to a subtree
-
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
           'append)
@@ -610,8 +609,15 @@ so change the default 'F' binding in the agenda to allow both"
 (setq org-agenda-restriction-lock-highlight-subtree nil)
 
 
-;;; Use org-capture with separate frame
+(defun gn/open-agenda (&optional arg split)
+  "Visit the org agenda `ARG', in the current window or a `SPLIT'."
+  (interactive "P")
+  (org-agenda nil arg)
+  (when (not split)
+    (delete-other-windows)))
 
+
+;;; Use org-capture with separate frame
 (defun make-capture-frame (&optional capture-url)
   "Create a new frame and run org-capture."
   (interactive)
@@ -621,6 +627,11 @@ so change the default 'F' binding in the agenda to allow both"
   (select-frame-by-name "capture")
   ;; (switch-to-buffer (get-buffer-create "*scratch*"))
   (org-capture))
+
+;; (defadvice org-capture-destroy (after delete-capture-frame activate)
+;;   "Advise capture-destroy to close the frame if it is the capture frame."
+;;   (if (equal "capture" (frame-parameter nil 'name))
+;;       (delete-frame)))
 
 ;; (defadvice org-capture-finalize (after delete-capture-frame activate)
 ;;   "Advise capture-finalize to close the frame if it is the capture frame."
@@ -632,11 +643,6 @@ so change the default 'F' binding in the agenda to allow both"
   (when (and (equal "capture" (frame-parameter nil 'name))
              (not (eq this-command 'org-capture-refile)))
     (delete-frame)))
-
-;; (defadvice org-capture-destroy (after delete-capture-frame activate)
-;;   "Advise capture-destroy to close the frame if it is the capture frame."
-;;   (if (equal "capture" (frame-parameter nil 'name))
-;;       (delete-frame)))
 
 (defadvice org-capture-kill (after delete-capture-frame activate)
   "Advise capture-kill to close the frame if it is the capture frame."
@@ -656,14 +662,6 @@ so change the default 'F' binding in the agenda to allow both"
 (defadvice org-capture-refile (after delete-capture-frame activate)
   "Advise org-refile to close the frame."
   (delete-frame))
-
-
-(defun gn/open-agenda (&optional arg split)
-  "Visit the org agenda `ARG', in the current window or a `SPLIT'."
-  (interactive "P")
-  (org-agenda nil arg)
-  (when (not split)
-    (delete-other-windows)))
 
 
 ;;; Entry
