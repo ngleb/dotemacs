@@ -368,9 +368,10 @@
 (use-package time
   :config
   (progn
-    (setf display-time-default-load-average nil
-          display-time-use-mail-icon t
-          display-time-24hr-format t)
+    (setf display-time-24hr-format t
+          display-time-day-and-date t)
+    (setq display-time-string-forms
+          '(month "/" day " " 24-hours ":" minutes " "))
     (display-time-mode t)))
 
 (use-package ielm
