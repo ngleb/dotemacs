@@ -1,7 +1,5 @@
 ;;; init.el
 
-(defconst emacs-start-time (current-time))
-
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 
@@ -28,7 +26,7 @@
 
 (setq package-pinned-packages
       '(;; list of packages to be installed
-        (avy . "melpa")
+        (elfeed . "melpa-stable")
         (async . "melpa-stable")
         (bind-key . "melpa")
         (company . "melpa-stable")
@@ -138,10 +136,6 @@
       scroll-conservatively most-positive-fixnum
       scroll-preserve-screen-position t)
 
-;; remove warning
-;; ad-handle-definition: `tramp-read-passwd' got redefined
-(setq ad-redefinition-action 'accept)
-
 ;; MULE & encoding setup
 (setq default-input-method "russian-computer")
 
@@ -172,11 +166,6 @@
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
 
-(use-package avy
-  :bind* ("C-." . avy-goto-char-timer)
-  :config
-  (avy-setup-default))
-
 (use-package ediff
   :config
   ;; use existing frame instead of creating a new one
@@ -200,6 +189,42 @@
   :config
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
 
+(use-package elfeed
+  :init
+  (setq elfeed-feeds
+        '("http://nullprogram.com/feed/"
+          "https://www.linux.org.ru/section-rss.jsp?section=1"
+          "https://www.opennet.ru/opennews/opennews_all.rss"
+          "https://wordpress.org/news/feed/"
+          "http://googlechromereleases.blogspot.com/atom.xml"
+          "https://planet.gentoo.org/rss20.xml"
+          "http://lineageos.org/feed.xml"
+          "https://lwn.net/headlines/newrss"
+          "http://mynameisangie.com/feed/"
+          "http://www.buchman.co.il/feed/"
+          "http://www.startup-marketing.com/feed/"
+          "https://medium.com/feed/@mwfogleman"
+          "https://habr.com/rss/all/all/"
+          "https://dictionaryblog.cambridge.org/feed/"
+          "https://feeds.feedburner.com/arstechnica/index/"
+          "https://dxdt.ru/feed/"
+          "http://gettingthingsdone.com/feed/atom/"
+          "http://jimblog.me/?feed=atom"
+          "https://www.smashingmagazine.com/feed/"
+          "http://www.stayclassicblog.com/feed/atom/"
+          "http://dolboeb.livejournal.com/data/atom"
+          "http://lleo.me/dnevnik/rss.xml"
+          "https://postnauka.ru/feed"
+          "http://nullprogram.com/feed/"
+          "http://planet.emacsen.org/atom.xml"))
+  (setq-default elfeed-search-filter "@2-days-ago +unread ")
+  :config
+  ;; Entries older than 2 weeks are marked as read
+  (add-hook 'elfeed-new-entry-hook
+            (elfeed-make-tagger :before "2 weeks ago"
+                                :remove 'unread))
+  (global-set-key (kbd "C-x w") 'elfeed))
+
 (use-package eshell
   :commands (eshell eshell-command))
 
@@ -211,29 +236,19 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
-  ;;:bind ("C-c C-r" . ivy-resume)
   :custom
   (ivy-use-virtual-buffers t)
   (ivy-display-style 'fancy)
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
   (ivy-do-completion-in-region nil))
-  ;; :config
-  ;; (ivy-mode 1))
 
 (use-package counsel
   :after ivy)
-  ;; :bind (("M-x" . counsel-M-x)
-  ;;        ("C-x C-f" . counsel-find-file)
-  ;;        ("C-c j" . counsel-imenu)
-  ;;        ("C-x l" . counsel-locate)
-  ;;        :map read-expression-map
-  ;;        ("C-r" . counsel-minibuffer-history)))
 
 (use-package swiper
   :after ivy
-  :bind (;;("\C-s" . swiper)
-         :map isearch-mode-map
+  :bind (:map isearch-mode-map
          ("C-o" . swiper-from-isearch)))
 
 (use-package uniquify
@@ -643,17 +658,5 @@
 
 (add-hook 'emacs-startup-hook #'emacs-min t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
-
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          emacs-start-time))))
-  (message "Loading %s...done (%.3fs)" load-file-name elapsed))
-
-(add-hook 'after-init-hook
-          `(lambda ()
-             (let ((elapsed
-                    (float-time
-                     (time-subtract (current-time) emacs-start-time))))
-               (message "Loading %s...done (%.3fs) [after-init]"
-                        ,load-file-name elapsed))) t)
 
 ;;; init.el ends here
