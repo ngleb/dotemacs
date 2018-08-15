@@ -62,6 +62,7 @@
         (olivetti . "melpa")
         (org-plus-contrib . "org")
         (ox-clip . "melpa")
+        (ox-pandoc . "melpa")
         (popup . "melpa-stable")
         (pyvenv . "melpa-stable")
         (smartparens . "melpa")
@@ -346,6 +347,19 @@
 (use-package magit
   :commands magit-status
   :bind ("C-c m" . magit-status))
+
+(use-package time
+  :config
+  (progn
+    (setf display-time-default-load-average nil
+          display-time-use-mail-icon t
+          display-time-24hr-format t)
+    (display-time-mode t)))
+
+(use-package ielm
+  :defer t
+  :config
+  (define-key ielm-map (kbd "C-c C-z") #'quit-window))
 
 (use-package whitespace
   :diminish (global-whitespace-mode

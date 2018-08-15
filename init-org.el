@@ -43,6 +43,11 @@
 (use-package ox-clip
   :commands ox-clip-formatted-copy)
 
+(use-package ox-pandoc
+  :init
+  (when (eq system-type 'gnu/linux)
+    (setq org-pandoc-command "~/my/bin/pandoc")))
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)

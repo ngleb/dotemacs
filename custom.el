@@ -12,6 +12,7 @@
  '(calendar-latitude 56.3 t)
  '(calendar-location-name "Tomsk" t)
  '(calendar-longitude 84.58 t)
+ '(calendar-mark-holidays-flag t)
  '(calendar-week-start-day 1)
  '(ivy-count-format "(%d/%d) ")
  '(ivy-display-style (quote fancy))
@@ -20,4 +21,4 @@
  '(ivy-use-virtual-buffers t)
  '(package-selected-packages
    (quote
-    (zenburn-theme which-key web-mode w32-browser use-package smooth-scrolling smex smartparens smart-mode-line ox-clip org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode langtool js2-mode helm-swoop helm-describe-modes helm-descbinds flyspell-popup flycheck-ledger elpy dockerfile-mode docker-compose-mode diminish deft counsel))))
+    (ox-pandoc hydra avy zenburn-theme which-key web-mode w32-browser use-package smooth-scrolling smex smartparens smart-mode-line ox-clip org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode langtool js2-mode helm-swoop helm-describe-modes helm-descbinds flyspell-popup flycheck-ledger elpy dockerfile-mode docker-compose-mode diminish deft counsel))))
