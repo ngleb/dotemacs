@@ -43,6 +43,7 @@
         (git-commit . "melpa-stable")
         (helm . "melpa")
         (helm-core . "melpa")
+        (helm-swoop . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
@@ -320,7 +321,8 @@
          ("C-c j" . helm-imenu)
          ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
          ("C-x C-f" . helm-find-files)
-         ("C-x r b" . helm-bookmarks))
+         ("C-x r b" . helm-bookmarks)
+         ("C-x c o" . helm-occur))
   :config
   (setq helm-split-window-inside-p t)
   (helm-autoresize-mode 1)
@@ -329,6 +331,16 @@
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
 
 (use-package helm-config)
+
+(use-package helm-descbinds
+  :defer t
+  :bind ("C-h b" . helm-descbinds)
+  :init
+  (fset 'describe-bindings 'helm-descbinds))
+
+(use-package helm-swoop
+  :defer t
+  :bind (("C-x c s" . helm-swoop)))
 
 (use-package langtool
   :config
