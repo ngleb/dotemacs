@@ -131,7 +131,10 @@
 ;; Stop scrolling by huge leaps
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
       scroll-conservatively most-positive-fixnum
-      scroll-preserve-screen-position t)
+      scroll-preserve-screen-position t
+      scroll-margin 0
+      hscroll-margin 1
+      hscroll-step 1)
 
 ;; MULE & encoding setup
 (setq default-input-method "russian-computer")
