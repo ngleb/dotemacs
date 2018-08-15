@@ -40,13 +40,9 @@
         (find-file-in-project . "melpa-stable")
         (flycheck . "melpa-stable")
         (flycheck-ledger . "melpa")
-        (flyspell-popup . "melpa-stable")
         (git-commit . "melpa-stable")
         (helm . "melpa")
         (helm-core . "melpa")
-        (helm-descbinds . "melpa")
-        (helm-describe-modes . "melpa")
-        (helm-swoop . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
@@ -70,7 +66,6 @@
         (use-package . "melpa")
         (w32-browser . "melpa")
         (web-mode . "melpa")
-        (which-key . "melpa")
         (with-editor . "melpa-stable")
         (yasnippet . "melpa")
         (zenburn-theme . "melpa")
@@ -332,17 +327,6 @@
 
 (use-package helm-config)
 
-(use-package helm-swoop)
-
-(use-package helm-descbinds
-  :bind ("C-h b" . helm-descbinds)
-  :init
-  (fset 'describe-bindings 'helm-descbinds))
-
-(use-package helm-describe-modes
-  :after helm
-  :bind ("C-h C-m" . helm-describe-modes))
-
 (use-package langtool
   :config
   (defconst gn-langtool-path
@@ -469,13 +453,6 @@
   :commands olivetti-mode
   :bind ("C-c i o" . olivetti-mode))
 
-(use-package which-key
-  :defer 5
-  :diminish
-  :commands which-key-mode
-  :config
-  (which-key-mode))
-
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -528,9 +505,8 @@
   (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
   (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
 
-(use-package flyspell-popup)
-
 (use-package smartparens-config
+  :disabled t
   :diminish smartparens-mode
   :config
   ;;(smartparens-global-mode t)

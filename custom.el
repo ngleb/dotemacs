@@ -21,4 +21,4 @@
  '(ivy-use-virtual-buffers t)
  '(package-selected-packages
    (quote
-    (ox-pandoc hydra avy zenburn-theme which-key web-mode w32-browser use-package smooth-scrolling smex smartparens smart-mode-line ox-clip org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode langtool js2-mode helm-swoop helm-describe-modes helm-descbinds flyspell-popup flycheck-ledger elpy dockerfile-mode docker-compose-mode diminish deft counsel))))
+    (zenburn-theme web-mode w32-browser use-package smex smartparens smart-mode-line ox-pandoc ox-clip org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode langtool js2-mode hydra helm flycheck-ledger elpy elfeed dockerfile-mode docker-compose-mode diminish deft counsel))))
