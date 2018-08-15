@@ -152,6 +152,7 @@
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 
+(global-set-key (kbd "C-x k") #'kill-this-buffer)
 (bind-key "M-z" #'zap-up-to-char)
 (bind-key "M-N" (kbd "C-u 1 C-v"))
 (bind-key "M-P" (kbd "C-u 1 M-v"))
