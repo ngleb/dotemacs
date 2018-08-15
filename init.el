@@ -68,7 +68,6 @@
         (smartparens . "melpa")
         (smart-mode-line . "melpa")
         (smex . "melpa")
-        (smooth-scrolling . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
         (w32-browser . "melpa")
@@ -128,14 +127,16 @@
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq require-final-newline t)
 (setq sentence-end-double-space nil)
-(setq scroll-preserve-screen-position t)
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
 
-(put 'narrow-to-region 'disabled nil)
+;; Stop scrolling by huge leaps
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
+      scroll-conservatively most-positive-fixnum
+      scroll-preserve-screen-position t)
 
 ;; remove warning
 ;; ad-handle-definition: `tramp-read-passwd' got redefined
@@ -392,11 +393,6 @@
                                  (case-fn . downcase)))
   (setq deft-text-mode 'org-mode)
   (setq deft-auto-save-interval 0.0))
-
-(use-package smooth-scrolling
-  :config
-  (setq smooth-scroll-margin 5)
-  (smooth-scrolling-mode 1))
 
 (use-package calendar
   :custom
