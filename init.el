@@ -110,6 +110,8 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode -1)
+(tooltip-mode -1)
+(setq tooltip-use-echo-area t)
 (column-number-mode 1)
 (show-paren-mode 1)
 (add-hook 'prog-mode-hook 'nlinum-mode)
@@ -480,8 +482,9 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :config
-  (when (eq system-type 'windows-nt)
-    (setq markdown-command "multimarkdown.exe"))
+  (setf markdown-indent-on-enter nil
+        markdown-command
+        "pandoc -f markdown -t html5 -s --self-contained --smart")
   (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
 
