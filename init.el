@@ -315,6 +315,8 @@
   :defer 5
   :diminish
   :commands which-key-mode
+  :init
+  (setq which-key-idle-delay 1.5)
   :config
   (which-key-mode))
 
