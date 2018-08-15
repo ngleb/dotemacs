@@ -40,6 +40,7 @@
         (find-file-in-project . "melpa-stable")
         (flycheck . "melpa-stable")
         (flycheck-ledger . "melpa")
+        (flyspell-popup . "melpa")
         (git-commit . "melpa-stable")
         (helm . "melpa")
         (helm-core . "melpa")
@@ -66,6 +67,7 @@
         (smex . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
+        (which-key . "melpa")
         (w32-browser . "melpa")
         (web-mode . "melpa")
         (with-editor . "melpa-stable")
@@ -308,6 +310,15 @@
   :after python
   :init
   (defalias 'workon 'pyvenv-workon))
+
+(use-package which-key
+  :defer 5
+  :diminish
+  :commands which-key-mode
+  :config
+  (which-key-mode))
+
+(use-package flyspell-popup)
 
 (use-package elpy
   :after python
