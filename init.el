@@ -44,6 +44,7 @@
         (helm . "melpa")
         (helm-core . "melpa")
         (helm-swoop . "melpa")
+        (helm-descbinds . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
