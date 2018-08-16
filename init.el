@@ -360,8 +360,8 @@
   :config
   (defconst gn-langtool-path
     (pcase system-type
-     (`gnu/linux "Applications/langtool/languagetool-commandline.jar")
-     (`windows-nt "my/bin/langtool/languagetool-commandline.jar")))
+     (`gnu/linux "my/bin/langtool/languagetool-commandline.jar")
+     (`windows-nt "Applications/langtool/languagetool-commandline.jar")))
   (setq langtool-language-tool-jar (expand-file-name gn-langtool-path gn-base-dir))
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
@@ -470,8 +470,9 @@
             (or (name . "^\\*scratch\\*$")
                 (name . "^\\*Messages\\*$")
                 (name . "^\\*Help\\*$")
-                (name . "^\\*info\\*$")
-                (name . "\*.*\*"))))))
+                (name . "^\\*info\\*$")))
+           ("Other"
+            (or (name . "\*.*\*"))))))
   (defun my-ibuffer-mode-hook ()
     (ibuffer-auto-mode 1)
     (ibuffer-switch-to-saved-filter-groups "default")
@@ -615,6 +616,8 @@
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq default-directory gn-base-dir)
+       (push (concat gn-base-dir "Applications/emacs-bin") exec-path)
+       (setenv "PATH" (mapconcat #'identity exec-path path-separator))
        (use-package w32-browser)))
 
 
@@ -659,6 +662,9 @@
     (set-param 'vertical-scroll-bars nil)
     (set-param 'horizontal-scroll-bars nil)))
 
+(defun emacs-maximize ()
+  (set-frame-parameter (selected-frame) 'fullscreen 'maximized))
+
 (defun emacs-toggle-size ()
   (interactive)
   (if (alist-get 'fullscreen (frame-parameters))
@@ -666,6 +672,8 @@
     (emacs-max)))
 
 (add-hook 'emacs-startup-hook #'emacs-min t)
+(when (eq system-type 'windows-nt)
+  (add-hook 'emacs-startup-hook #'emacs-maximize t))
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
 ;;; init.el ends here
