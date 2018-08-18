@@ -405,10 +405,7 @@
   (add-hook 'before-save-hook #'whitespace-cleanup)
   :config
   (setq whitespace-line-column 80) ;; limit line length
-  (setq whitespace-style '(face tabs tab-mark trailing))
-
-  (custom-set-faces
-   '(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))))
+  (setq whitespace-style '(face tabs tab-mark trailing)))
 
 (use-package deft
   :bind (("<f9>" . deft)
@@ -612,7 +609,9 @@
 
        (use-package zenburn-theme
          :config
-         (load-theme 'zenburn t)))
+         (load-theme 'zenburn t)
+         (custom-set-faces
+          '(whitespace-tab ((t (:foreground "gray40" :background "#424242")))))))
 
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))

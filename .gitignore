@@ -30,3 +30,4 @@ abbrev_defs
 lisp/dot-eudc.el
 lisp/dot-gnus-work.el
 lisp/dot-gnus-personal.el
+lisp/dot-gnus.el
