@@ -216,11 +216,12 @@
           "http://jimblog.me/?feed=atom"
           "https://www.smashingmagazine.com/feed/"
           "http://www.stayclassicblog.com/feed/atom/"
-          "http://dolboeb.livejournal.com/data/atom"
           "http://lleo.me/dnevnik/rss.xml"
           "https://postnauka.ru/feed"
           "http://nullprogram.com/feed/"
-          "http://planet.emacsen.org/atom.xml"))
+          "http://planet.emacsen.org/atom.xml"
+          "https://meduza.io/rss/all"
+          ))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
   ;; Entries older than 2 weeks are marked as read
