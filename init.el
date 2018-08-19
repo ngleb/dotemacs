@@ -196,36 +196,36 @@
 (use-package elfeed
   :init
   (setq elfeed-feeds
-        '("http://nullprogram.com/feed/"
-          "https://www.linux.org.ru/section-rss.jsp?section=1"
-          "https://www.opennet.ru/opennews/opennews_all.rss"
-          "https://wordpress.org/news/feed/"
-          "http://googlechromereleases.blogspot.com/atom.xml"
-          "https://planet.gentoo.org/rss20.xml"
-          "http://lineageos.org/feed.xml"
-          "https://lwn.net/headlines/newrss"
-          "http://mynameisangie.com/feed/"
-          "http://www.buchman.co.il/feed/"
-          "http://www.startup-marketing.com/feed/"
-          "https://medium.com/feed/@mwfogleman"
-          "https://habr.com/rss/all/all/"
-          "https://dictionaryblog.cambridge.org/feed/"
-          "https://feeds.feedburner.com/arstechnica/index/"
-          "https://dxdt.ru/feed/"
-          "http://gettingthingsdone.com/feed/atom/"
-          "http://jimblog.me/?feed=atom"
-          "https://www.smashingmagazine.com/feed/"
-          "http://www.stayclassicblog.com/feed/atom/"
-          "http://lleo.me/dnevnik/rss.xml"
-          "https://postnauka.ru/feed"
-          "http://nullprogram.com/feed/"
-          "http://planet.emacsen.org/atom.xml"
-          "https://meduza.io/rss/all"
-          "https://www.reddit.com/r/emacs/.rss"
-          "https://www.reddit.com/r/gentoo/.rss"
-          "https://www.reddit.com/r/linux/.rss"
-          "https://www.reddit.com/r/gtd/.rss"
-          "https://mikrotik.com/current.rss"
+        '(("https://www.linux.org.ru/section-rss.jsp?section=1" software)
+          ("https://www.opennet.ru/opennews/opennews_all.rss" software)
+          ("https://wordpress.org/news/feed/" software)
+          ("http://googlechromereleases.blogspot.com/atom.xml" software)
+          ("https://planet.gentoo.org/rss20.xml" software)
+          ("http://lineageos.org/feed.xml" software)
+          ("https://lwn.net/headlines/newrss" software)
+          ("http://mynameisangie.com/feed/" blogs)
+          ("http://www.buchman.co.il/feed/" marketing)
+          ("http://www.startup-marketing.com/feed/" marketing)
+          ("https://medium.com/feed/@mwfogleman" marketing)
+          ("https://habr.com/rss/all/all/" news)
+          ("https://dictionaryblog.cambridge.org/feed/" english)
+          ("https://feeds.feedburner.com/arstechnica/index/" news)
+          ("https://dxdt.ru/feed/" software)
+          ("http://gettingthingsdone.com/feed/atom/" gtd)
+          ("http://jimblog.me/?feed=atom" blogs)
+          ("https://www.smashingmagazine.com/feed/" blogs)
+          ("http://www.stayclassicblog.com/feed/atom/" blogs)
+          ("http://lleo.me/dnevnik/rss.xml" blogs)
+          ("https://postnauka.ru/feed" news)
+          ("http://nullprogram.com/feed/" emacs software)
+          ("http://planet.emacsen.org/atom.xml" emacs software)
+          ("https://meduza.io/rss/all" news)
+          ("https://www.reddit.com/r/emacs/.rss" emacs software)
+          ("https://www.reddit.com/r/gentoo/.rss" software)
+          ("https://www.reddit.com/r/linux/.rss" software)
+          ("https://www.reddit.com/r/gtd/.rss" gtd)
+          ("https://mikrotik.com/current.rss" software)
+          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
