@@ -92,8 +92,8 @@
 (eval-when-compile
   (require 'use-package))
 
-
-(use-package diminish :demand t)
+(require 'cl-lib)
+(require 'diminish)
 
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
