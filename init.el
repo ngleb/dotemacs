@@ -221,6 +221,11 @@
           "http://nullprogram.com/feed/"
           "http://planet.emacsen.org/atom.xml"
           "https://meduza.io/rss/all"
+          "https://www.reddit.com/r/emacs/.rss"
+          "https://www.reddit.com/r/gentoo/.rss"
+          "https://www.reddit.com/r/linux/.rss"
+          "https://www.reddit.com/r/gtd/.rss"
+          "https://mikrotik.com/current.rss"
           ))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
