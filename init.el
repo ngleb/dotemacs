@@ -226,14 +226,46 @@
           ("https://www.reddit.com/r/gtd/.rss" gtd)
           ("https://mikrotik.com/current.rss" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
-          ))
+          ("http://www.youtube.com/playlist?list=PLfoNZDHitwjUUrM4dYe542iCcRpEzS_RX" youtube)))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
+
+  (define-key elfeed-search-mode-map "h"
+    (lambda ()
+      (interactive)
+      (elfeed-search-set-filter (default-value 'elfeed-search-filter))))
+
+  (define-key elfeed-search-mode-map (kbd "l")
+    (lambda ()
+      (interactive)
+      (switch-to-buffer (elfeed-log-buffer))))
+
+  (define-key elfeed-search-mode-map "t"
+    (lambda ()
+      (interactive)
+      (cl-macrolet ((re (re rep str) `(replace-regexp-in-string ,re ,rep ,str)))
+        (elfeed-search-set-filter
+         (cond
+          ((string-match-p "-youtube" elfeed-search-filter)
+           (re " *-youtube" " +youtube" elfeed-search-filter))
+          ((string-match-p "\\+youtube" elfeed-search-filter)
+           (re " *\\+youtube" " -youtube" elfeed-search-filter))
+          ((concat elfeed-search-filter " -youtube")))))))
+
   ;; Entries older than 2 weeks are marked as read
   (add-hook 'elfeed-new-entry-hook
             (elfeed-make-tagger :before "2 weeks ago"
                                 :remove 'unread))
-  (global-set-key (kbd "C-x w") 'elfeed))
+
+  (global-set-key (kbd "C-x w") 'elfeed)
+
+  (defface elfeed-youtube
+    '((t :foreground "#f9f"))
+    "Marks YouTube videos in Elfeed."
+    :group 'elfeed)
+
+  (push '(youtube elfeed-youtube)
+        elfeed-search-face-alist))
 
 (use-package eshell
   :commands (eshell eshell-command))
