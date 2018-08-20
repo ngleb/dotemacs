@@ -222,7 +222,6 @@
           ("https://meduza.io/rss/all" news)
           ("https://www.reddit.com/r/emacs/.rss" emacs software)
           ("https://www.reddit.com/r/gentoo/.rss" software)
-          ("https://www.reddit.com/r/linux/.rss" software)
           ("https://www.reddit.com/r/gtd/.rss" gtd)
           ("https://mikrotik.com/current.rss" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
