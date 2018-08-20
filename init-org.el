@@ -939,6 +939,26 @@ so change the default 'F' binding in the agenda to allow both"
               ;; NOTE(nox): Just process the children of this headline without todo keyword
               (unless tickler (setq return (+agenda-process-children headline)))))
 
+        (setq no-timestamp t)
+
+        ;; verify if entry has timestamp
+        (let* ((timestamp (or scheduled-ts deadline-ts))
+               first-child search-bound)
+          (when contents-begin
+            (setq first-child (org-element-map (org-element-contents headline) 'headline #'identity
+                                               nil t 'headline)
+                  search-bound (or (and first-child (org-element-property :begin first-child))
+                                   (org-element-property :end headline)))
+            (goto-char contents-begin)
+            (if (re-search-forward org-ts-regexp search-bound t)
+                (setq no-timestamp nil)
+              (setq no-timestamp t))))
+
+        (setq no-timestamp (or no-timestamp (or scheduled-ts deadline-ts)))
+
+        ;; process entried without timestamps, sheduled or deadlines
+        (when no-timestamp
+
         ;; NOTE(nox): Has todo keyword
         (+agenda-set-parent-minimum-status 'stuck)
 
@@ -1006,7 +1026,7 @@ so change the default 'F' binding in the agenda to allow both"
                                                           scheduled-future))
                         (push entry +agenda-isolated-tasks)))
 
-                  (when (or (string= todo "NEXT") scheduled-past-or-now) (setq return entry)))))))))
+                  (when (or (string= todo "NEXT") scheduled-past-or-now) (setq return entry))))))))))
       return)))
 
 (defun +agenda-tasks (&optional _)
