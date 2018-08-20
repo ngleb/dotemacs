@@ -671,6 +671,11 @@ so change the default 'F' binding in the agenda to allow both"
 
 ;;; Entry
 
+(defun +agenda-is-low-effort (effort-text &optional todo-type)
+  (and effort-text
+       (or (not todo-type) (eq todo-type 'todo))
+       (< (org-duration-to-minutes effort-text) 20)))
+
 (cl-defstruct +agenda-entry todo priority text tags planned low-effort marker project-status children)
 
 (defun +agenda-entry (headline &optional tags)
@@ -681,17 +686,17 @@ so change the default 'F' binding in the agenda to allow both"
      :priority (org-element-property :priority headline)
      :text (org-element-property :raw-value headline)
      :tags (or tags (org-element-property :tags headline))
-     :low-effort (and effort (eq todo-type 'todo) (< (org-duration-to-minutes effort) 20))
+     :low-effort (+agenda-is-low-effort effort todo-type)
      :marker (org-agenda-new-marker (org-element-property :begin headline)))))
 
 
 ;;; Renderer
 
-(defconst +agenda-projects-not-task-faces '(("NEXT" . '(:inherit org-todo :weight normal))
-                                            ("TODO" . '(:inherit org-todo :weight normal))))
+(defconst +agenda-projects-not-task-faces '(("NEXT" . (:inherit org-todo :weight normal))
+                                            ("TODO" . (:inherit org-todo :weight normal))))
 
-(defconst +agenda-projects-task-faces '(("NEXT" . '(:inherit org-todo :weight bold))
-                                        ("TODO" . '(:inherit org-todo :weight bold))))
+(defconst +agenda-projects-task-faces '(("NEXT" . (:inherit org-todo :weight bold))
+                                        ("TODO" . (:inherit org-todo :weight bold))))
 
 (defun +agenda-format-entry (prefix entry)
   (let ((props (list 'nox-custom-agenda t
@@ -730,6 +735,9 @@ so change the default 'F' binding in the agenda to allow both"
       (propertize text 'face '(:foreground "#b58900"))
     (or alt-text text)))
 
+(defun +agenda-schedule-get-prefix ()
+  (+agenda-tip-for-effort "➤" (+agenda-is-low-effort effort) " "))
+
 (defun +agenda-project-get-prefix (taskp parent-continuations &optional low-effort)
   ;; IMPORTANT(nox): `parent-continuations' is in reverse order!
   (let ((prefix "")
@@ -751,11 +759,6 @@ so change the default 'F' binding in the agenda to allow both"
   (let ((pa (or (+agenda-entry-priority a) org-default-priority))
         (pb (or (+agenda-entry-priority b) org-default-priority)))
     (< pa pb)))
-
-(defun +agenda-tag-sort (a b)
-  (let ((pa (car (+agenda-entry-tags a)))
-        (pb (car (+agenda-entry-tags b))))
-    (if (string-lessp pa pb) t)))
 
 (defun +agenda-flatten-list (l)
   (cond ((not l) nil)
@@ -790,7 +793,6 @@ so change the default 'F' binding in the agenda to allow both"
 
 (defun +agenda-simple-printer (list)
   (setq list (sort list #'+agenda-priority-sort))
-;;  (setq list (sort list #'+agenda-tag-sort))
   (dolist (entry list)
     (insert
      (+agenda-format-entry (+agenda-tip-for-effort " ➤" (+agenda-entry-low-effort entry) "  ") entry))))
@@ -904,7 +906,7 @@ so change the default 'F' binding in the agenda to allow both"
          (effort (org-element-property :EFFORT headline))
          (contents-begin (org-element-property :contents-begin headline))
          (tickler (member "TICKLER" (org-element-property :tags headline)))
-         entry project-status return timestamp-pos)
+         entry project-status return)
 
     (when (or +agenda-show-private (not (member "PRIVATE" (org-element-property :tags headline))))
       (setq entry
@@ -936,29 +938,6 @@ so change the default 'F' binding in the agenda to allow both"
 
               ;; NOTE(nox): Just process the children of this headline without todo keyword
               (unless tickler (setq return (+agenda-process-children headline)))))
-
-        (setq no-timestamp t)
-        ;; verify if entry has timestamp
-        (let* ((timestamp (or scheduled-ts deadline-ts))
-               first-child search-bound)
-          (when contents-begin
-            (setq first-child (org-element-map (org-element-contents headline) 'headline #'identity
-                                               nil t 'headline)
-                  search-bound (or (and first-child (org-element-property :begin first-child))
-                                   (org-element-property :end headline)))
-            (goto-char contents-begin)
-
-            (if (re-search-forward org-ts-regexp search-bound t)
-                (setq no-timestamp nil)
-              (setq no-timestamp t))))
-
-        ;;(message "\n[TEST] %s" (org-element-property :raw-value headline))
-        ;;(message "no-ts %s | ds %s | sc %s" no-timestamp deadline-ts scheduled-ts)
-        (setq no-timestamp (or no-timestamp (or scheduled-ts deadline-ts)))
-        ;;(message "no-ts %s\n" no-timestamp)
-
-        ;; process entried without timestamps, sheduled or deadlines
-        (when no-timestamp
 
         ;; NOTE(nox): Has todo keyword
         (+agenda-set-parent-minimum-status 'stuck)
@@ -1027,7 +1006,7 @@ so change the default 'F' binding in the agenda to allow both"
                                                           scheduled-future))
                         (push entry +agenda-isolated-tasks)))
 
-                  (when (or (string= todo "NEXT") scheduled-past-or-now) (setq return entry))))))))))
+                  (when (or (string= todo "NEXT") scheduled-past-or-now) (setq return entry)))))))))
       return)))
 
 (defun +agenda-tasks (&optional _)
