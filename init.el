@@ -157,6 +157,12 @@
 (bind-key "M-P" (kbd "C-u 1 M-v"))
 (bind-key "C-c i t" #'toggle-truncate-lines)
 
+(defun expose (function &rest args)
+  "Return an interactive version of FUNCTION, 'exposing' it to the user."
+  (lambda ()
+    (interactive)
+    (apply function args)))
+
 (defun fill-sentence ()
   (interactive)
   (save-excursion
@@ -193,6 +199,11 @@
   :config
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
 
+(use-package youtube-dl
+  :config
+  (setq youtube-dl-arguments '("--no-mtime" "--restrict-filenames" "--format" "bestvideo[ext=mp4][width<=1920][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best")
+        youtube-dl-directory "/media/data/dls/"))
+
 (use-package elfeed
   :init
   (setq elfeed-feeds
@@ -227,6 +238,32 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
+  (defun elfeed-show-youtube-dl ()
+    "Download the current entry with youtube-dl."
+    (interactive)
+    (pop-to-buffer (youtube-dl (elfeed-entry-link elfeed-show-entry))))
+
+  (cl-defun elfeed-search-youtube-dl (&key slow)
+    "Download the current entry with youtube-dl."
+    (interactive)
+    (let ((entries (elfeed-search-selected)))
+      (dolist (entry entries)
+        (if (null (youtube-dl (elfeed-entry-link entry)
+                              :title (elfeed-entry-title entry)
+                              :slow slow))
+            (message "Entry is not a YouTube link!")
+          (message "Downloading %s" (elfeed-entry-title entry)))
+        (elfeed-untag entry 'unread)
+        (elfeed-search-update-entry entry)
+        (unless (use-region-p) (forward-line)))))
+
+  (defalias 'elfeed-search-youtube-dl-slow
+    (expose #'elfeed-search-youtube-dl :slow t))
+
+  (define-key elfeed-show-mode-map "d" 'elfeed-show-youtube-dl)
+  (define-key elfeed-search-mode-map "d" 'elfeed-search-youtube-dl)
+  (define-key elfeed-search-mode-map "D" 'elfeed-search-youtube-dl-slow)
+  (define-key elfeed-search-mode-map "L" 'youtube-dl-list)
 
   (define-key elfeed-search-mode-map "h"
     (lambda ()
