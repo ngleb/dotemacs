@@ -30,6 +30,7 @@
  ("C-c a" . org-agenda)
  ("C-c c" . org-capture)
  ("C-c b" . org-switchb)
+ ("<f11>" . (lambda () (interactive) (gn/open-agenda "n" nil)))
  ("<f12>" . (lambda () (interactive) (gn/open-agenda " " nil))))
 
 (use-package org-habit
