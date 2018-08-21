@@ -92,6 +92,7 @@
 (eval-when-compile
   (require 'use-package))
 
+(require 'bind-key)
 (require 'cl-lib)
 (require 'diminish)
 
@@ -110,7 +111,6 @@
 (scroll-bar-mode -1)
 (blink-cursor-mode -1)
 (tooltip-mode -1)
-(setq tooltip-use-echo-area t)
 (column-number-mode 1)
 (show-paren-mode 1)
 (add-hook 'prog-mode-hook 'nlinum-mode)
@@ -206,7 +206,6 @@
           ("http://mynameisangie.com/feed/" blogs)
           ("http://www.buchman.co.il/feed/" marketing)
           ("http://www.startup-marketing.com/feed/" marketing)
-          ("https://medium.com/feed/@mwfogleman" marketing)
           ("https://habr.com/rss/all/all/" news)
           ("https://dictionaryblog.cambridge.org/feed/" english)
           ("https://feeds.feedburner.com/arstechnica/index/" news)
@@ -225,7 +224,7 @@
           ("https://www.reddit.com/r/gtd/.rss" gtd)
           ("https://mikrotik.com/current.rss" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
-          ("http://www.youtube.com/playlist?list=PLfoNZDHitwjUUrM4dYe542iCcRpEzS_RX" youtube)))
+          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
 
