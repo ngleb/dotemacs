@@ -760,6 +760,12 @@ so change the default 'F' binding in the agenda to allow both"
         (pb (or (+agenda-entry-priority b) org-default-priority)))
     (< pa pb)))
 
+(defun gn-org-cmp-tag (a b)
+  "Compare the string values of the first tags of A and B."
+  (let ((ta (car (last (+agenda-entry-tags a))))
+        (tb (car (last (+agenda-entry-tags b)))))
+    (string-lessp ta tb)))
+
 (defun +agenda-flatten-list (l)
   (cond ((not l) nil)
         ((atom l) (list l))
@@ -792,7 +798,8 @@ so change the default 'F' binding in the agenda to allow both"
             first nil))))
 
 (defun +agenda-simple-printer (list)
-  (setq list (sort list #'+agenda-priority-sort))
+  ;;(setq list (sort list #'+agenda-priority-sort))
+  (setq list (sort list #'gn-org-cmp-tag))
   (dolist (entry list)
     (insert
      (+agenda-format-entry (+agenda-tip-for-effort " ➤" (+agenda-entry-low-effort entry) "  ") entry))))
