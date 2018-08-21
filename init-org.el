@@ -1,4 +1,3 @@
-
 (eval-and-compile
   (require 'cl-lib))
 
@@ -30,8 +29,7 @@
  ("C-c a" . org-agenda)
  ("C-c c" . org-capture)
  ("C-c b" . org-switchb)
- ("<f11>" . (lambda () (interactive) (gn/open-agenda "n" nil)))
- ("<f12>" . (lambda () (interactive) (gn/open-agenda " " nil))))
+ ("<f12>" . (lambda () (interactive) (gn/open-agenda "n" nil))))
 
 (use-package org-habit
   :config
@@ -68,14 +66,12 @@
 (setq org-drawers '(("PROPERTIES" "LOGBOOK")))
 (setq org-fast-tag-selection-single-key 't)
 
-(defvar gn-org-agenda-file)
-(defvar gn-org-someday-file)
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
 (setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
-(setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
-(setq gn-org-reading-file (expand-file-name "reading.org" org-directory))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory)
       org-agenda-files (list org-default-notes-file gn-org-agenda-file))
+(setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
+(setq gn-org-journal-file (expand-file-name "journal.org" org-directory))
 
 ;; Refile setup
 (setq org-refile-targets '((nil :maxlevel . 9)
@@ -122,44 +118,23 @@
    (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
 
 (setq org-capture-templates
-      '(("x" "note" entry (file "refile.org")
-         "* %?\nAdded on: %U\n")
-        ("t" "todo" entry (file "refile.org")
-         "* TODO %?\nAdded on: %U\n")
-        ("n" "todo clocked" entry (file "refile.org")
-         "* TODO %?\nAdded on: %U\n" :clock-in t :clock-resume t)
-        ("j" "Journal" entry (file+olp+datetree "diary.org")
+      '(("x" "Note" entry (file "")
          "* %?\nAdded on: %U\n" :clock-in t :clock-resume t)
-        ("p" "org-protocol" entry (file "refile.org")
+        ("j" "Journal" entry (file+olp+datetree gn-org-journal-file)
+         "* %?\n" :clock-in t :clock-resume t)
+        ("p" "Link" entry (file "")
          "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nAdded on: %U\n" :immediate-finish t)
-        ("w" "Protocol selected" entry (file "refile.org")
+        ("s" "Link with text" entry (file "")
         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
-        ("h" "Habit" entry (file "refile.org")
+        ("h" "Habit" entry (file "")
          "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
 (setq org-agenda-custom-commands
-      '(("h" "Habits" tags-todo "STYLE=\"habit\""
-         ((org-agenda-overriding-header "Habits")
-          (org-agenda-sorting-strategy
-           '(todo-state-down effort-up category-keep))))
-        ("n" "Agenda"
+      '(("n" "Agenda"
          ((agenda "" ((org-agenda-files (list org-default-notes-file gn-org-agenda-file))
                       (org-agenda-span 3)))
           (+agenda-inbox nil ((org-agenda-files (list org-default-notes-file))))
           (+agenda-tasks nil ((org-agenda-files (list gn-org-agenda-file))))))
-        ("r" "Reading"
-           ((tags "+readlater-books/-DONE"
-                  ((org-agenda-overriding-header "Read later")))
-            (tags "+reading+books-readlater-tosort/-DONE-NEXT"
-                  ((org-agenda-overriding-header "To read")
-                   (org-agenda-files (list gn-org-reading-file))))
-            (tags "+reading+tosort"
-                  ((org-agenda-overriding-header "Sort")
-                   (org-agenda-files (list gn-org-reading-file))))
-            (tags "+reading/DONE"
-                  ((org-agenda-overriding-header "Finished")
-                   (org-agenda-files (list gn-org-reading-file)))))
-           (org-agenda-files (list gn-org-reading-file)))
         (" " "Agenda"
          ((agenda ""
                   ((org-agenda-time-grid nil)
