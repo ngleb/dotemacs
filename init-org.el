@@ -67,9 +67,10 @@
 (setq org-fast-tag-selection-single-key 't)
 
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
+(setq org-default-notes-file (expand-file-name "refile.org" org-directory))
 (setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
-(setq org-default-notes-file (expand-file-name "refile.org" org-directory)
-      org-agenda-files (list org-default-notes-file gn-org-agenda-file))
+(setq gn-org-reading-file (expand-file-name "reading.org" org-directory)
+      org-agenda-files (list org-default-notes-file gn-org-agenda-file gn-org-reading-file))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq gn-org-journal-file (expand-file-name "journal.org" org-directory))
 
@@ -119,9 +120,9 @@
 
 (setq org-capture-templates
       '(("x" "Note" entry (file "")
-         "* %?\nAdded on: %U\n" :clock-in t :clock-resume t)
+         "* %?\nAdded on: %U\n")
         ("j" "Journal" entry (file+olp+datetree gn-org-journal-file)
-         "* %?\n" :clock-in t :clock-resume t)
+         "* %?\n")
         ("p" "Link" entry (file "")
          "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nAdded on: %U\n" :immediate-finish t)
         ("s" "Link with text" entry (file "")
@@ -604,10 +605,55 @@ so change the default 'F' binding in the agenda to allow both"
   (interactive)
   (make-frame '((name . "capture")
                 (width . 100)
-                (height . 30)))
+                (height . 30)
+                (org-capture-frame . t)))
   (select-frame-by-name "capture")
-  ;; (switch-to-buffer (get-buffer-create "*scratch*"))
   (org-capture))
+
+;; (defun activate-capture-frame ()
+;;   "run org-capture in capture frame"
+;;   (select-frame-by-name "capture")
+;;   (switch-to-buffer (get-buffer-create "*scratch*"))
+;;   (org-capture))
+
+;; (defun +capture-frame ()
+;;     (let ((capture-frame (catch 'capture-frame
+;;                            (dolist (frame (frame-list))
+;;                              (when (frame-parameter frame 'org-capture-frame)
+;;                                (throw 'capture-frame frame))))))
+;;       (cond (capture-frame
+;;              (delete-frame)
+;;              (select-frame-set-input-focus capture-frame))
+
+;;             (t
+;;              (modify-frame-parameters nil '((name . "Org Capture") (org-capture-frame . t)
+;;                                             (width . 110) (height . 40)))
+;;              (org-capture)))))
+
+(advice-add
+ 'org-switch-to-buffer-other-window :after
+ (lambda (&rest _) (when (frame-parameter nil 'org-capture-frame) (delete-other-windows))))
+
+(advice-add
+ 'org-capture :around
+ (lambda (capture-function &rest args)
+   (condition-case nil (apply capture-function args)
+     (error (when (frame-parameter nil 'org-capture-frame)
+              (delete-frame))))))
+
+(add-hook
+ 'org-capture-after-finalize-hook
+ (lambda (&rest _)
+   (when (and (frame-parameter nil 'org-capture-frame) (not org-capture-is-refiling))
+     (org-save-all-org-buffers)
+     (delete-frame))))
+
+(advice-add
+ 'org-capture-refile :after
+ (lambda (&rest _)
+   (when (frame-parameter nil 'org-capture-frame)
+     (org-save-all-org-buffers)
+     (delete-frame))))
 
 ;; (defadvice org-capture-destroy (after delete-capture-frame activate)
 ;;   "Advise capture-destroy to close the frame if it is the capture frame."
@@ -619,30 +665,30 @@ so change the default 'F' binding in the agenda to allow both"
 ;;   (if (equal "capture" (frame-parameter nil 'name))
 ;;       (delete-frame)))
 
-(defadvice org-capture-finalize (after delete-capture-frame activate)
-  "Advise capture-finalize to close the frame if it is the capture frame."
-  (when (and (equal "capture" (frame-parameter nil 'name))
-             (not (eq this-command 'org-capture-refile)))
-    (delete-frame)))
+;; (defadvice org-capture-finalize (after delete-capture-frame activate)
+;;   "Advise capture-finalize to close the frame if it is the capture frame."
+;;   (when (and (equal "capture" (frame-parameter nil 'name))
+;;              (not (eq this-command 'org-capture-refile)))
+;;     (delete-frame)))
 
-(defadvice org-capture-kill (after delete-capture-frame activate)
-  "Advise capture-kill to close the frame if it is the capture frame."
-  (if (equal "capture" (frame-parameter nil 'name))
-      (delete-frame)))
+;; (defadvice org-capture-kill (after delete-capture-frame activate)
+;;   "Advise capture-kill to close the frame if it is the capture frame."
+;;   (if (equal "capture" (frame-parameter nil 'name))
+;;       (delete-frame)))
 
-(defadvice org-switch-to-buffer-other-window (after supress-window-splitting activate)
-  "Delete the extra window if we're in a capture frame."
-  (if (equal "capture" (frame-parameter nil 'name))
-      (delete-other-windows)))
+;; (defadvice org-switch-to-buffer-other-window (after supress-window-splitting activate)
+;;   "Delete the extra window if we're in a capture frame."
+;;   (if (equal "capture" (frame-parameter nil 'name))
+;;       (delete-other-windows)))
 
-(defadvice org-capture (after make-full-window-frame activate)
-  "Advise capture to be the only window when used as a popup."
-  (if (equal "capture" (frame-parameter nil 'name))
-      (delete-other-windows)))
+;; (defadvice org-capture (after make-full-window-frame activate)
+;;   "Advise capture to be the only window when used as a popup."
+;;   (if (equal "capture" (frame-parameter nil 'name))
+;;       (delete-other-windows)))
 
-(defadvice org-capture-refile (after delete-capture-frame activate)
-  "Advise org-refile to close the frame."
-  (delete-frame))
+;; (defadvice org-capture-refile (after delete-capture-frame activate)
+;;   "Advise org-refile to close the frame."
+;;   (delete-frame))
 
 
 ;;; Entry

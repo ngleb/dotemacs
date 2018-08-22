@@ -131,6 +131,7 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
+(setq enable-recursive-minibuffers t)
 
 ;; Stop scrolling by huge leaps
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
@@ -405,6 +406,7 @@
   (elpy-enable))
 
 (use-package helm
+  :defer 1
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
          ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
