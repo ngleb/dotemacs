@@ -375,20 +375,14 @@
     'flycheck-show-error-at-point))
 
 (use-package python
-  :defer t
   :mode ("\\.py\\'" . python-mode)
   :config
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i")
   (setq python-indent-guess-indent-offset nil))
 
-(use-package pyvenv
-  :after python
-  :init
-  (defalias 'workon 'pyvenv-workon))
-
 (use-package which-key
-  :defer 5
+  :defer 3
   :diminish
   :commands which-key-mode
   :init
@@ -397,6 +391,10 @@
   (which-key-mode))
 
 (use-package flyspell-popup)
+
+(use-package pyvenv
+  :init
+  (defalias 'workon 'pyvenv-workon))
 
 (use-package elpy
   :after python
