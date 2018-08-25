@@ -339,12 +339,15 @@
 
 (use-package company
   :diminish " ❋"
+  :defer 5
+  :bind (:map company-mode-map
+         ("C-<tab>" . company-complete-common-or-cycle)
+         :map company-active-map
+         ("TAB" . company-complete-common-or-cycle)
+         ("<tab>" . company-complete-common-or-cycle))
   :config
   (setq company-require-match nil)
-  (global-company-mode)
-  (bind-key "C-<tab>" 'company-complete-common-or-cycle)
-  (bind-key "TAB" 'company-complete-common-or-cycle company-active-map)
-  (bind-key "<tab>" 'company-complete-common-or-cycle company-active-map))
+  (global-company-mode))
 
 (use-package flycheck
   :commands (flycheck-mode
