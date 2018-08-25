@@ -544,7 +544,8 @@
                 (name . "^\\*Help\\*$")
                 (name . "^\\*info\\*$")))
            ("Other"
-            (or (name . "\*.*\*"))))))
+            (or (name . "\*.*\*")
+                (name . "^magit.*"))))))
   (defun my-ibuffer-mode-hook ()
     (ibuffer-auto-mode 1)
     (ibuffer-switch-to-saved-filter-groups "default")
