@@ -338,27 +338,19 @@
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package company
-  :defer 5
-  :commands (company-mode
-             company-complete-common-or-cycle)
-  :bind (:map company-mode-map
-          ("C-M-i" . company-complete-common-or-cycle)
-          ("C-<tab>" . company-complete-common-or-cycle)
-
-          :map company-active-map
-          ("C-j" . company-complete-selection)
-          ("TAB" . company-complete-common-or-cycle)
-          ("<tab>" . company-complete-common-or-cycle))
-  :init
-  (setq company-require-match nil)
+  :diminish " ❋"
   :config
-  (diminish 'company-mode " ❋")
-  (global-company-mode 1))
+  (setq company-require-match nil)
+  (global-company-mode)
+  (bind-key "C-<tab>" 'company-complete-common-or-cycle)
+  (bind-key "TAB" 'company-complete-common-or-cycle company-active-map)
+  (bind-key "<tab>" 'company-complete-common-or-cycle company-active-map))
 
 (use-package flycheck
   :commands (flycheck-mode
              flycheck-next-error
              flycheck-previous-error)
+  :diminish flycheck-mode
   :init
   (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
                    (js2-mode-hook        . js2-mode-map)
@@ -368,7 +360,6 @@
               `(lambda ()
                  (bind-key "M-n" #'flycheck-next-error ,(cdr where))
                  (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
-  :init
   (global-flycheck-mode)
   :config
   (defalias 'show-error-at-point-soon
@@ -406,6 +397,7 @@
 
 (use-package helm
   :defer 1
+  :diminish helm-mode
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
          ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list

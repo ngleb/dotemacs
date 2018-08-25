@@ -112,6 +112,7 @@
 (setq org-agenda-prefix-format '((agenda . "  %?-12t% s")))
 (setq org-agenda-compact-blocks t)
 (setq org-enforce-todo-dependencies t)
+(setq org-agenda-sticky t)
 
 (defun transform-square-brackets-to-round-ones (string-to-transform)
   "Transforms [ into ( and ] into ), other chars left unchanged in STRING-TO-TRANSFORM."
