@@ -12,24 +12,20 @@
   :config
   (setq ledger-report-links-in-register nil)
   (setq ledger-report-use-header-line t)
+  (setq ledger-report-use-strict t)
 
   (setq ledger-reports
         (quote
-         (("bal" "%(binary) -f %(ledger-file) --strict -w bal")
-          ("reg" "%(binary) -f %(ledger-file) --strict -w reg")
-          ("payee" "%(binary) -f %(ledger-file) --strict -w reg @%(payee)")
-          ("account" "%(binary) -f %(ledger-file) --strict -w reg %(account)")
-          ("account45" "%(binary) -f %(ledger-file) --strict -w -d \"d>=[last 45 days]\" reg %(account)")
-          ("bal-assets" "%(binary) -f %(ledger-file) --strict -w bal assets and not Foreign and not Reim")
-          ("bal-assets-full" "%(binary) -f %(ledger-file) --strict -w bal assets")
-          ("exp-this-month" "%(binary) -f %(ledger-file) --aux-date --strict -w -p \"this month\" bal expenses")
-          ("exp-last-month" "%(binary) -f %(ledger-file) --aux-date --strict -w -p \"last month\" bal expenses")
-          ("exp-this-week" "%(binary) -f %(ledger-file) --strict -w -p \"this week\" --start-of-week=1 bal expenses")
-          ("exp-last-week" "%(binary) -f %(ledger-file) --strict -w -p \"last week\" --start-of-week=1 bal expenses")
-          ("bu-this-month" "%(binary) -f %(ledger-file) --aux-date --strict -w -p \"this month\" bal --unbudgeted ^exp")
-          ("bb-this-month" "%(binary) -f %(ledger-file) --aux-date --strict -w -p \"this month\" bal --budget ^exp --invert")
-          ("bu-last-month" "%(binary) -f %(ledger-file) --aux-date --strict -w -p \"last month\" bal --unbudgeted ^exp")
-          ("bb-last-month" "%(binary) -f %(ledger-file) --aux-date --strict -w -p \"last month\" bal --budget ^exp --invert"))))
+         (("bal" "%(binary) -f %(ledger-file) --wide balance")
+          ("reg" "%(binary) -f %(ledger-file) --wide register")
+          ("payee" "%(binary) -f %(ledger-file) --wide register @%(payee)")
+          ("account" "%(binary) -f %(ledger-file) --wide register %(account)")
+          ("account-last-45days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 45 days]\" register %(account)")
+          ("assets-short" "%(binary) -f %(ledger-file) --wide balance ^assets and not Foreign and not Reim")
+          ("assets-full" "%(binary) -f %(ledger-file) --wide balance ^assets")
+          ("expenses-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide balance ^expenses")
+          ("budget-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --budget --invert bal ^expenses")
+          ("unbudgeted-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --unbudgeted balance ^expenses"))))
 
   (defun my-ledger-mode-hook ()
     (flycheck-mode 1)
@@ -60,33 +56,23 @@
 
   (defhydra my-ledger-report (nil nil :foreign-keys nil :hint nil :exit t)
     "
-Balance:            Budget:          Unbudgeted:
-_1_: Assets         _u_: This month  _o_: This month
-_2_: Assets (full)  _i_: Last month  _p_: Last month
-
-Expenses:           Register:
-_3_: This month     _r_: Register report for account
-_4_: Last month
-_5_: This week
-_6_: Last week
+Balance:               Reports                  Budget:
+_a_: Assets (short)    _e_: Monthly expenses    _b_: Monthly budget
+_f_: Assets (full)     _r_: Account register    _u_: Monthly unbudgeted
+_1_: Balance
 
 _q_ quit"
     ("q" nil)
-    ("1" (gn/ledger-report "bal-assets"))
-    ("2" (gn/ledger-report "bal-assets-full"))
+    ("a" (gn/ledger-report "assets-short"))
+    ("f" (gn/ledger-report "assets-full"))
 
-    ("3" (gn/ledger-report "exp-this-month"))
-    ("4" (gn/ledger-report "exp-last-month"))
-    ("5" (gn/ledger-report "exp-this-week"))
-    ("6" (gn/ledger-report "exp-last-week"))
+    ("e" (gn/ledger-report "expenses-monthly"))
+    ("r" (gn/ledger-report "account-last-45days"))
 
-    ("u" (gn/ledger-report "bb-this-month"))
-    ("i" (gn/ledger-report "bb-last-month"))
+    ("b" (gn/ledger-report "budget-monthly"))
+    ("u" (gn/ledger-report "unbudgeted-monthly"))
 
-    ("o" (gn/ledger-report "bu-this-month"))
-    ("p" (gn/ledger-report "bu-last-month"))
-
-    ("r" (gn/ledger-report "account45"))))
+    ("1" (gn/ledger-report "bal"))))
 
 (use-package flycheck-ledger
   :after flycheck)
