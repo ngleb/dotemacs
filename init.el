@@ -308,6 +308,17 @@
 (use-package eshell
   :commands (eshell eshell-command))
 
+(use-package goto-addr
+  :hook ((compilation-mode . goto-address-mode)
+         (prog-mode . goto-address-prog-mode)
+         (eshell-mode . goto-address-mode)
+         (shell-mode . goto-address-mode))
+  :bind (:map goto-address-highlight-keymap
+              ("<RET>" . goto-address-at-point)
+              ("M-<RET>" . newline))
+  :commands (goto-address-prog-mode
+             goto-address-mode))
+
 (use-package isearch)
 
 (use-package man
@@ -339,7 +350,7 @@
 
 (use-package company
   :diminish " ❋"
-  :defer 5
+  :defer 3
   :bind (:map company-mode-map
          ("C-<tab>" . company-complete-common-or-cycle)
          :map company-active-map
