@@ -32,3 +32,4 @@ session*
 smex-items
 tramp
 url/*
+org-clock-save.el*
