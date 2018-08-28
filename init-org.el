@@ -118,7 +118,7 @@
         org-agenda-include-diary nil
         org-agenda-sorting-strategy
         '((agenda habit-down time-up user-defined-up effort-up category-keep)
-          (todo category-up effort-up)
+          (todo tag-up category-up effort-up)
           (tags category-up effort-up)
           (search category-up))
         org-agenda-window-setup 'only-window
@@ -140,13 +140,15 @@
                        ((org-agenda-overriding-header "Next Actions")
                         (org-agenda-tags-todo-honor-ignore-options t)
                         (org-agenda-todo-ignore-scheduled 'all)
+                        (org-agenda-todo-ignore-with-date 'all)
+                        (org-agenda-todo-ignore-timestamp 'all)
                         (org-agenda-skip-function
                          '(lambda ()
                             (or (org-agenda-skip-subtree-if 'todo '("HOLD" "WAITING"))
                                 (org-agenda-skip-entry-if 'nottodo '("NEXT")))))
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
-                         '(todo-state-down effort-up category-keep))))
+                         '(todo-state-down tag-up effort-up category-keep))))
             (tags-todo ,active-project-match
                        ((org-agenda-overriding-header "Projects")
                         (org-tags-match-list-sublevels t)
@@ -158,13 +160,14 @@
                         (org-agenda-todo-ignore-scheduled 'all)
                         (org-agenda-todo-ignore-with-date 'all)
                         (org-agenda-todo-ignore-timestamp 'all)
+                        (org-agenda-sorting-strategy '(tag-up))
                         (org-agenda-skip-function
                          '(lambda ()
                             (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING" "DELEGATED"))
                                 (org-agenda-skip-subtree-if 'nottododo '("TODO")))))
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
-                         '(category-keep))))
+                         '(tag-up category-keep))))
             (tags-todo "/WAITING"
                        ((org-agenda-overriding-header "Waiting")
                         (org-agenda-tags-todo-honor-ignore-options t)
