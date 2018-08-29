@@ -127,7 +127,7 @@
            ((org-agenda-overriding-header "Notes")
             (org-tags-match-list-sublevels t)))
           ("g" "GTD"
-           ((agenda "" nil)
+           ((agenda "" ((org-agenda-skip-timestamp-if-done t)))
             (tags "INBOX"
                   ((org-agenda-overriding-header "Inbox")
                    (org-tags-match-list-sublevels nil)))
