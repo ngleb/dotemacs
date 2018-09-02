@@ -30,6 +30,12 @@
 (setq org-catch-invisible-edits 'show)
 (setq org-export-coding-system 'utf-8)
 
+
+;;; org babel
+
+(setq org-confirm-babel-evaluate nil)
+
+
 ;;; org refile
 
 (setq org-refile-targets '((nil :maxlevel . 9)
