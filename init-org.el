@@ -133,7 +133,9 @@
            ((org-agenda-overriding-header "Notes")
             (org-tags-match-list-sublevels t)))
           ("g" "GTD"
-           ((agenda "" ((org-agenda-skip-timestamp-if-done t)))
+           ((agenda ""
+                    ((org-agenda-skip-timestamp-if-done t)
+                     (org-deadline-warning-days 5)))
             (tags "INBOX"
                   ((org-agenda-overriding-header "Inbox")
                    (org-tags-match-list-sublevels nil)))
