@@ -50,9 +50,9 @@
 ;;; todo
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)"  "|" "DONE(d!/!)")
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
               (sequence "PROJECT(p)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)")))
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
       org-use-fast-todo-selection t)
 
 ;; (setq org-todo-state-tags-triggers
