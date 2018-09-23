@@ -135,6 +135,7 @@
           ("g" "GTD"
            ((agenda ""
                     ((org-agenda-skip-timestamp-if-done t)
+                     (org-agenda-skip-deadline-if-done t)
                      (org-deadline-warning-days 5)))
             (tags "INBOX"
                   ((org-agenda-overriding-header "Inbox")
