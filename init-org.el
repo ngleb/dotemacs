@@ -120,7 +120,8 @@
   (setq org-agenda-compact-blocks t
         org-agenda-sticky t
         org-agenda-start-on-weekday nil
-        org-agenda-span 'day
+        org-agenda-span 2
+        org-agenda-start-day "-2d"
         org-agenda-include-diary nil
         org-agenda-sorting-strategy
         '((agenda habit-down time-up user-defined-up effort-up category-keep)
