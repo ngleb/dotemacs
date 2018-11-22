@@ -234,6 +234,7 @@
           ("https://mikrotik.com/current.rss" software)
           ("https://anchor.fm/s/29b5580/podcast/rss" marketing)
           ("https://kopywritingkourse.com/feed/" marketing)
+          ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCPDis9pjXuqyI7RYLJ-TTSA" youtube)
@@ -422,7 +423,18 @@
   (helm-autoresize-mode 1)
   (helm-mode 1)
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
+
+  (when (eq system-type 'windows-nt)
+    (setq helm-locate-command "es %s -sort run-count %s")
+    (defun helm-es-hook ()
+      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
+                 (string-match "\\`es" helm-locate-command))
+        (mapc (lambda (file)
+                (call-process "es" nil nil nil
+                              "-inc-run-count" (convert-standard-filename file)))
+              (helm-marked-candidates))))
+    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
 
 (use-package helm-config)
 
