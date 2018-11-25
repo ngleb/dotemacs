@@ -30,6 +30,7 @@
 (setq org-catch-invisible-edits 'show)
 (setq org-export-coding-system 'utf-8)
 
+(setq org-enable-priority-commands nil)
 
 ;;; org babel
 
