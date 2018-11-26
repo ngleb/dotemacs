@@ -18,9 +18,12 @@
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory))
 (setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
 (setq gn-org-reading-file (expand-file-name "reading.org" org-directory))
-(setq org-agenda-files (list org-default-notes-file gn-org-agenda-file))
+(setq org-agenda-files (list gn-org-agenda-file))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq gn-org-journal-file (expand-file-name "journal.org" org-directory))
+
+(setq org-mobile-directory (expand-file-name "Sync/org-mobile/" gn-base-dir))
+(setq gn-org-mobile-file (expand-file-name "mobile.org" org-mobile-directory))
 
 (setq org-startup-indented t)
 (setq org-archive-save-context-info nil)
@@ -141,7 +144,8 @@
                      (org-deadline-warning-days 5)))
             (tags "INBOX"
                   ((org-agenda-overriding-header "Inbox")
-                   (org-tags-match-list-sublevels nil)))
+                   (org-tags-match-list-sublevels nil)
+                   (org-agenda-files (list org-default-notes-file gn-org-mobile-file))))
             (stuck ""
                    ((org-agenda-overriding-header "Stuck Projects")
                     (org-agenda-tags-todo-honor-ignore-options t)
