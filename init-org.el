@@ -32,7 +32,8 @@
 (setq org-tags-column -90)
 (setq org-catch-invisible-edits 'show)
 (setq org-export-coding-system 'utf-8)
-(setq org-tag-alist '(("home" . ?h)
+(setq org-tag-alist '((:startgroup . nil)
+                      ("home" . ?h)
                       ("office" . ?o)
                       ("a" . ?a)
                       ("anywhere" . ?w)
@@ -40,7 +41,8 @@
                       ("laptop" . ?l)
                       ("errands" . ?e)
                       ("reading" . ?r)
-                      ("calls" . ?c)))
+                      ("calls" . ?c)
+                      (:endgroup . nil)))
 
 (setq org-enable-priority-commands nil)
 
