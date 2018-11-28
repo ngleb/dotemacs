@@ -75,7 +75,7 @@
         (zenburn-theme . "melpa")
         )) ;; end of list
 
-(package-initialize)
+(when (version< emacs-version "27.0") (package-initialize))
 (setq package-contents-refreshed nil)
 
 (mapc (lambda (pinned-package)
