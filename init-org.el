@@ -2,9 +2,11 @@
 (require 'org-agenda)
 (require 'org-protocol)
 (require 'org-capture)
+(use-package org-checklist)
+
 
 (add-hook 'org-mode-hook 'visual-line-mode)
-(setq org-modules '(org-habit org-protocol))
+(setq org-modules '(org-habit org-protocol org-checklist))
 (setq org-export-backends '(html latex ascii))
 
 (bind-keys
