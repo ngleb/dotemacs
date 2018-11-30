@@ -56,7 +56,8 @@
 (setq org-refile-targets '((nil :maxlevel . 9)
                            (gn-org-agenda-file :maxlevel . 2)
                            (gn-org-reading-file :maxlevel . 2)
-                           (gn-org-someday-file :maxlevel . 1)))
+                           (gn-org-someday-file :maxlevel . 1)
+                           (org-default-notes-file :maxlevel . 1)))
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-outline-path-complete-in-steps nil)
@@ -135,7 +136,7 @@
   (setq org-agenda-compact-blocks t
         org-agenda-sticky t
         org-agenda-start-on-weekday nil
-        org-agenda-span 4
+        org-agenda-span 5
         org-agenda-start-day "-2d"
         org-agenda-include-diary nil
         org-agenda-sorting-strategy
@@ -152,7 +153,8 @@
            ((agenda ""
                     ((org-agenda-skip-timestamp-if-done t)
                      (org-agenda-skip-deadline-if-done t)
-                     (org-deadline-warning-days 5)))
+                     (org-agenda-skip-scheduled-if-done t)
+                     (org-deadline-warning-days 7)))
             (tags "INBOX"
                   ((org-agenda-overriding-header "Inbox")
                    (org-tags-match-list-sublevels nil)
