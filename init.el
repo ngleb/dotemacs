@@ -235,6 +235,7 @@
           ("https://anchor.fm/s/29b5580/podcast/rss" marketing)
           ("https://kopywritingkourse.com/feed/" marketing)
           ("https://www.allthingsdistributed.com/index.xml" marketing)
+          ("https://blog.mikrotik.com/rss/" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCPDis9pjXuqyI7RYLJ-TTSA" youtube)
