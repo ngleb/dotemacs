@@ -65,6 +65,7 @@
         (smartparens . "melpa")
         (smart-mode-line . "melpa")
         (smex . "melpa")
+        (sokoban . "gnu")
         (swiper . "melpa-stable")
         (use-package . "melpa")
         (which-key . "melpa")
