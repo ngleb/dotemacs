@@ -710,7 +710,7 @@
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq default-directory gn-base-dir)
-       (push (concat gn-base-dir "Applications/emacs-bin") exec-path)
+       (push (concat gn-base-dir "Applications/emacs-bin/bin") exec-path)
        (setenv "PATH" (mapconcat #'identity exec-path path-separator))
        (use-package w32-browser)))
 
