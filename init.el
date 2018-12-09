@@ -547,7 +547,7 @@
         '(("default"
            ("Dired" (mode . dired-mode))
            ("Planner"
-            (or (filename . "\\(todo\\|refile\\|reading\\|someday\\|archive\*\\).org")
+            (or (filename . "\\(todo\\|refile\\|reading\\|mobile\\|someday\\|archive\*\\).org")
                 (mode . org-agenda-mode)
                 (name . "^\\*Calendar\\*$")
                 (name . "^diary$")))
