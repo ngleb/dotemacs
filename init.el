@@ -455,7 +455,7 @@
   (defconst gn-langtool-path
     (pcase system-type
      (`gnu/linux "my/bin/langtool/languagetool-commandline.jar")
-     (`windows-nt "Applications/langtool/languagetool-commandline.jar")))
+     (`windows-nt "Apps/langtool/languagetool-commandline.jar")))
   (setq langtool-language-tool-jar (expand-file-name gn-langtool-path gn-base-dir))
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
@@ -709,8 +709,9 @@
 
       ((eq system-type 'windows-nt)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
+       (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)
-       (push (concat gn-base-dir "Applications/emacs-bin/bin") exec-path)
+       (push (concat gn-base-dir "Apps/emacs-bin/bin") exec-path)
        (setenv "PATH" (mapconcat #'identity exec-path path-separator))
        (use-package w32-browser)))
 
