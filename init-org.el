@@ -6,7 +6,9 @@
 
 
 (add-hook 'org-mode-hook 'visual-line-mode)
-(setq org-modules '(org-habit org-protocol org-checklist))
+(add-to-list 'org-modules 'org-habit)
+(add-to-list 'org-modules 'org-protocol)
+(add-to-list 'org-modules 'org-checklist)
 (setq org-export-backends '(html latex ascii))
 
 (bind-keys
@@ -245,6 +247,7 @@
   (when (eq system-type 'gnu/linux)
     (setq org-pandoc-command "~/my/bin/pandoc")))
 
+(use-package ox-beamer)
 
 (defun gn/open-agenda (&optional arg split)
   "Visit the org agenda `ARG', in the current window or a `SPLIT'."

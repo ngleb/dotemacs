@@ -135,6 +135,8 @@
 (setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
 (setq enable-recursive-minibuffers t)
+(setq auth-source-save-behavior nil)
+
 
 ;; Stop scrolling by huge leaps
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
