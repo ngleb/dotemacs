@@ -4,12 +4,15 @@
 (require 'org-capture)
 (use-package org-checklist)
 
-
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-to-list 'org-modules 'org-habit)
 (add-to-list 'org-modules 'org-protocol)
 (add-to-list 'org-modules 'org-checklist)
 (setq org-export-backends '(html latex ascii))
+
+;; List of additional LaTeX packages
+(add-to-list 'org-latex-packages-alist '("" "cmap" t))
+(add-to-list 'org-latex-packages-alist '("english,russian" "babel" t))
 
 (bind-keys
  ("C-c l" . org-store-link)
