@@ -233,7 +233,7 @@
           ("http://lleo.me/dnevnik/rss.xml" blogs)
           ("https://postnauka.ru/feed" news)
           ("http://nullprogram.com/feed/" emacs software)
-          ("http://planet.emacsen.org/atom.xml" emacs software)
+          ;;("http://planet.emacsen.org/atom.xml" emacs software)
           ("https://mikrotik.com/current.rss" software)
           ("https://anchor.fm/s/29b5580/podcast/rss" marketing)
           ("https://kopywritingkourse.com/feed/" marketing)
