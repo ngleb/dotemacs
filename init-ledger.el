@@ -22,7 +22,7 @@
           ("account" "%(binary) -f %(ledger-file) --wide register %(account)")
           ("account-last-45days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 45 days]\" register %(account)")
           ("assets-short" "%(binary) -f %(ledger-file) --wide balance ^assets and not Foreign and not Reim")
-          ("assets-full" "%(binary) -f %(ledger-file) --wide balance ^assets")
+          ("assets-full" "%(binary) -f %(ledger-file) --wide balance ^assets ^liabilities")
           ("expenses-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide balance ^expenses")
           ("budget-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --budget --invert bal ^expenses")
           ("unbudgeted-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --unbudgeted balance ^expenses"))))
