@@ -10,6 +10,7 @@
          ("p"      . previous-line))
 
   :config
+  (setq ledger-accounts-file (expand-file-name "accounts.ledger" "~/Nextcloud/Finance"))
   (setq ledger-report-links-in-register nil)
   (setq ledger-report-use-header-line t)
   (setq ledger-report-use-strict t)
@@ -29,9 +30,11 @@
 
   (defun my-ledger-mode-hook ()
     (flycheck-mode 1)
-    (company-mode 0)
-    (setq pcomplete-ignore-case t)
-    (setq completion-ignore-case t))
+    (company-mode 1)
+    (setq-local tab-always-indent 'complete)
+    (setq-local completion-cycle-threshold t)
+    (setq-local ledger-complete-in-steps t)
+    (setq-local completion-ignore-case t))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
 
   (defun my-ledger-report-mode-hook ()

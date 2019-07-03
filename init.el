@@ -424,6 +424,7 @@
          ("C-x c o" . helm-occur))
   :config
   (setq helm-split-window-inside-p t)
+  (setq helm-mode-handle-completion-in-region nil)
   (helm-autoresize-mode 1)
   (helm-mode 1)
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
