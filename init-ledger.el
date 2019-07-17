@@ -14,6 +14,7 @@
   (setq ledger-report-links-in-register nil)
   (setq ledger-report-use-header-line t)
   (setq ledger-report-use-strict t)
+  (setq ledger-complete-in-steps t)
 
   (setq ledger-reports
         (quote
@@ -33,7 +34,6 @@
     (company-mode 1)
     (setq-local tab-always-indent 'complete)
     (setq-local completion-cycle-threshold t)
-    (setq-local ledger-complete-in-steps t)
     (setq-local completion-ignore-case t))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
 
