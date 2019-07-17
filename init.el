@@ -131,6 +131,7 @@
 (setq sentence-end-double-space nil)
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
+(setq visual-line-fringe-indicators '(nil right-curly-arrow))
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
