@@ -14,10 +14,12 @@
  '(calendar-longitude 84.58 t)
  '(calendar-mark-holidays-flag t)
  '(calendar-week-start-day 1)
+ '(enable-recursive-minibuffers t)
  '(ivy-count-format "(%d/%d) ")
  '(ivy-display-style 'fancy)
  '(ivy-do-completion-in-region nil)
- '(ivy-initial-inputs-alist nil t)
+ '(ivy-initial-inputs-alist nil)
  '(ivy-use-virtual-buffers t)
+ '(ivy-wrap t)
  '(package-selected-packages
    '(sokoban zenburn-theme web-mode w32-browser use-package smex smartparens smart-mode-line ox-pandoc ox-clip org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode langtool js2-mode hydra helm flycheck-ledger elpy elfeed dockerfile-mode docker-compose-mode diminish deft counsel)))

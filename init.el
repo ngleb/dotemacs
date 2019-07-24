@@ -26,6 +26,7 @@
 
 (setq package-pinned-packages
       '(;; list of packages to be installed
+        (avy . "melpa")
         (elfeed . "melpa-stable")
         (async . "melpa-stable")
         (bind-key . "melpa")
@@ -42,6 +43,10 @@
         (flycheck-ledger . "melpa")
         (flyspell-popup . "melpa")
         (git-commit . "melpa-stable")
+        (helm . "melpa")
+        (helm-core . "melpa")
+        (helm-swoop . "melpa")
+        (helm-descbinds . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
@@ -178,6 +183,11 @@
       (if (and ix (equal "LaTeX" (substring mode-name ix)))
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
+
+(use-package avy
+  :bind* ("C-." . avy-goto-char-timer)
+  :config
+  (avy-setup-default))
 
 (use-package ediff
   :config
@@ -328,36 +338,23 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window))
+  :diminish
+  :demand t
   :custom
   (ivy-use-virtual-buffers t)
   (enable-recursive-minibuffers t)
   (ivy-display-style 'fancy)
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
-  (ivy-wrap t)
-  :config
-  (ivy-mode 1))
+  (ivy-wrap t))
 
 (use-package counsel
-  :after ivy
-  :bind (("C-x C-f" . counsel-find-file)
-         ("C-x r b" . counsel-bookmark)
-         ("M-x"     . counsel-M-x)
-         ("C-h f"   . counsel-describe-function)
-         ("C-h v"   . counsel-describe-variable)
-         ("C-h b"   . counsel-descbinds)
-         ("C-c j"   . counsel-imenu))
-  :bind (:map org-mode-map
-              ("C-c j" . counsel-org-goto))
-  :commands counsel-minibuffer-history
-  :init
-  (bind-key "M-r" #'counsel-minibuffer-history minibuffer-local-map))
+  :after ivy)
 
 (use-package swiper
   :after ivy
-  :bind ("C-s" . swiper))
+  :bind (:map isearch-mode-map
+              ("C-o" . swiper-from-isearch)))
 
 (use-package uniquify
   :init
@@ -425,6 +422,48 @@
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
+
+(use-package helm
+  :defer 1
+  :diminish helm-mode
+  :bind (("M-x" . helm-M-x)
+         ("C-c j" . helm-imenu)
+         ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
+         ("C-x C-f" . helm-find-files)
+         ("C-x r b" . helm-bookmarks)
+         ("C-x c o" . helm-occur))
+  :bind (:map org-mode-map
+              ("C-c j" . helm-org-in-buffer-headings))
+  :config
+  ;;(setq helm-split-window-inside-p t)
+  (setq helm-mode-handle-completion-in-region nil)
+  (helm-autoresize-mode 1)
+  (helm-mode 1)
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
+
+  (when (eq system-type 'windows-nt)
+    (setq helm-locate-command "es %s -sort run-count %s")
+    (defun helm-es-hook ()
+      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
+                 (string-match "\\`es" helm-locate-command))
+        (mapc (lambda (file)
+                (call-process "es" nil nil nil
+                              "-inc-run-count" (convert-standard-filename file)))
+              (helm-marked-candidates))))
+    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
+
+(use-package helm-config)
+
+(use-package helm-descbinds
+  :defer t
+  :bind ("C-h b" . helm-descbinds)
+  :init
+  (fset 'describe-bindings 'helm-descbinds))
+
+(use-package helm-swoop
+  :defer t
+  :bind (("C-x c s" . helm-swoop)))
 
 (use-package langtool
   :config
