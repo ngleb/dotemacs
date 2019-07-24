@@ -42,10 +42,6 @@
         (flycheck-ledger . "melpa")
         (flyspell-popup . "melpa")
         (git-commit . "melpa-stable")
-        (helm . "melpa")
-        (helm-core . "melpa")
-        (helm-swoop . "melpa")
-        (helm-descbinds . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
@@ -63,7 +59,6 @@
         (popup . "melpa-stable")
         (pyvenv . "melpa-stable")
         (smartparens . "melpa")
-        (smart-mode-line . "melpa")
         (smex . "melpa")
         (sokoban . "gnu")
         (swiper . "melpa-stable")
@@ -137,6 +132,7 @@
 (global-auto-revert-mode 1)
 (setq enable-recursive-minibuffers t)
 (setq auth-source-save-behavior nil)
+(setq kill-whole-line t)
 
 
 ;; Stop scrolling by huge leaps
@@ -332,20 +328,36 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window))
   :custom
   (ivy-use-virtual-buffers t)
+  (enable-recursive-minibuffers t)
   (ivy-display-style 'fancy)
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
-  (ivy-do-completion-in-region nil))
+  (ivy-wrap t)
+  :config
+  (ivy-mode 1))
 
 (use-package counsel
-  :after ivy)
+  :after ivy
+  :bind (("C-x C-f" . counsel-find-file)
+         ("C-x r b" . counsel-bookmark)
+         ("M-x"     . counsel-M-x)
+         ("C-h f"   . counsel-describe-function)
+         ("C-h v"   . counsel-describe-variable)
+         ("C-h b"   . counsel-descbinds)
+         ("C-c j"   . counsel-imenu))
+  :bind (:map org-mode-map
+              ("C-c j" . counsel-org-goto))
+  :commands counsel-minibuffer-history
+  :init
+  (bind-key "M-r" #'counsel-minibuffer-history minibuffer-local-map))
 
 (use-package swiper
   :after ivy
-  :bind (:map isearch-mode-map
-         ("C-o" . swiper-from-isearch)))
+  :bind ("C-s" . swiper))
 
 (use-package uniquify
   :init
@@ -414,46 +426,6 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
 
-(use-package helm
-  :defer 1
-  :diminish helm-mode
-  :bind (("M-x" . helm-M-x)
-         ("C-c j" . helm-imenu)
-         ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
-         ("C-x C-f" . helm-find-files)
-         ("C-x r b" . helm-bookmarks)
-         ("C-x c o" . helm-occur))
-  :config
-  (setq helm-split-window-inside-p t)
-  (setq helm-mode-handle-completion-in-region nil)
-  (helm-autoresize-mode 1)
-  (helm-mode 1)
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
-
-  (when (eq system-type 'windows-nt)
-    (setq helm-locate-command "es %s -sort run-count %s")
-    (defun helm-es-hook ()
-      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
-                 (string-match "\\`es" helm-locate-command))
-        (mapc (lambda (file)
-                (call-process "es" nil nil nil
-                              "-inc-run-count" (convert-standard-filename file)))
-              (helm-marked-candidates))))
-    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
-
-(use-package helm-config)
-
-(use-package helm-descbinds
-  :defer t
-  :bind ("C-h b" . helm-descbinds)
-  :init
-  (fset 'describe-bindings 'helm-descbinds))
-
-(use-package helm-swoop
-  :defer t
-  :bind (("C-x c s" . helm-swoop)))
-
 (use-package langtool
   :config
   (defconst gn-langtool-path
@@ -477,15 +449,6 @@
 (use-package magit
   :commands magit-status
   :bind ("C-c m" . magit-status))
-
-(use-package time
-  :config
-  (progn
-    (setf display-time-24hr-format t
-          display-time-day-and-date t)
-    (setq display-time-string-forms
-          '(month "/" day " " 24-hours ":" minutes " "))
-    (display-time-mode t)))
 
 (use-package ielm
   :defer t
@@ -675,15 +638,8 @@
 (use-package recentf
     :config
     (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude "AppData/Local/Temp")
     (setq recentf-max-saved-items 60))
-
-(use-package smart-mode-line
-  :config
-  ;; See https://github.com/Malabarba/smart-mode-line/issues/217
-  (setq mode-line-format (delq 'mode-line-position mode-line-format))
-  (setq sml/no-confirm-load-theme t)
-  (sml/setup))
-
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
@@ -712,6 +668,8 @@
           '(whitespace-tab ((t (:foreground "gray40" :background "#424242")))))))
 
       ((eq system-type 'windows-nt)
+       (set-face-attribute 'mode-line nil
+                    :box nil)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)

@@ -10,7 +10,6 @@
          ("p"      . previous-line))
 
   :config
-  (setq ledger-accounts-file (expand-file-name "accounts.ledger" "~/Nextcloud/Finance"))
   (setq ledger-report-links-in-register nil)
   (setq ledger-report-use-header-line t)
   (setq ledger-report-use-strict t)
