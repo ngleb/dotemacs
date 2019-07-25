@@ -422,8 +422,13 @@
   :bind (:map org-mode-map
               ("C-c j" . helm-org-in-buffer-headings))
   :config
-  ;;(setq helm-split-window-inside-p t)
+  ;; (setq helm-display-function 'helm-display-buffer-in-own-frame
+  ;;       helm-display-buffer-reuse-frame t
+  ;;       helm-use-undecorated-frame-option t)
+  (setq helm-split-window-inside-p t)
   (setq helm-mode-handle-completion-in-region nil)
+  (setq helm-org-format-outline-path t)
+  (setq helm-display-header-line nil)
   (helm-autoresize-mode 1)
   (helm-mode 1)
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
