@@ -721,13 +721,13 @@
   (pcase display-name
     (`lenovo 100)
     (`lenovo-m 190)
-    (`office 100)))
+    (`office 220)))
 
 (defconst emacs-min-height
   (pcase display-name
     (`lenovo 40)
     (`lenovo-m 53)
-    (`office 40)))
+    (`office 50)))
 
 (defconst emacs-min-width
   (pcase display-name
@@ -760,8 +760,8 @@
     (emacs-max)))
 
 (add-hook 'emacs-startup-hook #'emacs-min t)
-(when (eq system-type 'windows-nt)
-  (add-hook 'emacs-startup-hook #'emacs-maximize t))
+;; (when (eq system-type 'windows-nt)
+;;   (add-hook 'emacs-startup-hook #'emacs-maximize t))
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
 ;;; init.el ends here
