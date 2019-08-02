@@ -24,13 +24,11 @@
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory))
 (setq gn-org-agenda-file (expand-file-name "gtd.org" org-directory))
-(setq gn-org-reading-file (expand-file-name "reading.org" org-directory))
-(setq org-agenda-files (list gn-org-agenda-file))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
-(setq gn-org-journal-file (expand-file-name "journal.org" org-directory))
+(setq org-agenda-files (list gn-org-agenda-file))
 
-(setq org-mobile-directory (expand-file-name "Sync/org-mobile/" gn-base-dir))
-(setq gn-org-mobile-file (expand-file-name "mobile.org" org-mobile-directory))
+(setq gn-org-mobile-file (expand-file-name "Sync/org-mobile/mobile.org" gn-base-dir))
+(setq gn-org-purchases (expand-file-name "Sync/org-mobile/purchases.org" gn-base-dir))
 
 (setq org-startup-indented t)
 (setq org-archive-save-context-info nil)
@@ -62,9 +60,9 @@
 
 (setq org-refile-targets '((nil :maxlevel . 9)
                            (gn-org-agenda-file :maxlevel . 2)
-                           (gn-org-reading-file :maxlevel . 2)
                            (gn-org-someday-file :maxlevel . 1)
-                           (org-default-notes-file :maxlevel . 1)))
+                           (org-default-notes-file :maxlevel . 1)
+                           (gn-org-purchases :maxlevel . 2)))
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 (setq org-outline-path-complete-in-steps nil)
