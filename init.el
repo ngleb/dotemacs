@@ -224,6 +224,7 @@
   :init
   (setq elfeed-feeds
         '(("https://www.linux.org.ru/section-rss.jsp?section=1" software)
+          ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://wordpress.org/news/feed/" software)
           ("http://googlechromereleases.blogspot.com/atom.xml" software)
@@ -243,6 +244,8 @@
           ("http://lleo.me/dnevnik/rss.xml" blogs)
           ("https://postnauka.ru/feed" news)
           ("http://nullprogram.com/feed/" emacs software)
+          ("http://ammo1.livejournal.com/data/rss" blogs)
+          ("http://tema.livejournal.com/data/rss" blogs)
           ;;("http://planet.emacsen.org/atom.xml" emacs software)
           ("https://mikrotik.com/current.rss" software)
           ("https://anchor.fm/s/29b5580/podcast/rss" marketing)
@@ -253,7 +256,8 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCPDis9pjXuqyI7RYLJ-TTSA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCg0Y6Q0m3A_5X0CPY-IG3Yg" youtube)))
+          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCg0Y6Q0m3A_5X0CPY-IG3Yg" youtube)
+          ("https://www.youtube.com/feeds/videos.xml?user=TheBadComedian" youtube)))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
   :config
   (defun elfeed-show-youtube-dl ()
