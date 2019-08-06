@@ -224,6 +224,7 @@
   :init
   (setq elfeed-feeds
         '(("https://www.linux.org.ru/section-rss.jsp?section=1" software)
+          ("https://kg-portal.ru/rss/news.rss" movies)
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://wordpress.org/news/feed/" software)
