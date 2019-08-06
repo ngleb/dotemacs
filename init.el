@@ -66,6 +66,7 @@
         (smartparens . "melpa")
         (smex . "melpa")
         (sokoban . "gnu")
+        (speed-type . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
         (which-key . "melpa")
