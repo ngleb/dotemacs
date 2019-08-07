@@ -22,6 +22,7 @@ lisp/dot-gnus-personal.el
 lisp/dot-gnus-work.el
 lisp/dot-gnus.el
 network-security.data
+org-clock-save.el*
 personal.el
 pkgs
 places
@@ -30,6 +31,6 @@ savefile
 server/*
 session*
 smex-items
+speed-type/*
 tramp
 url/*
-org-clock-save.el*
