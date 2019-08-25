@@ -470,11 +470,10 @@
 
 (use-package langtool
   :config
-  (defconst gn-langtool-path
-    (pcase system-type
-     (`gnu/linux "my/bin/langtool/languagetool-commandline.jar")
-     (`windows-nt "Apps/langtool/languagetool-commandline.jar")))
-  (setq langtool-language-tool-jar (expand-file-name gn-langtool-path gn-base-dir))
+  (cond ((eq system-type 'gnu/linux)
+         (setq langtool-bin "/usr/bin/languagetool"))
+        ((eq system-type 'windows-nt)
+         (setq langtool-language-tool-jar (expand-file-name gn-base-dir "Apps/langtool/languagetool-commandline.jar"))))
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
     (when (require 'popup nil t)
