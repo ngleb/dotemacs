@@ -244,6 +244,7 @@
   :commands ox-clip-formatted-copy)
 
 (use-package ox-pandoc
+  :disabled t
   :init
   (when (eq system-type 'gnu/linux)
     (setq org-pandoc-command "~/my/bin/pandoc")))
