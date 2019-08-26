@@ -45,6 +45,7 @@
         (git-commit . "melpa-stable")
         (helm . "melpa")
         (helm-core . "melpa")
+        (helm-org . "melpa")
         (helm-swoop . "melpa")
         (helm-descbinds . "melpa")
         (highlight-indentation . "melpa-stable")
