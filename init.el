@@ -57,7 +57,6 @@
         (magit . "melpa-stable")
         (magit-popup . "melpa-stable")
         (markdown-mode . "melpa")
-        (nlinum . "gnu")
         (olivetti . "melpa")
         (org-plus-contrib . "org")
         (ox-clip . "melpa")
