@@ -226,7 +226,7 @@
   (setq elfeed-feeds
         '(("https://www.linux.org.ru/section-rss.jsp?section=1" software)
           ("https://www.riatomsk.ru/rss.xml" news)
-          ("view-source:https://habr.com/en/rss/all/all/?fl=ru%2Cen" news)
+          ("https://habr.com/en/rss/all/all/?fl=ru,en" news)
           ("https://kg-portal.ru/rss/news.rss" movies)
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
