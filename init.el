@@ -39,7 +39,7 @@
         (dockerfile-mode . "melpa")
         (elpy . "melpa-stable")
         (find-file-in-project . "melpa-stable")
-        (flycheck . "melpa-stable")
+        (flycheck . "melpa")
         (flycheck-ledger . "melpa")
         (flyspell-popup . "melpa")
         (git-commit . "melpa-stable")
