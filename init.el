@@ -231,7 +231,7 @@
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://wordpress.org/news/feed/" software)
-          ("http://googlechromereleases.blogspot.com/atom.xml" software)
+          ("https://chromereleases.googleblog.com/feeds/posts/default" software)
           ("https://planet.gentoo.org/rss20.xml" software)
           ("http://lineageos.org/feed.xml" software)
           ("https://lwn.net/headlines/newrss" software)
