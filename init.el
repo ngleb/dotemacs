@@ -418,9 +418,11 @@
 (use-package elpy
   :after python
   :config
+  (setq elpy-rpc-virtualenv-path 'current)
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
+  ;;(setq elpy-rpc-python-command "python3.7")
   (elpy-enable))
 
 (use-package helm
