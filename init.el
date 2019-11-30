@@ -239,7 +239,6 @@
           ("https://dictionaryblog.cambridge.org/feed/" english)
           ("https://feeds.feedburner.com/arstechnica/index/" news)
           ("https://dxdt.ru/feed/" software)
-          ("http://gettingthingsdone.com/feed/atom/" gtd)
           ("http://jimblog.me/?feed=atom" blogs)
           ("https://www.smashingmagazine.com/feed/" blogs)
           ("http://www.stayclassicblog.com/feed/atom/" blogs)
