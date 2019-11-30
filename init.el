@@ -225,8 +225,6 @@
   :init
   (setq elfeed-feeds
         '(("https://www.linux.org.ru/section-rss.jsp?section=1" software)
-          ("https://www.riatomsk.ru/rss.xml" news)
-          ("https://habr.com/en/rss/all/all/?fl=ru,en" habr)
           ("https://kg-portal.ru/rss/news.rss" movies)
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
@@ -257,7 +255,6 @@
           ("https://blog.mikrotik.com/rss/" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCPDis9pjXuqyI7RYLJ-TTSA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCg0Y6Q0m3A_5X0CPY-IG3Yg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)
