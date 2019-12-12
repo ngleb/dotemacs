@@ -415,10 +415,10 @@
   :after python
   :config
   (setq elpy-rpc-virtualenv-path 'current)
+  (setq elpy-shell-echo-input nil)
   (delete 'elpy-module-highlight-indentation elpy-modules)
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
-  ;;(setq elpy-rpc-python-command "python3.7")
   (elpy-enable))
 
 (use-package helm
@@ -442,7 +442,9 @@
   (setq helm-display-header-line nil)
   (helm-autoresize-mode 1)
   (helm-mode 1)
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*magit-"))
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*scratch\\*")
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*Messages\\*")
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
 
   (when (eq system-type 'windows-nt)
