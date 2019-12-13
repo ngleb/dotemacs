@@ -105,7 +105,7 @@
   (file-name-as-directory
    (pcase system-type
      (`gnu/linux (expand-file-name "~"))
-     (`windows-nt (expand-file-name user-login-name "C:/Users")))))
+     (`windows-nt (getenv "USERPROFILE")))))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
