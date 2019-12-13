@@ -260,6 +260,8 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbhMGG0ZievPtK8mzLH5jhQ" youtube)
           ("https://www.youtube.com/feeds/videos.xml?user=TheBadComedian" youtube)))
   (setq-default elfeed-search-filter "@2-days-ago +unread ")
+  (setq elfeed-search-title-max-width 110)
+
   :config
   (defun elfeed-show-youtube-dl ()
     "Download the current entry with youtube-dl."
