@@ -26,6 +26,7 @@
 
 (setq package-pinned-packages
       '(;; list of packages to be installed
+        (nginx-mode . "melpa")
         (avy . "melpa")
         (elfeed . "melpa-stable")
         (async . "melpa-stable")
@@ -681,10 +682,15 @@
   :commands smex)
 
 (use-package recentf
-    :config
-    (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude "AppData/Local/Temp")
-    (setq recentf-max-saved-items 60))
+  :config
+  (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
+  (add-to-list 'recentf-exclude "AppData/Local/Temp")
+  (setq recentf-max-saved-items 60))
+
+(use-package nginx-mode
+  :init
+  (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
+
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
