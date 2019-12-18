@@ -260,6 +260,7 @@
 
 
 ;;; Use org-capture with separate frame
+;;; command to eval this code: emacsclientw.exe -ne "(make-capture-frame)"
 (defun make-capture-frame (&optional capture-url)
   "Create a new frame and run org-capture."
   (interactive)
