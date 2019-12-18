@@ -1,5 +1,4 @@
 ;;; init.el
-
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 
@@ -107,6 +106,11 @@
    (pcase system-type
      (`gnu/linux (expand-file-name "~"))
      (`windows-nt (getenv "USERPROFILE")))))
+
+(when (eq system-type 'windows-nt)
+  (push "C:/msys64/usr/bin" exec-path)
+  (push "C:/msys64/mingw64/bin" exec-path)
+  (setenv "PATH" (mapconcat #'identity exec-path path-separator)))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -478,7 +482,7 @@
   (cond ((eq system-type 'gnu/linux)
          (setq langtool-bin "/usr/bin/languagetool"))
         ((eq system-type 'windows-nt)
-         (setq langtool-language-tool-jar (expand-file-name gn-base-dir "Apps/langtool/languagetool-commandline.jar"))))
+         (setq langtool-language-tool-jar "C:/apps/langtool/languagetool-commandline.jar")))
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
     (when (require 'popup nil t)
@@ -724,8 +728,9 @@
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)
-       (push (concat gn-base-dir "Apps/emacs-bin/bin") exec-path)
-       (setenv "PATH" (mapconcat #'identity exec-path path-separator))
+       ;; (push "C:/msys64/usr/bin" exec-path)
+       ;; (push "C:/msys64/mingw64/bin" exec-path)
+       ;; (setenv "PATH" (mapconcat #'identity exec-path path-separator))
        (use-package w32-browser)))
 
 
