@@ -22,4 +22,4 @@
  '(ivy-use-virtual-buffers t)
  '(ivy-wrap t)
  '(package-selected-packages
-   '(nginx-mode sokoban zenburn-theme web-mode w32-browser use-package smex smart-mode-line ox-pandoc ox-clip org-plus-contrib olivetti nlinum markdown-mode magit ledger-mode langtool js2-mode hydra helm flycheck-ledger elpy elfeed dockerfile-mode docker-compose-mode diminish deft counsel)))
+   '(zenburn-theme which-key web-mode w32-browser use-package speed-type sokoban smex smartparens ox-pandoc ox-clip org-plus-contrib olivetti nginx-mode markdown-mode magit ledger-mode langtool js2-mode hydra helm-swoop helm-org helm-descbinds flyspell-popup flycheck-ledger find-file-in-project elpy elfeed dockerfile-mode docker-compose-mode diminish deft counsel avy)))
