@@ -582,6 +582,18 @@
            ("Other"
             (or (name . "\*.*\*")
                 (name . "^magit.*"))))))
+  ;; nearly all of this is the default layout
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 30 30 :left :elide) ; change: 30s were originally 18s
+                " "
+                (size 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " " filename-and-process)
+          (mark " "
+                (name 16 -1)
+                " " filename)))
   (defun my-ibuffer-mode-hook ()
     (ibuffer-auto-mode 1)
     (ibuffer-switch-to-saved-filter-groups "default")
