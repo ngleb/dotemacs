@@ -26,6 +26,7 @@
 (setq package-pinned-packages
       '(;; list of packages to be installed
         (nginx-mode . "melpa")
+        (treemacs . "melpa")
         (avy . "melpa")
         (elfeed . "melpa-stable")
         (async . "melpa-stable")
@@ -229,8 +230,7 @@
 (use-package elfeed
   :init
   (setq elfeed-feeds
-        '(("https://www.linux.org.ru/section-rss.jsp?section=1" software)
-          ("https://kg-portal.ru/rss/news.rss" movies)
+        '(("https://kg-portal.ru/rss/news.rss" movies)
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://wordpress.org/news/feed/" software)
