@@ -10,6 +10,7 @@ auto-save-list
 backup
 backups
 bookmarks
+.cache/*
 el-get
 elpa
 eshell
