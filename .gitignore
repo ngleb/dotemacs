@@ -2,6 +2,7 @@
 *.elc
 *~
 .#recentf
+.cache/*
 .cask
 .org-id-locations
 .python-environments
@@ -10,10 +11,10 @@ auto-save-list
 backup
 backups
 bookmarks
-.cache/*
 el-get
 elpa
 eshell
+flycheck_init.el
 games/*
 history
 image-dired

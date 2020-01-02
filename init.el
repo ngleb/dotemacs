@@ -120,7 +120,8 @@
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
 (blink-cursor-mode -1)
 (tooltip-mode -1)
 (column-number-mode 1)
@@ -354,8 +355,7 @@
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
   (ivy-wrap t)
-  :config
-  (setq ivy-format-function 'ivy-format-function-line))
+  (ivy-format-function 'ivy-format-function-line))
 
 (use-package counsel
   :after ivy)
@@ -373,7 +373,7 @@
 
 (use-package company
   :diminish " ❋"
-  :defer 3
+  :defer 1
   :bind (:map company-mode-map
          ("C-<tab>" . company-complete-common-or-cycle)
          :map company-active-map
