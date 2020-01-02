@@ -18,6 +18,7 @@
  '(ivy-count-format "(%d/%d) ")
  '(ivy-display-style 'fancy)
  '(ivy-do-completion-in-region nil)
+ '(ivy-format-function 'ivy-format-function-line t)
  '(ivy-initial-inputs-alist nil)
  '(ivy-use-virtual-buffers t)
  '(ivy-wrap t)
