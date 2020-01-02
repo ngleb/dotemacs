@@ -349,7 +349,9 @@
   (ivy-display-style 'fancy)
   (ivy-count-format "(%d/%d) ")
   (ivy-initial-inputs-alist nil)
-  (ivy-wrap t))
+  (ivy-wrap t)
+  :config
+  (setq ivy-format-function 'ivy-format-function-line))
 
 (use-package counsel
   :after ivy)
@@ -731,18 +733,18 @@
        (use-package zenburn-theme
          :config
          (load-theme 'zenburn t)
-         (custom-set-faces
-          '(whitespace-tab ((t (:foreground "gray40" :background "#424242")))))))
+         (let ((custom--inhibit-theme-enable nil))
+           (custom-theme-set-faces
+            'zenburn
+            '(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))
+            '(ivy-current-match ((t (:background "#4f4f4f" :underline nil))))
+            ))))
 
       ((eq system-type 'windows-nt)
-       (set-face-attribute 'mode-line nil
-                    :box nil)
+       (set-face-attribute 'mode-line nil :box nil)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)
-       ;; (push "C:/msys64/usr/bin" exec-path)
-       ;; (push "C:/msys64/mingw64/bin" exec-path)
-       ;; (setenv "PATH" (mapconcat #'identity exec-path path-separator))
        (use-package w32-browser)))
 
 
