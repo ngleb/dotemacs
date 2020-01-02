@@ -30,6 +30,7 @@
 (setq package-pinned-packages
       '(;; list of packages to be installed
         (nginx-mode . "melpa")
+        (csv-mode . "elpa")
         (treemacs . "melpa")
         (avy . "melpa")
         (elfeed . "melpa-stable")
