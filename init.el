@@ -8,11 +8,11 @@
                    gc-cons-percentage 0.1)
              (garbage-collect)) t)
 
-(prefer-coding-system 'utf-8)
+(set-language-environment 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8)
 
 (require 'package)
 (setq package-enable-at-startup nil)
