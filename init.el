@@ -234,7 +234,8 @@
 (use-package elfeed
   :init
   (setq elfeed-feeds
-        '(("https://kg-portal.ru/rss/news.rss" movies)
+        '(("https://softwaremaniacs.org/blog/feed/" blogs)
+          ("https://kg-portal.ru/rss/news.rss" movies)
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://wordpress.org/news/feed/" software)
@@ -563,6 +564,7 @@
   :bind ("C-x C-b" . ibuffer)
   :config
   (use-package ibuf-ext)
+  (add-to-list 'ibuffer-never-show-predicates "^\\*helm")
   (setq ibuffer-show-empty-filter-groups nil)
   (setq ibuffer-expert t)
   (setq ibuffer-saved-filter-groups
