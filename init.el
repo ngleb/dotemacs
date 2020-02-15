@@ -113,10 +113,10 @@
      (`gnu/linux (expand-file-name "~"))
      (`windows-nt (getenv "USERPROFILE")))))
 
-(when (eq system-type 'windows-nt)
-  (push "C:/msys64/usr/bin" exec-path)
-  (push "C:/msys64/mingw64/bin" exec-path)
-  (setenv "PATH" (mapconcat #'identity exec-path path-separator)))
+;; (when (eq system-type 'windows-nt)
+;;   (push "C:/msys64/usr/bin" exec-path)
+;;   (push "C:/msys64/mingw64/bin" exec-path)
+;;   (setenv "PATH" (mapconcat #'identity exec-path path-separator)))
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'menu-bar-mode)(menu-bar-mode -1))
