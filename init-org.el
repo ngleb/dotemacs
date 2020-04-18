@@ -139,7 +139,7 @@
         `(,active-project-match ("NEXT")))
 
   (setq org-agenda-compact-blocks t
-        org-agenda-sticky t
+        org-agenda-sticky nil
         org-agenda-start-on-weekday nil
         org-agenda-span 5
         org-agenda-start-day "-2d"
@@ -153,6 +153,9 @@
         org-agenda-custom-commands
         `(("N" "Notes" tags "NOTE"
            ((org-agenda-overriding-header "Notes")
+            (org-tags-match-list-sublevels t)))
+          ("d" "Done" tags (concat "LEVEL=1" "TODO=\"DONE\"")
+           ((org-agenda-overriding-header "Done tasks")
             (org-tags-match-list-sublevels t)))
           ("g" "GTD"
            ((agenda ""
