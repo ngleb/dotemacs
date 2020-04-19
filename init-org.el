@@ -23,7 +23,7 @@
 
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory))
-(setq gn-org-agenda-file (expand-file-name "gtd.org" org-directory))
+(setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq org-agenda-files (list gn-org-agenda-file))
 
