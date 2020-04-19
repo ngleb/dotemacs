@@ -46,6 +46,7 @@
                       ("laptop" . ?l)
                       ("errands" . ?e)
                       ("reading" . ?r)
+                      ("video" . ?v)
                       ("calls" . ?c)
                       (:endgroup . nil)))
 
