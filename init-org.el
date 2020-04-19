@@ -77,15 +77,6 @@
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
       org-use-fast-todo-selection t)
 
-;; (setq org-todo-state-tags-triggers
-;;       (quote (("CANCELLED" ("CANCELLED" . t))
-;;               ("WAITING" ("WAITING" . t))
-;;               ("HOLD" ("WAITING") ("HOLD" . t))
-;;               (done ("WAITING") ("HOLD"))
-;;               ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-;;               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-;;               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-
 (setq org-todo-keyword-faces
       (quote (("NEXT" :inherit warning)
               ("PROJECT" . "turquoise"))))
@@ -155,9 +146,6 @@
         `(("N" "Notes" tags "NOTE"
            ((org-agenda-overriding-header "Notes")
             (org-tags-match-list-sublevels t)))
-          ("d" "Done" tags (concat "LEVEL=1" "TODO=\"DONE\"")
-           ((org-agenda-overriding-header "Done tasks")
-            (org-tags-match-list-sublevels t)))
           ("g" "GTD"
            ((agenda ""
                     ((org-agenda-skip-timestamp-if-done t)
@@ -226,6 +214,9 @@
                         (org-tags-match-list-sublevels nil)
                         (org-agenda-sorting-strategy
                          '(category-keep))))
+            (tags (concat "LEVEL=1" "TODO=\"DONE\"")
+                  ((org-agenda-overriding-header "Finished tasks")
+                   (org-tags-match-list-sublevels t)))
             ;; (tags-todo "-NEXT"
             ;;            ((org-agenda-overriding-header "All other TODOs")
             ;;             (org-match-list-sublevels t)))
