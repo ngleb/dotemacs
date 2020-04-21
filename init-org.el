@@ -153,7 +153,7 @@
                      (org-agenda-skip-scheduled-if-done t)
                      (org-deadline-warning-days 7)))
             (tags "INBOX"
-                  ((org-agenda-overriding-header "Inbox")
+                  ((org-agenda-overriding-header (concat "Inbox (" (number-to-string (length (org-map-entries t "LEVEL=1" (list org-default-notes-file gn-org-mobile-file)))) ")"))
                    (org-tags-match-list-sublevels nil)
                    (org-agenda-files (list org-default-notes-file gn-org-mobile-file))))
             (stuck ""
