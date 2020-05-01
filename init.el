@@ -720,7 +720,6 @@
 (require 'server)
 (or (server-running-p) (server-start))
 
-
 (cond ((eq system-type 'gnu/linux)
        ;; TODO fix the font changing in GUI on Linux
        ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
