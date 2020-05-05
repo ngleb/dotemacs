@@ -367,6 +367,8 @@
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-do-completion-in-region nil)
+  (ivy-mode 1)
   :bind (("C-x b" . ivy-switch-buffer)
          ("C-x B" . ivy-switch-buffer-other-window)))
 
@@ -404,7 +406,7 @@
          ("<tab>" . company-complete-common-or-cycle))
   :config
   (setq company-require-match nil)
-  (global-company-mode))
+  (global-company-mode 1))
 
 (use-package flycheck
   :commands (flycheck-mode

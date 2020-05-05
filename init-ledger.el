@@ -5,6 +5,7 @@
          ("C-<f7>" . quick-calc)
          ("<f8>"   . my-ledger-report/body)
          ("<f9>"   . ledger-mode-clean-buffer)
+         ("TAB"    . company-indent-or-complete-common)
          :map ledger-report-mode-map
          ("n"      . next-line)
          ("p"      . previous-line))
