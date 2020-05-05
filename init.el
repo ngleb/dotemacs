@@ -49,11 +49,6 @@
         (flycheck-ledger . "melpa")
         (flyspell-popup . "melpa")
         (git-commit . "melpa-stable")
-        (helm . "melpa")
-        (helm-core . "melpa")
-        (helm-org . "melpa")
-        (helm-swoop . "melpa")
-        (helm-descbinds . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
@@ -198,6 +193,34 @@
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
 
+(cond ((eq system-type 'gnu/linux)
+       ;; TODO fix the font changing in GUI on Linux
+       ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
+       (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
+       (define-key special-event-map [config-changed-event] #'ignore)
+       (set-face-attribute 'default nil
+                           :family "Meslo LG M"
+                           :height 115)
+       (use-package zenburn-theme
+         :init
+         (load-theme 'zenburn t)
+
+         :config
+         (zenburn-with-color-variables
+           (custom-theme-set-faces
+            'zenburn
+            `(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))
+            `(ivy-current-match ((t (:background ,zenburn-bg+1 :underline nil))))
+            `(swiper-line-face ((t (:background ,zenburn-bg+1 :underline nil))))))
+         (setq zenburn-add-font-lock-keywords t)))
+
+      ((eq system-type 'windows-nt)
+       (set-face-attribute 'mode-line nil :box nil)
+       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
+       (setq inhibit-compacting-font-caches t)
+       (setq default-directory gn-base-dir)
+       (use-package w32-browser)))
+
 (use-package avy
   :bind* ("C-." . avy-goto-char-timer)
   :config
@@ -341,24 +364,28 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
-  :diminish
-  :demand t
-  :custom
-  (ivy-use-virtual-buffers t)
-  (enable-recursive-minibuffers t)
-  (ivy-display-style 'fancy)
-  (ivy-count-format "(%d/%d) ")
-  (ivy-initial-inputs-alist nil)
-  (ivy-wrap t)
-  (ivy-format-function 'ivy-format-function-line))
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window)))
 
 (use-package counsel
-  :after ivy)
-
-(use-package swiper
   :after ivy
-  :bind (:map isearch-mode-map
-              ("C-o" . swiper-from-isearch)))
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("M-y" . counsel-yank-pop)
+         ("C-x r b" . counsel-bookmark)
+         ("C-c o" . counsel-outline)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-h b" . counsel-descbinds)
+         ("C-*" . counsel-org-agenda-headlines)
+         ("C-x l" . counsel-locate)))
+  
+(use-package swiper
+  :config
+  (global-set-key (kbd "C-s") 'swiper-isearch))
 
 (use-package uniquify
   :init
@@ -428,55 +455,6 @@
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
-
-(use-package helm
-  :defer 1
-  :diminish helm-mode
-  :bind (("M-x" . helm-M-x)
-         ("C-c j" . helm-imenu)
-         ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
-         ("C-x C-f" . helm-find-files)
-         ("C-x r b" . helm-bookmarks)
-         ("C-x c o" . helm-occur))
-  :bind (:map org-mode-map
-              ("C-c j" . helm-org-in-buffer-headings))
-  :config
-  ;; (setq helm-display-function 'helm-display-buffer-in-own-frame
-  ;;       helm-display-buffer-reuse-frame t
-  ;;       helm-use-undecorated-frame-option t)
-  (setq helm-split-window-inside-p t)
-  (setq helm-mode-handle-completion-in-region nil)
-  (setq helm-org-format-outline-path t)
-  (setq helm-display-header-line nil)
-  (helm-autoresize-mode 1)
-  (helm-mode 1)
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*scratch\\*")
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*Messages\\*")
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
-
-  (when (eq system-type 'windows-nt)
-    (setq helm-locate-command "es %s -sort run-count %s")
-    (defun helm-es-hook ()
-      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
-                 (string-match "\\`es" helm-locate-command))
-        (mapc (lambda (file)
-                (call-process "es" nil nil nil
-                              "-inc-run-count" (convert-standard-filename file)))
-              (helm-marked-candidates))))
-    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
-
-(use-package helm-config)
-
-(use-package helm-descbinds
-  :defer t
-  :bind ("C-h b" . helm-descbinds)
-  :init
-  (fset 'describe-bindings 'helm-descbinds))
-
-(use-package helm-swoop
-  :defer t
-  :bind (("C-x c s" . helm-swoop)))
 
 (use-package langtool
   :config
@@ -720,33 +698,6 @@
 (require 'server)
 (or (server-running-p) (server-start))
 
-(cond ((eq system-type 'gnu/linux)
-       ;; TODO fix the font changing in GUI on Linux
-       ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
-       (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
-       (define-key special-event-map [config-changed-event] #'ignore)
-       (set-face-attribute 'default nil
-                           :family "Meslo LG M"
-                           :height 115)
-
-       (use-package zenburn-theme
-         :config
-         (load-theme 'zenburn t)
-         (let ((custom--inhibit-theme-enable nil))
-           (custom-theme-set-faces
-            'zenburn
-            '(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))
-            '(ivy-current-match ((t (:background "#4f4f4f" :underline nil))))
-            ))))
-
-      ((eq system-type 'windows-nt)
-       (set-face-attribute 'mode-line nil :box nil)
-       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
-       (setq inhibit-compacting-font-caches t)
-       (setq default-directory gn-base-dir)
-       (use-package w32-browser)))
-
-
 (defconst display-name
   (pcase (display-pixel-height)
     (`768 'lenovo)
@@ -797,9 +748,9 @@
       (emacs-min)
     (emacs-max)))
 
-(add-hook 'emacs-startup-hook #'emacs-min t)
+;; (add-hook 'emacs-startup-hook #'emacs-min t)
 ;; (when (eq system-type 'windows-nt)
-;;   (add-hook 'emacs-startup-hook #'emacs-maximize t))
+(add-hook 'emacs-startup-hook #'emacs-maximize t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
 ;;; init.el ends here
