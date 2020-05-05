@@ -373,6 +373,7 @@
 (use-package counsel
   :after ivy
   :bind (("M-x" . counsel-M-x)
+         ("C-c i i" . counsel-imenu)
          ("C-x C-f" . counsel-find-file)
          ("M-y" . counsel-yank-pop)
          ("C-x r b" . counsel-bookmark)
