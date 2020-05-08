@@ -455,13 +455,13 @@
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
-         ("C-x b" . helm-buffers-list) ;; helm-mini or helm-buffers-list
+         ("C-x b" . helm-buffers-list)
          ("C-x B" . helm-mini)
          ("C-x C-f" . helm-find-files)
          ("C-x r b" . helm-bookmarks)
-         ("C-x c o" . helm-occur))
-  :bind (:map org-mode-map
-              ("C-c j" . helm-org-in-buffer-headings))
+         ("C-x c o" . helm-occur)
+         :map org-mode-map
+         ("C-c j" . helm-org-in-buffer-headings))
   :config
   (setq helm-split-window-inside-p t)
   (setq helm-mode-handle-completion-in-region nil)
@@ -641,12 +641,13 @@
          ("C-c i r" . ispell-region)
          ("C-c i v" . ispell-buffer))
   :commands ispell-word
+  :init
+  (setq ispell-dictionary "english")
   :config
   (add-to-list 'ispell-local-dictionary-alist
                '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "en_US") nil utf-8))
   (add-to-list 'ispell-local-dictionary-alist
                '("russian" "[[:alpha:]]" "[^[:alpha:]]" "[']" t ("-d" "ru_RU") nil koi8-r))
-  (setq ispell-dictionary "english")
   (setq ispell-silently-savep t)
   (when (executable-find "hunspell")
     (setq-default ispell-program-name "hunspell")
@@ -664,7 +665,7 @@
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
-         ("C-c i m" . flyspell-mode))
+         ("C-c i f" . flyspell-mode))
   :config
   (defun flyspell-check-next-highlighted-word ()
     "Custom function to spell check next highlighted word"
