@@ -451,7 +451,9 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
 
-(use-package helm
+(require 'helm-config)
+
+(use-package helm-mode
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
@@ -485,17 +487,12 @@
               (helm-marked-candidates))))
     (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
 
-(use-package helm-config
-  :after helm)
-
 (use-package helm-descbinds
-  :after helm
   :bind ("C-h b" . helm-descbinds)
   :init
   (fset 'describe-bindings 'helm-descbinds))
 
 (use-package helm-swoop
-  :after helm
   :bind ("C-x c s" . helm-swoop))
 
 (use-package langtool
@@ -626,13 +623,7 @@
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :config
-  (setf markdown-indent-on-enter nil
-        markdown-command
-        "pandoc -f markdown -t html5 -s --self-contained --smart")
-  (add-hook 'markdown-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'markdown-mode-hook 'turn-on-olivetti-mode))
+         ("\\.markdown\\'" . markdown-mode)))
 
 (use-package ispell
   :bind (("C-c i c" . ispell-comments-and-strings)
