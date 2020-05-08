@@ -49,6 +49,11 @@
         (flycheck-ledger . "melpa")
         (flyspell-popup . "melpa")
         (git-commit . "melpa-stable")
+        (helm . "melpa")
+        (helm-core . "melpa")
+        (helm-org . "melpa")
+        (helm-swoop . "melpa")
+        (helm-descbinds . "melpa")
         (highlight-indentation . "melpa-stable")
         (hydra . "melpa")
         (ivy . "melpa-stable")
@@ -367,31 +372,16 @@
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-do-completion-in-region nil)
-  (ivy-mode 1)
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window)))
+  (setq ivy-do-completion-in-region nil))
 
 (use-package counsel
-  :after ivy
-  :bind (("M-x" . counsel-M-x)
-         ("C-c i i" . counsel-imenu)
-         ("C-x C-f" . counsel-find-file)
-         ("M-y" . counsel-yank-pop)
-         ("C-x r b" . counsel-bookmark)
-         ("C-c o" . counsel-outline)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ("C-h b" . counsel-descbinds)
-         ("C-*" . counsel-org-agenda-headlines)
-         ("C-x l" . counsel-locate)))
+  :after ivy)
   
 (use-package swiper
-  :config
-  (global-set-key (kbd "C-s") 'swiper-isearch))
+  :bind ("C-s" . iswiper-isearch))
 
 (use-package uniquify
-  :init
+  :config
   (setq uniquify-buffer-name-style 'reverse)
   (setq uniquify-separator "/")
   (setq uniquify-ignore-buffers-re "^\\*"))
@@ -458,6 +448,52 @@
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
+
+(use-package helm
+  ;; :defer 1
+  :diminish helm-mode
+  :bind (("M-x" . helm-M-x)
+         ("C-c j" . helm-imenu)
+         ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
+         ("C-x C-f" . helm-find-files)
+         ("C-x r b" . helm-bookmarks)
+         ("C-x c o" . helm-occur))
+  :bind (:map org-mode-map
+              ("C-c j" . helm-org-in-buffer-headings))
+  :config
+  (setq helm-split-window-inside-p t)
+  (setq helm-mode-handle-completion-in-region nil)
+  (setq helm-org-format-outline-path t)
+  (setq helm-display-header-line nil)
+  (helm-autoresize-mode 1)
+  (helm-mode 1)
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*scratch\\*")
+  (add-to-list 'helm-boring-buffer-regexp-list "\\*Messages\\*")
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
+
+  (when (eq system-type 'windows-nt)
+    (setq helm-locate-command "es %s -sort run-count %s")
+    (defun helm-es-hook ()
+      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
+                 (string-match "\\`es" helm-locate-command))
+        (mapc (lambda (file)
+                (call-process "es" nil nil nil
+                              "-inc-run-count" (convert-standard-filename file)))
+              (helm-marked-candidates))))
+    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
+
+(use-package helm-config)
+
+(use-package helm-descbinds
+  :defer t
+  :bind ("C-h b" . helm-descbinds)
+  :init
+  (fset 'describe-bindings 'helm-descbinds))
+
+(use-package helm-swoop
+  :defer t
+  :bind (("C-x c s" . helm-swoop)))
 
 (use-package langtool
   :config
