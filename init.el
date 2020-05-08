@@ -451,10 +451,9 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
 
-(require 'helm-config)
-
-(use-package helm-mode
+(use-package helm
   :diminish helm-mode
+  :preface (require 'helm-config)
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
          ("C-x b" . helm-buffers-list)
@@ -469,8 +468,8 @@
   (setq helm-mode-handle-completion-in-region nil)
   (setq helm-org-format-outline-path t)
   (setq helm-display-header-line nil)
-  (helm-autoresize-mode 1)
   (helm-mode 1)
+  (helm-autoresize-mode 1)  
   (add-to-list 'helm-boring-buffer-regexp-list "\\*scratch\\*")
   (add-to-list 'helm-boring-buffer-regexp-list "\\*Messages\\*")
   (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
