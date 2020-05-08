@@ -234,16 +234,8 @@
       org-habit-today-glyph ?@
       org-habit-show-habits-only-for-today t)
 
-
-(use-package ox-clip
-  :commands ox-clip-formatted-copy)
-
-(use-package ox-pandoc
-  :disabled t
-  :init
-  (when (eq system-type 'gnu/linux)
-    (setq org-pandoc-command "~/my/bin/pandoc")))
-
+(use-package ox-clip)
+(use-package ox-pandoc)
 (use-package ox-beamer)
 
 (defun gn/open-agenda (&optional arg split)

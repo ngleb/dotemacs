@@ -378,7 +378,9 @@
   :after ivy)
   
 (use-package swiper
-  :bind ("C-s" . iswiper-isearch))
+  :after ivy
+  :commands iswiper-isearch
+  :bind ("C-s" . swiper-isearch))
 
 (use-package uniquify
   :config
@@ -450,11 +452,11 @@
   (elpy-enable))
 
 (use-package helm
-  ;; :defer 1
   :diminish helm-mode
   :bind (("M-x" . helm-M-x)
          ("C-c j" . helm-imenu)
-         ("C-x b" . helm-mini) ;; helm-mini or helm-buffers-list
+         ("C-x b" . helm-buffers-list) ;; helm-mini or helm-buffers-list
+         ("C-x B" . helm-mini)
          ("C-x C-f" . helm-find-files)
          ("C-x r b" . helm-bookmarks)
          ("C-x c o" . helm-occur))
@@ -483,7 +485,8 @@
               (helm-marked-candidates))))
     (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
 
-(use-package helm-config)
+(use-package helm-config
+  :after helm)
 
 (use-package helm-descbinds
   :defer t
@@ -527,10 +530,6 @@
   :diminish (global-whitespace-mode
              whitespace-mode
              whitespace-newline-mode)
-  ;; :init
-  ;; (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-  ;;   (add-hook hook #'whitespace-mode))
-  ;; (add-hook 'before-save-hook #'whitespace-cleanup)
   :config
   (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs tab-mark trailing)))
