@@ -489,14 +489,14 @@
   :after helm)
 
 (use-package helm-descbinds
-  :defer t
+  :after helm
   :bind ("C-h b" . helm-descbinds)
   :init
   (fset 'describe-bindings 'helm-descbinds))
 
 (use-package helm-swoop
-  :defer t
-  :bind (("C-x c s" . helm-swoop)))
+  :after helm
+  :bind ("C-x c s" . helm-swoop))
 
 (use-package langtool
   :config
