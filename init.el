@@ -29,6 +29,7 @@
 
 (setq package-pinned-packages
       '(;; list of packages to be installed
+        (ag . "melpa")
         (nginx-mode . "melpa")
         (csv-mode . "gnu")
         (treemacs . "melpa")
@@ -103,7 +104,6 @@
 (require 'bind-key)
 (require 'cl-lib)
 (require 'diminish)
-
 
 (add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
@@ -207,10 +207,8 @@
                            :family "Meslo LG M"
                            :height 115)
        (use-package zenburn-theme
-         :init
-         (load-theme 'zenburn t)
-
          :config
+         (load-theme 'zenburn t)
          (zenburn-with-color-variables
            (custom-theme-set-faces
             'zenburn
@@ -226,10 +224,53 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
-(use-package avy
-  :bind* ("C-." . avy-goto-char-timer)
+(require 'helm-config)
+(use-package helm-mode
+  :demand
+  :bind (("M-x" . helm-M-x)
+         ("C-x r b" . helm-filtered-bookmarks)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-buffers-list)
+         ("C-c j" . helm-imenu)
+         ("C-x B" . helm-mini)
+         ("C-x c o" . helm-occur))
   :config
-  (avy-setup-default))
+  (helm-mode 1)
+  (helm-autoresize-mode 1)
+  (setq helm-split-window-inside-p t)
+  (setq helm-mode-handle-completion-in-region nil)
+  (setq helm-display-header-line nil)
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
+
+  (when (eq system-type 'windows-nt)
+    (setq helm-locate-command "es %s -sort run-count %s")
+    (defun helm-es-hook ()
+      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
+                 (string-match "\\`es" helm-locate-command))
+        (mapc (lambda (file)
+                (call-process "es" nil nil nil
+                              "-inc-run-count" (convert-standard-filename file)))
+              (helm-marked-candidates))))
+    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
+
+(use-package helm-descbinds
+  :after helm-mode
+  :config
+  (helm-descbinds-mode 1))
+
+(use-package helm-swoop
+  :after helm-mode
+  :bind ("C-x c s" . helm-swoop)
+  :config
+  (setq helm-swoop-speed-or-color t))
+
+(use-package helm-org
+  :after helm-mode
+  :bind (:map org-mode-map
+              ("C-c j" . helm-org-in-buffer-headings))  
+  :config
+  (setq helm-org-format-outline-path t))
 
 (use-package ediff
   :config
@@ -250,7 +291,6 @@
   (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
 
 (use-package eldoc
-  :diminish
   :config
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
 
@@ -360,27 +400,24 @@
   (push '(youtube elfeed-youtube)
         elfeed-search-face-alist))
 
-(use-package eshell
-  :commands (eshell eshell-command))
-
 (use-package man
   :config
   (bind-key "j" (kbd "C-u 1 C-v") Man-mode-map)
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
-(use-package ivy
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-do-completion-in-region nil))
+;; (use-package ivy
+;;   :config
+;;   (setq ivy-use-virtual-buffers t)
+;;   (setq ivy-count-format "(%d/%d) ")
+;;   (setq ivy-do-completion-in-region nil))
 
-(use-package counsel
-  :after ivy)
+;; (use-package counsel
+;;   :after ivy)
   
-(use-package swiper
-  :after ivy
-  :commands iswiper-isearch
-  :bind ("C-s" . swiper-isearch))
+;; (use-package swiper
+;;   :after ivy
+;;   :commands iswiper-isearch
+;;   :bind ("C-s" . swiper-isearch))
 
 (use-package uniquify
   :config
@@ -451,49 +488,6 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
 
-(use-package helm
-  :diminish helm-mode
-  :preface (require 'helm-config)
-  :bind (("M-x" . helm-M-x)
-         ("C-c j" . helm-imenu)
-         ("C-x b" . helm-buffers-list)
-         ("C-x B" . helm-mini)
-         ("C-x C-f" . helm-find-files)
-         ("C-x r b" . helm-bookmarks)
-         ("C-x c o" . helm-occur)
-         :map org-mode-map
-         ("C-c j" . helm-org-in-buffer-headings))
-  :config
-  (setq helm-split-window-inside-p t)
-  (setq helm-mode-handle-completion-in-region nil)
-  (setq helm-org-format-outline-path t)
-  (setq helm-display-header-line nil)
-  (helm-mode 1)
-  (helm-autoresize-mode 1)  
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*scratch\\*")
-  (add-to-list 'helm-boring-buffer-regexp-list "\\*Messages\\*")
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
-
-  (when (eq system-type 'windows-nt)
-    (setq helm-locate-command "es %s -sort run-count %s")
-    (defun helm-es-hook ()
-      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
-                 (string-match "\\`es" helm-locate-command))
-        (mapc (lambda (file)
-                (call-process "es" nil nil nil
-                              "-inc-run-count" (convert-standard-filename file)))
-              (helm-marked-candidates))))
-    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
-
-(use-package helm-descbinds
-  :bind ("C-h b" . helm-descbinds)
-  :init
-  (fset 'describe-bindings 'helm-descbinds))
-
-(use-package helm-swoop
-  :bind ("C-x c s" . helm-swoop))
-
 (use-package langtool
   :config
   (cond ((eq system-type 'gnu/linux)
@@ -547,17 +541,15 @@
   (setq deft-auto-save-interval 0.0))
 
 (use-package calendar
-  :custom
-  (calendar-week-start-day 1)
-  (calendar-location-name "Tomsk")
-  (calendar-latitude 56.30)
-  (calendar-longitude 84.58)
-  (calendar-mark-holidays-flag t)
   :config
+  (setq calendar-week-start-day 1
+        calendar-location-name "Tomsk"
+        calendar-latitude 56.30
+        calendar-longitude 84.58
+        calendar-mark-holidays-flag t)
   (setq calendar-date-display-form calendar-european-date-display-form))
 
-(use-package web-mode
-  :commands web-mode)
+(use-package web-mode)
 
 (use-package js2-mode
   :mode "\\.js\\'"
@@ -665,13 +657,6 @@
   (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
   (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
 
-(use-package smartparens-config
-  :disabled t
-  :diminish smartparens-mode
-  :config
-  ;;(smartparens-global-mode t)
-  (show-smartparens-global-mode t))
-
 (use-package ls-lisp
   :config
   (when (eq system-type 'windows-nt)
@@ -713,7 +698,7 @@
   (setq recentf-max-saved-items 60))
 
 (use-package nginx-mode
-  :init
+  :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
 
