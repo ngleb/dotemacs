@@ -693,6 +693,9 @@
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
+(use-package server
+  :config (or (server-running-p) (server-mode)))
+
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
 
@@ -700,8 +703,7 @@
 (load "~/.emacs.d/init-org")
 (load "~/.emacs.d/init-ledger")
 
-(require 'server)
-(or (server-running-p) (server-start))
+
 
 (defconst display-name
   (pcase (display-pixel-height)
