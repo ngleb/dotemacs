@@ -426,18 +426,6 @@
   (setq uniquify-separator "/")
   (setq uniquify-ignore-buffers-re "^\\*"))
 
-(use-package company
-  :diminish " ❋"
-  :defer 1
-  :bind (:map company-mode-map
-         ("C-<tab>" . company-complete-common-or-cycle)
-         :map company-active-map
-         ("TAB" . company-complete-common-or-cycle)
-         ("<tab>" . company-complete-common-or-cycle))
-  :config
-  (setq company-require-match nil)
-  (global-company-mode 1))
-
 (use-package flycheck
   :commands (flycheck-mode
              flycheck-next-error
@@ -457,12 +445,18 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point))
 
-(use-package which-key
-  :diminish
-  :commands which-key-mode
+(use-package company
+  :diminish " ❋"
+  :defer 1
   :config
-  (setq which-key-idle-delay 1.5)
-  (which-key-mode))
+  (setq company-require-match nil)
+  (global-company-mode))
+
+(use-package find-file-in-project)
+
+(use-package pyvenv
+  :init
+  (defalias 'workon 'pyvenv-workon))
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
@@ -471,12 +465,10 @@
         python-shell-interpreter-args "-i")
   (setq python-indent-guess-indent-offset nil))
 
-(use-package pyvenv
-  :init
-  (defalias 'workon 'pyvenv-workon))
-
 (use-package elpy
   :after python
+  :init
+  (setq elpy-remove-modeline-lighter nil)
   :config
   (setq elpy-rpc-virtualenv-path 'current)
   (setq elpy-shell-echo-input nil)
@@ -484,6 +476,13 @@
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
+
+(use-package which-key
+  :diminish
+  :commands which-key-mode
+  :config
+  (setq which-key-idle-delay 1.5)
+  (which-key-mode))
 
 (use-package hydra)
 
