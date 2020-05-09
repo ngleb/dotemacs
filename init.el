@@ -99,6 +99,8 @@
 (eval-when-compile
   (require 'use-package))
 
+(setq use-package-compute-statistics t)
+
 (require 'bind-key)
 (require 'cl-lib)
 (require 'diminish)
@@ -117,7 +119,7 @@
 ;;   (setenv "PATH" (mapconcat #'identity exec-path path-separator)))
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'menu-bar-mode)(menu-bar-mode -1))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (blink-cursor-mode -1)
 (tooltip-mode -1)
