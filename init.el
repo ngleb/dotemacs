@@ -73,7 +73,6 @@
         (smartparens . "melpa")
         (smex . "melpa")
         (sokoban . "gnu")
-        (speed-type . "melpa")
         (swiper . "melpa-stable")
         (use-package . "melpa")
         (which-key . "melpa")
@@ -81,8 +80,7 @@
         (web-mode . "melpa")
         (with-editor . "melpa-stable")
         (yasnippet . "melpa")
-        (zenburn-theme . "melpa")
-        )) ;; end of list
+        (zenburn-theme . "melpa")))
 
 (when (version< emacs-version "27.0") (package-initialize))
 (setq package-contents-refreshed nil)
@@ -224,8 +222,7 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
-(use-package helm-config
-  :demand)
+(use-package helm-config)
 
 (use-package helm-mode
   :demand
