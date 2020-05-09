@@ -457,23 +457,19 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point))
 
+(use-package which-key
+  :diminish
+  :commands which-key-mode
+  :config
+  (setq which-key-idle-delay 1.5)
+  (which-key-mode))
+
 (use-package python
   :mode ("\\.py\\'" . python-mode)
   :config
   (setq python-shell-interpreter "python"
         python-shell-interpreter-args "-i")
   (setq python-indent-guess-indent-offset nil))
-
-(use-package which-key
-  :defer 3
-  :diminish
-  :commands which-key-mode
-  :init
-  (setq which-key-idle-delay 1.5)
-  :config
-  (which-key-mode))
-
-(use-package flyspell-popup)
 
 (use-package pyvenv
   :init
@@ -488,23 +484,6 @@
   (delete 'elpy-module-flymake elpy-modules)
   (add-hook 'elpy-mode-hook 'flycheck-mode)
   (elpy-enable))
-
-(use-package langtool
-  :config
-  (cond ((eq system-type 'gnu/linux)
-         (setq langtool-bin "/usr/bin/languagetool"))
-        ((eq system-type 'windows-nt)
-         (setq langtool-language-tool-jar "C:/apps/langtool/languagetool-commandline.jar")))
-  (setq langtool-default-language "en-US")
-  (defun langtool-autoshow-detail-popup (overlays)
-    (when (require 'popup nil t)
-      ;; Do not interrupt current popup
-      (unless (or popup-instances
-                  ;; suppress popup after type `C-g` .
-                  (memq last-command '(keyboard-quit)))
-        (let ((msg (langtool-details-error-message overlays)))
-          (popup-tip msg)))))
-  (setq langtool-autoshow-message-function 'langtool-autoshow-detail-popup))
 
 (use-package hydra)
 
@@ -650,6 +629,7 @@
   :bind (("C-c i b" . flyspell-buffer)
          ("C-c i f" . flyspell-mode))
   :config
+  (use-package flyspell-popup)
   (defun flyspell-check-next-highlighted-word ()
     "Custom function to spell check next highlighted word"
     (interactive)
@@ -657,6 +637,23 @@
     (ispell-word))
   (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
   (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
+
+(use-package langtool
+  :config
+  (cond ((eq system-type 'gnu/linux)
+         (setq langtool-bin "/usr/bin/languagetool"))
+        ((eq system-type 'windows-nt)
+         (setq langtool-language-tool-jar "C:/apps/langtool/languagetool-commandline.jar")))
+  (setq langtool-default-language "en-US")
+  (defun langtool-autoshow-detail-popup (overlays)
+    (when (require 'popup nil t)
+      ;; Do not interrupt current popup
+      (unless (or popup-instances
+                  ;; suppress popup after type `C-g` .
+                  (memq last-command '(keyboard-quit)))
+        (let ((msg (langtool-details-error-message overlays)))
+          (popup-tip msg)))))
+  (setq langtool-autoshow-message-function 'langtool-autoshow-detail-popup))
 
 (use-package ls-lisp
   :config
@@ -688,20 +685,15 @@
   (setq diredp-hide-details-initially-flag nil)
   (diredp-toggle-find-file-reuse-dir 1))
 
-(use-package smex
-  :defer 5
-  :commands smex)
-
 (use-package recentf
   :config
   (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
   (add-to-list 'recentf-exclude "AppData/Local/Temp")
-  (setq recentf-max-saved-items 60))
+  (setq recentf-max-saved-items 100))
 
 (use-package nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
-
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file t)
