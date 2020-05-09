@@ -240,6 +240,7 @@
   (setq helm-split-window-inside-p t)
   (setq helm-mode-handle-completion-in-region nil)
   (setq helm-display-header-line nil)
+  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
   (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
 
@@ -268,7 +269,7 @@
 (use-package helm-org
   :after helm-mode
   :bind (:map org-mode-map
-              ("C-c j" . helm-org-in-buffer-headings))  
+              ("C-c j" . helm-org-in-buffer-headings))
   :config
   (setq helm-org-format-outline-path t))
 
@@ -405,19 +406,19 @@
   (bind-key "j" (kbd "C-u 1 C-v") Man-mode-map)
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
-;; (use-package ivy
-;;   :config
-;;   (setq ivy-use-virtual-buffers t)
-;;   (setq ivy-count-format "(%d/%d) ")
-;;   (setq ivy-do-completion-in-region nil))
+(use-package ivy
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-do-completion-in-region nil))
 
-;; (use-package counsel
-;;   :after ivy)
+(use-package counsel
+  :after ivy)
   
-;; (use-package swiper
-;;   :after ivy
-;;   :commands iswiper-isearch
-;;   :bind ("C-s" . swiper-isearch))
+(use-package swiper
+  :after ivy
+  :commands iswiper-isearch
+  :bind ("C-s" . swiper-isearch))
 
 (use-package uniquify
   :config
