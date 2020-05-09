@@ -224,9 +224,12 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
-(require 'helm-config)
+(use-package helm-config
+  :demand)
+
 (use-package helm-mode
   :demand
+  :after helm-config
   :bind (("M-x" . helm-M-x)
          ("C-x r b" . helm-filtered-bookmarks)
          ("C-x C-f" . helm-find-files)
