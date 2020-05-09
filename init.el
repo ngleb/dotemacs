@@ -467,9 +467,8 @@
 
 (use-package elpy
   :after python
-  :init
-  (setq elpy-remove-modeline-lighter nil)
   :config
+  (setq elpy-remove-modeline-lighter nil)
   (setq elpy-rpc-virtualenv-path 'current)
   (setq elpy-shell-echo-input nil)
   (delete 'elpy-module-highlight-indentation elpy-modules)
