@@ -16,7 +16,15 @@
          :map ledger-report-mode-map
          ("n"      . next-line)
          ("p"      . previous-line))
-
+  :init
+  (defun my-ledger-mode-hook ()
+    (flycheck-mode 1)
+    (company-mode 1)
+    (setq-local tab-always-indent 'complete)
+    (setq-local completion-ignore-case t)
+    (setq-local ledger-complete-in-steps t))
+  (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
+  (add-hook 'ledger-report-mode-hook 'hl-line-mode 1)
   :config
   (setq ledger-report-links-in-register nil)
   (setq ledger-report-use-header-line t)
@@ -34,18 +42,6 @@
           ("expenses-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide balance ^expenses")
           ("budget-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --budget --invert bal ^expenses")
           ("unbudgeted-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --unbudgeted balance ^expenses"))))
-
-  (add-hook 'ledger-mode-hook
-            (lambda ()
-              (flycheck-mode 1)
-              (company-mode 1)
-              (setq-local tab-always-indent 'complete)
-              (setq-local completion-ignore-case t)
-              (setq-local ledger-complete-in-steps t)))
-
-  (add-hook 'ledger-report-mode-hook
-            (lambda ()
-              (hl-line-mode 1)))
 
   (defun my-center-buffer (&rest args)
     (recenter))
