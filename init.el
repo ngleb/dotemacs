@@ -435,7 +435,6 @@
   :commands (flycheck-mode
              flycheck-next-error
              flycheck-previous-error)
-  :diminish flycheck-mode
   :init
   (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
                    (js2-mode-hook        . js2-mode-map)
