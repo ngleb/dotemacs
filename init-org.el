@@ -1,3 +1,10 @@
+;;; init-org.el --- Load org-mode configuration -*- lexical-binding: t -*-
+;;; Commentary:
+
+;; org-mode config
+
+;;; Code:
+
 (require 'org)
 (require 'org-agenda)
 (require 'org-protocol)
@@ -283,6 +290,12 @@
      (org-save-all-org-buffers)
      (delete-frame))))
 
+
+
 (provide 'init-org)
 
+;; Local Variables:
+;; coding: utf-8
+;; no-byte-compile: t
+;; End:
 ;;; init-org.el ends here

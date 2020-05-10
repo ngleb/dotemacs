@@ -1,3 +1,10 @@
+;;; init-ledger.el --- Load ledger-mode configuration -*- lexical-binding: t -*-
+;;; Commentary:
+
+;; ledger-mode config
+
+;;; Code:
+
 (use-package ledger-mode
   :mode "\\.ledger\\'"
   :bind (:map ledger-mode-map
@@ -79,4 +86,12 @@ _q_ quit"
 (use-package flycheck-ledger
   :after flycheck)
 
+
+
+(provide 'init-ledger)
+
+;; Local Variables:
+;; coding: utf-8
+;; no-byte-compile: t
+;; End:
 ;;; init-ledger.el ends here

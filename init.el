@@ -1,6 +1,9 @@
-;;; init.el
-(setq gc-cons-threshold 402653184
-      gc-cons-percentage 0.6)
+;;; init.el --- Load the full configuration -*- lexical-binding: t -*-
+;;; Commentary:
+
+;; Init file
+
+;;; Code:
 
 (add-hook 'after-init-hook
           `(lambda ()
@@ -761,4 +764,12 @@
 (add-hook 'emacs-startup-hook #'emacs-maximize t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
+
+
+(provide 'init)
+
+;; Local Variables:
+;; coding: utf-8
+;; no-byte-compile: t
+;; End:
 ;;; init.el ends here
