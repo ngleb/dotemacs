@@ -462,8 +462,7 @@
   (setq company-require-match nil
         company-show-numbers t
         company-minimum-prefix-length 2
-        company-idle-delay 0
-        company-selection-wrap-around t))
+        company-idle-delay 0.1))
 
 (use-package find-file-in-project)
 

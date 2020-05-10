@@ -20,6 +20,7 @@
   (defun my-ledger-mode-hook ()
     (flycheck-mode 1)
     (company-mode 1)
+    (setq-local company-backends '(company-capf))
     (setq-local tab-always-indent 'complete)
     (setq-local completion-ignore-case t)
     (setq-local ledger-complete-in-steps t))
