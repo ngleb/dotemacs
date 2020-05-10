@@ -10,15 +10,8 @@
              (setq gc-cons-threshold 16777216
                    gc-cons-percentage 0.1)))
 
-(set-language-environment 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system
- (if (eq system-type 'windows-nt)
-     'utf-16-le  ;; https://rufflewind.com/2014-07-20/pasting-unicode-in-emacs-on-windows
-   'utf-8))
-(prefer-coding-system 'utf-8)
+(defconst *is-linux* (eq system-type 'gnu/linux))
+(defconst *is-windows* (eq system-type 'windows-nt))
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -166,6 +159,15 @@
 
 ;; MULE & encoding setup
 (setq default-input-method "russian-computer")
+(set-language-environment 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system
+ (if *is-windows*
+     'utf-16-le  ;; https://rufflewind.com/2014-07-20/pasting-unicode-in-emacs-on-windows
+   'utf-8))
+(prefer-coding-system 'utf-8)
 
 ;; Stop creating backup and auto-save files
 (setq make-backup-files nil) ; stop creating those backup~ files
@@ -200,7 +202,7 @@
           (LaTeX-fill-region-as-paragraph beg (point))
         (fill-region-as-paragraph beg (point))))))
 
-(cond ((eq system-type 'gnu/linux)
+(cond (*is-linux*
        ;; TODO fix the font changing in GUI on Linux
        ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
        (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
@@ -219,7 +221,7 @@
             `(swiper-line-face ((t (:background ,zenburn-bg+1 :underline nil))))))
          (setq zenburn-add-font-lock-keywords t)))
 
-      ((eq system-type 'windows-nt)
+      (*is-windows*
        (set-face-attribute 'mode-line nil :box nil)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
        (setq inhibit-compacting-font-caches t)
@@ -248,7 +250,7 @@
   (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
 
-  (when (eq system-type 'windows-nt)
+  (when *is-windows*
     (setq helm-locate-command "es %s -sort run-count %s")
     (defun helm-es-hook ()
       (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
@@ -642,9 +644,9 @@
 
 (use-package langtool
   :config
-  (cond ((eq system-type 'gnu/linux)
+  (cond (*is-linux*
          (setq langtool-bin "/usr/bin/languagetool"))
-        ((eq system-type 'windows-nt)
+        (*is-windows*
          (setq langtool-language-tool-jar "C:/apps/langtool/languagetool-commandline.jar")))
   (setq langtool-default-language "en-US")
   (defun langtool-autoshow-detail-popup (overlays)
@@ -659,7 +661,7 @@
 
 (use-package ls-lisp
   :config
-  (when (eq system-type 'windows-nt)
+  (when *is-windows*
     (setq ls-lisp-format-time-list  '("%d.%m.%Y %H:%M" "%d.%m.%Y %H:%M"))
     (setq ls-lisp-emulation 'MS-Windows)
     (ls-lisp-set-options)))
