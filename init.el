@@ -4,9 +4,8 @@
 
 (add-hook 'after-init-hook
           `(lambda ()
-             (setq gc-cons-threshold 800000
-                   gc-cons-percentage 0.1)
-             (garbage-collect)) t)
+             (setq gc-cons-threshold 16777216
+                   gc-cons-percentage 0.1)))
 
 (set-language-environment 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -118,9 +117,9 @@
 ;;   (push "C:/msys64/mingw64/bin" exec-path)
 ;;   (setenv "PATH" (mapconcat #'identity exec-path path-separator)))
 
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+;; (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;; (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+;; (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (blink-cursor-mode -1)
 (tooltip-mode -1)
 (column-number-mode 1)
