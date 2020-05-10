@@ -451,10 +451,13 @@
 
 (use-package company
   :diminish " ❋"
-  :defer 1
+  :init
+  (add-hook 'prog-mode-hook 'company-mode)
   :config
-  (setq company-require-match nil)
-  (global-company-mode))
+  (setq company-require-match nil
+        company-show-numbers t
+        company-minimum-prefix-length 2
+        company-idle-delay 0))
 
 (use-package find-file-in-project)
 
