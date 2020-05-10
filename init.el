@@ -529,7 +529,8 @@
         calendar-mark-holidays-flag t)
   (setq calendar-date-display-form calendar-european-date-display-form))
 
-(use-package web-mode)
+(use-package web-mode
+  :mode ("\\.html?\\'" . web-mode))
 
 (use-package js2-mode
   :mode "\\.js\\'"
