@@ -303,7 +303,8 @@
         youtube-dl-directory (expand-file-name "Downloads" gn-base-dir)))
 
 (use-package elfeed
-  :init
+  :bind ("C-x w" . elfeed)
+  :config
   (setq elfeed-feeds
         '(("https://softwaremaniacs.org/blog/feed/" blogs)
           ("https://kg-portal.ru/rss/news.rss" movies)
@@ -335,10 +336,10 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbhMGG0ZievPtK8mzLH5jhQ" youtube)
           ("https://www.youtube.com/feeds/videos.xml?user=TheBadComedian" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCsKiNBoIWLpIxU6vsAv3v3w" youtube)))
-  (setq-default elfeed-search-filter "@2-days-ago +unread ")
-  (setq elfeed-search-title-max-width 95)
 
-  :config
+  (setq elfeed-search-filter "@2-days-ago +unread "
+        elfeed-search-title-max-width 95)
+
   (defun elfeed-show-youtube-dl ()
     "Download the current entry with youtube-dl."
     (interactive)
@@ -392,8 +393,6 @@
   (add-hook 'elfeed-new-entry-hook
             (elfeed-make-tagger :before "2 weeks ago"
                                 :remove 'unread))
-
-  (global-set-key (kbd "C-x w") 'elfeed)
 
   (defface elfeed-youtube
     '((t :foreground "#f9f"))
