@@ -451,6 +451,11 @@
 
 (use-package company
   :diminish " ❋"
+  :bind(:map company-mode-map
+        ("TAB" . company-indent-or-complete-common)
+        :map company-active-map
+        ("TAB" . company-complete-common-or-cycle)
+        ("<tab>" . company-complete-common-or-cycle))
   :init
   (add-hook 'prog-mode-hook 'company-mode)
   :config
