@@ -24,7 +24,7 @@
     (setq-local completion-ignore-case t)
     (setq-local ledger-complete-in-steps t))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
-  (add-hook 'ledger-report-mode-hook 'hl-line-mode 1)
+  (add-hook 'ledger-report-mode-hook 'hl-line-mode)
   :config
   (setq ledger-report-use-header-line t)
   (setq ledger-report-use-strict t)
