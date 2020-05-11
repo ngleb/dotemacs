@@ -158,7 +158,6 @@
       hscroll-step 1)
 
 ;; MULE & encoding setup
-(setq default-input-method "russian-computer")
 (set-language-environment 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -168,6 +167,7 @@
      'utf-16-le  ;; https://rufflewind.com/2014-07-20/pasting-unicode-in-emacs-on-windows
    'utf-8))
 (prefer-coding-system 'utf-8)
+(setq default-input-method "russian-computer")
 
 ;; Stop creating backup and auto-save files
 (setq make-backup-files nil) ; stop creating those backup~ files
