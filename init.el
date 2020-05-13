@@ -273,7 +273,7 @@
   (setq helm-swoop-speed-or-color t))
 
 (use-package helm-org
-  :after helm-mode
+  :after (org helm-mode)
   :bind (:map org-mode-map
               ("C-c j" . helm-org-in-buffer-headings))
   :config
