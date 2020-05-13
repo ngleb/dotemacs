@@ -241,11 +241,9 @@
          ("C-x B" . helm-mini)
          ("C-x c o" . helm-occur))
   :config
-  (helm-mode 1)
-  (helm-autoresize-mode 1)
-  (setq helm-split-window-inside-p t)
   (setq helm-mode-handle-completion-in-region nil)
   (setq helm-display-header-line nil)
+  (setq helm-split-window-inside-p t)
   (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
   (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
@@ -259,7 +257,10 @@
                 (call-process "es" nil nil nil
                               "-inc-run-count" (convert-standard-filename file)))
               (helm-marked-candidates))))
-    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook)))
+    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook))
+
+  (helm-mode 1)
+  (helm-autoresize-mode 1))
 
 (use-package helm-descbinds
   :after helm-mode
