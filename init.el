@@ -245,7 +245,7 @@
   (setq helm-display-header-line nil)
   (setq helm-split-window-inside-p t)
   (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit-"))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit"))
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
 
   (when *is-windows*
