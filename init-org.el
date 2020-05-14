@@ -221,7 +221,7 @@
                         (org-tags-match-list-sublevels nil)
                         (org-agenda-sorting-strategy
                          '(category-keep))))
-            (tags (concat "LEVEL=1" "TODO=\"DONE\"")
+            (tags "LEVEL=1+TODO=\"CANCELLED\"|LEVEL=1+TODO=\"DONE\""
                   ((org-agenda-overriding-header "Finished tasks")
                    (org-tags-match-list-sublevels t)))
             ;; (tags-todo "-NEXT"
