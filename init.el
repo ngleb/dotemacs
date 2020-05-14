@@ -675,13 +675,13 @@
     (ls-lisp-set-options)))
 
 (use-package dired
-  :config
-  (setq dired-omit-files "^\\...+$")
+  :init
   (defun my-dired-mode-hook ()
     (hl-line-mode 1)
     (dired-omit-mode 1))
   (add-hook 'dired-mode-hook 'my-dired-mode-hook)
-
+  :config
+  (setq dired-omit-files "^\\...+$")
   (defconst my-dired-listing-switches
     (pcase system-type
       (`gnu/linux "-aBhl --group-directories-first")
