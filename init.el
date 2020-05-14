@@ -553,6 +553,12 @@
 (use-package ibuffer
   :commands ibuffer
   :bind ("C-x C-b" . ibuffer)
+  :init
+  (defun my-ibuffer-mode-hook ()
+    (ibuffer-auto-mode 1)
+    (ibuffer-switch-to-saved-filter-groups "default")
+    (hl-line-mode 1))
+  (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook)
   :config
   (use-package ibuf-ext)
   (add-to-list 'ibuffer-never-show-predicates "^\\*helm")
@@ -591,12 +597,7 @@
                 " " filename-and-process)
           (mark " "
                 (name 16 -1)
-                " " filename)))
-  (defun my-ibuffer-mode-hook ()
-    (ibuffer-auto-mode 1)
-    (ibuffer-switch-to-saved-filter-groups "default")
-    (hl-line-mode 1))
-  (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook))
+                " " filename))))
 
 (use-package olivetti
   :commands olivetti-mode
