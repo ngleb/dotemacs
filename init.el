@@ -490,8 +490,6 @@
   (elpy-enable))
 
 (use-package which-key
-  :diminish
-  :commands which-key-mode
   :config
   (setq which-key-idle-delay 1.5)
   (which-key-mode))
