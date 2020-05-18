@@ -6,9 +6,9 @@
 ;;; Code:
 
 (require 'org)
-(require 'org-agenda)
-(require 'org-protocol)
-(require 'org-capture)
+(use-package org-agenda)
+(use-package org-capture)
+(use-package org-protocol)
 (use-package org-checklist)
 
 (add-hook 'org-mode-hook 'visual-line-mode)
