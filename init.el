@@ -706,6 +706,11 @@
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
 
+(use-package gnus
+  :init
+  (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
+        gnus-home-directory "~/my/gnus"))
+
 (use-package server
   :config (or (server-running-p) (server-mode)))
 
