@@ -333,6 +333,7 @@
           ("https://anchor.fm/s/29b5580/podcast/rss" marketing)
           ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://blog.mikrotik.com/rss/" software)
+          ("https://planet.emacslife.com/atom.xml" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
