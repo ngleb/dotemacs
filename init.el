@@ -675,26 +675,37 @@
     (ls-lisp-set-options)))
 
 (use-package dired
-  :init
-  (defun my-dired-mode-hook ()
-    (hl-line-mode 1)
-    (dired-omit-mode 1))
-  (add-hook 'dired-mode-hook 'my-dired-mode-hook)
+  :bind (:map dired-mode-map
+              ("l" . dired-up-directory))
+  :hook (dired-mode . hl-line-mode)
+;;  :hook (dired-mode . dired-hide-details-mode)
   :config
-  (setq dired-omit-files "^\\...+$")
+  (setq font-lock-maximum-decoration (quote ((dired-mode . nil) (t . t))))
+  (put 'dired-find-alternate-file 'disabled nil)
+  (setq dired-dwim-target t)
+  (setq dired-hide-details-hide-symlink-targets nil)
+  (setq dired-hide-details-hide-information-lines nil)
   (defconst my-dired-listing-switches
     (pcase system-type
-      (`gnu/linux "-aBhl --group-directories-first")
+      (`gnu/linux "-ahl --group-directories-first")
       (`windows-nt "-alh")))
   (setq dired-listing-switches my-dired-listing-switches))
 
 (use-package dired-x
-  :after dired)
+  :after dired
+  :bind (:map dired-mode-map
+              ("h" . dired-omit-mode))
+  :hook (dired-mode . dired-omit-mode)
+  :config
+  (setq dired-omit-verbose nil)
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
 
 (use-package dired+
-  :after dired
-  :config
+  :after dired-x
+  :init
   (setq diredp-hide-details-initially-flag nil)
+  (setq diredp-hide-details-propagate-flag t)
+  :config
   (diredp-toggle-find-file-reuse-dir 1))
 
 (use-package recentf
