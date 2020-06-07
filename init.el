@@ -721,7 +721,7 @@
 
 (use-package gnus
   :init
-  (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
+  (setq gnus-init-file (expand-file-name "init-gnus" user-emacs-directory)
         gnus-home-directory "~/my/gnus"))
 
 (use-package savehist
@@ -738,8 +738,6 @@
 (load "~/.emacs.d/personal")
 (load "~/.emacs.d/init-org")
 (load "~/.emacs.d/init-ledger")
-(load "~/.emacs.d/dot-eudc")
-
 
 
 (defconst display-name

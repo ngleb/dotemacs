@@ -11,8 +11,6 @@ auto-save-list
 backup
 backups
 bookmarks
-dot-eudc.el
-dot-gnus-work.el
 el-get
 elpa
 eshell
@@ -21,6 +19,7 @@ flycheck_init.el
 games/*
 history
 image-dired
+init-gnus.el
 irony
 network-security.data
 org-clock-save.el*
