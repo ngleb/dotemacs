@@ -724,6 +724,11 @@
   (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
         gnus-home-directory "~/my/gnus"))
 
+(use-package savehist
+  :config
+  (setq history-delete-duplicates t)
+  (savehist-mode 1))
+
 (use-package server
   :config (or (server-running-p) (server-mode)))
 

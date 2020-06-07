@@ -117,7 +117,7 @@
          "* %?\nAdded on: %U" :clock-resume t :empty-lines 1)
         ("t" "Task" entry (file "")
          "* NEXT %?\nAdded on: %U" :clock-resume t :empty-lines 1)
-        ("j" "Journal" entry (file+olp+datetree gn-org-journal-file)
+        ("j" "Journal" entry (file+olp+datetree "")
          "* %?\n")
         ("p" "Link" entry (file "")
          "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nAdded on: %U\n" :immediate-finish t)
