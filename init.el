@@ -738,6 +738,7 @@
 (load "~/.emacs.d/personal")
 (load "~/.emacs.d/init-org")
 (load "~/.emacs.d/init-ledger")
+(load "~/.emacs.d/dot-eudc")
 
 
 
