@@ -142,7 +142,7 @@
 (setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
 (setq enable-recursive-minibuffers t)
-(setq auth-source-save-behavior nil)
+;;(setq auth-source-save-behavior nil)
 (setq kill-whole-line t)
 
 (put 'narrow-to-defun  'disabled nil)
@@ -182,6 +182,8 @@
 (bind-key "M-N" (kbd "C-u 1 C-v"))
 (bind-key "M-P" (kbd "C-u 1 M-v"))
 (bind-key "C-c i t" #'toggle-truncate-lines)
+
+(define-key minibuffer-inactive-mode-map [mouse-1] #'ignore)
 
 (defun expose (function &rest args)
   "Return an interactive version of FUNCTION, 'exposing' it to the user."
@@ -241,6 +243,8 @@
          ("C-x B" . helm-mini)
          ("C-x c o" . helm-occur))
   :config
+  (setq helm-ff-cache-mode-lighter-sleep ""
+        helm-ff-cache-mode-lighter-updating "")
   (setq helm-mode-handle-completion-in-region nil)
   (setq helm-display-header-line nil)
   (setq helm-split-window-inside-p t)
@@ -728,6 +732,10 @@
   :config
   (setq history-delete-duplicates t)
   (savehist-mode 1))
+
+;; (use-package tramp
+;;   :init
+;;   (setq tramp-completion-use-auth-sources nil))
 
 (use-package server
   :config (or (server-running-p) (server-mode)))

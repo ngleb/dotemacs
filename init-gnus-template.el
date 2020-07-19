@@ -23,6 +23,7 @@
 (setq gnus-permanently-visible-groups ".*")
 (setq gnus-use-correct-string-widths nil)
 (setq gnus­use­adaptive­scoring nil)
+(setq gnus-use-full-window nil)
 
 (defun my-message-mode-setup ()
   (setq fill-column 72)
