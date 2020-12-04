@@ -108,14 +108,6 @@
      (`gnu/linux (expand-file-name "~"))
      (`windows-nt (getenv "USERPROFILE")))))
 
-;; (when (eq system-type 'windows-nt)
-;;   (push "C:/msys64/usr/bin" exec-path)
-;;   (push "C:/msys64/mingw64/bin" exec-path)
-;;   (setenv "PATH" (mapconcat #'identity exec-path path-separator)))
-
-;; (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-;; (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-;; (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (blink-cursor-mode -1)
 (tooltip-mode -1)
 (column-number-mode 1)
@@ -142,7 +134,7 @@
 (setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
 (setq enable-recursive-minibuffers t)
-;;(setq auth-source-save-behavior nil)
+(setq auth-source-save-behavior nil)
 (setq kill-whole-line t)
 
 (put 'narrow-to-defun  'disabled nil)
@@ -735,9 +727,9 @@
   (setq history-delete-duplicates t)
   (savehist-mode 1))
 
-;; (use-package tramp
-;;   :init
-;;   (setq tramp-completion-use-auth-sources nil))
+(use-package tramp
+  :config
+  (setq tramp-completion-use-auth-sources nil))
 
 (use-package server
   :config (or (server-running-p) (server-mode)))
@@ -800,8 +792,6 @@
       (emacs-min)
     (emacs-max)))
 
-;; (add-hook 'emacs-startup-hook #'emacs-min t)
-;; (when (eq system-type 'windows-nt)
 (add-hook 'emacs-startup-hook #'emacs-maximize t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
 
