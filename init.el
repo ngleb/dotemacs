@@ -729,6 +729,9 @@
 
 (use-package tramp
   :config
+  (fset #'tramp-read-passwd
+        (lambda (key &optional prompt)
+        (password-read (or prompt "Password: ") key)))
   (setq tramp-completion-use-auth-sources nil))
 
 (use-package server
