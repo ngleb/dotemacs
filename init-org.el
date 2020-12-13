@@ -10,6 +10,7 @@
 (use-package org-capture)
 (use-package org-protocol)
 (use-package org-checklist)
+(use-package org-tempo)
 
 (add-hook 'org-mode-hook 'visual-line-mode)
 (add-to-list 'org-modules 'org-habit)
