@@ -340,7 +340,6 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCyNtlmLB73-7gtlBz00XOQQ" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCes1EvRjcKU4sY_UEavndBw" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCsKiNBoIWLpIxU6vsAv3v3w" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZ-ix1fUTguJvwj6sxgF-6A" youtube)))
 
   (setq elfeed-search-filter "@2-days-ago +unread "
@@ -730,9 +729,9 @@
 
 (use-package tramp
   :config
-  (fset #'tramp-read-passwd
-        (lambda (key &optional prompt)
-        (password-read (or prompt "Password: ") key)))
+  ;; (fset #'tramp-read-passwd
+  ;;       (lambda (key &optional prompt)
+  ;;       (password-read (or prompt "Password: ") key)))
   (setq tramp-completion-use-auth-sources nil))
 
 (use-package server
