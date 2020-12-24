@@ -115,13 +115,13 @@
 
 (setq org-capture-templates
       '(("x" "Note" entry (file "")
-         "* %?\nAdded on: %U" :clock-resume t :empty-lines 1)
+         "* %?" :clock-resume t :empty-lines 1)
         ("t" "Task" entry (file "")
-         "* NEXT %?\nAdded on: %U" :clock-resume t :empty-lines 1)
+         "* NEXT %?" :clock-resume t :empty-lines 1)
         ("j" "Journal" entry (file+olp+datetree "")
          "* %?\n")
         ("p" "Link" entry (file "")
-         "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nAdded on: %U\n" :immediate-finish t)
+         "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n" :immediate-finish t)
         ("s" "Link with text" entry (file "")
         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
         ("h" "Habit" entry (file "")
