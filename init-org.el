@@ -115,9 +115,9 @@
 
 (setq org-capture-templates
       '(("x" "Note" entry (file "")
-         "* %?" :clock-resume t :empty-lines 1)
+         "* %?" :clock-resume t :empty-lines 0)
         ("t" "Task" entry (file "")
-         "* NEXT %?" :clock-resume t :empty-lines 1)
+         "* NEXT %?" :clock-resume t :empty-lines 0)
         ("j" "Journal" entry (file+olp+datetree "")
          "* %?\n")
         ("p" "Link" entry (file "")
