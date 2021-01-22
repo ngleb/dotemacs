@@ -28,6 +28,7 @@
         (nginx-mode . "melpa")
         (csv-mode . "gnu")
         (treemacs . "melpa")
+        (tramp . "gnu")
         (avy . "melpa")
         (elfeed . "melpa-stable")
         (async . "melpa-stable")

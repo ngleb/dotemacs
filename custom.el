@@ -39,6 +39,7 @@
      smex
      sokoban
      swiper
+     tramp
      treemacs
      use-package
      w32-browser
