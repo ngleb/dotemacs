@@ -35,8 +35,8 @@
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq org-agenda-files (list gn-org-agenda-file))
 
-(setq gn-org-mobile-file (expand-file-name "Sync/org-mobile/mobile.org" gn-base-dir))
-(setq gn-org-purchases (expand-file-name "Sync/org-mobile/purchases.org" gn-base-dir))
+(setq gn-org-mobile-file (expand-file-name "Nextcloud/org-mobile/mobile.org" gn-base-dir))
+(setq gn-org-purchases (expand-file-name "Nextcloud/org-mobile/purchases.org" gn-base-dir))
 
 (setq org-startup-indented t)
 (setq org-archive-save-context-info nil)
