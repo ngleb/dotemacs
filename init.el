@@ -419,16 +419,36 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
+  :demand t
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window))
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-do-completion-in-region nil))
+  (setq ivy-do-completion-in-region nil)
+  (setq ivy-height 10)
+  (ivy-mode 1))
 
 (use-package counsel
-  :after ivy)
+  :demand t
+  :after ivy
+  :bind (("M-x" . counsel-M-x)
+         ("C-c i i" . counsel-imenu)
+         ("C-x C-f" . counsel-find-file)
+         ("M-y" . counsel-yank-pop)
+         ("C-x r b" . counsel-bookmark)
+         ("C-c o" . counsel-outline)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-h b" . counsel-descbinds)
+         ("C-*" . counsel-org-agenda-headlines)
+         ("C-x l" . counsel-locate))
+  :config
+  (counsel-mode 1))
   
 (use-package swiper
   :after ivy
+  :demand t
   :commands iswiper-isearch
   :bind ("C-s" . swiper-isearch))
 
