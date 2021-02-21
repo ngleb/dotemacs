@@ -223,9 +223,11 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
-(use-package helm-config)
+(use-package helm-config
+  :disabled t)
 
 (use-package helm-mode
+  :disabled t
   :demand
   :after helm-config
   :bind (("M-x" . helm-M-x)
@@ -260,17 +262,20 @@
   (helm-autoresize-mode 1))
 
 (use-package helm-descbinds
+  :disabled t
   :after helm-mode
   :config
   (helm-descbinds-mode 1))
 
 (use-package helm-swoop
+  :disabled t
   :after helm-mode
   :bind ("C-x c s" . helm-swoop)
   :config
   (setq helm-swoop-speed-or-color t))
 
 (use-package helm-org
+  :disabled t
   :after (org helm-mode)
   :bind (:map org-mode-map
               ("C-c j" . helm-org-in-buffer-headings))
