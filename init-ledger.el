@@ -29,6 +29,7 @@
   :config
   (setq ledger-report-use-header-line t)
   (setq ledger-report-use-strict t)
+  (setq ledger-add-transaction-prompt-for-text nil)
 
   (setq ledger-reports
         (quote
