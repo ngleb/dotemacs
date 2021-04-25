@@ -126,7 +126,7 @@
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 (setq confirm-kill-emacs 'y-or-n-p)
-(setq require-final-newline t)
+(setq require-final-newline nil)
 (setq sentence-end-double-space nil)
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
@@ -137,6 +137,7 @@
 (setq enable-recursive-minibuffers t)
 (setq auth-source-save-behavior nil)
 (setq kill-whole-line t)
+(setq-default indicate-empty-lines t)
 
 (put 'narrow-to-defun  'disabled nil)
 (put 'narrow-to-page   'disabled nil)
