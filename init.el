@@ -35,7 +35,7 @@
         (bind-key . "melpa")
         (company . "melpa-stable")
         (counsel . "melpa-stable")
-        (dash . "melpa-stable")
+        (dash . "melpa")
         (deft . "melpa")
         (diminish . "melpa")
         (docker-compose-mode . "melpa")
