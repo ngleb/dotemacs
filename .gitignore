@@ -33,4 +33,5 @@ session*
 smex-items
 speed-type/*
 tramp
+transient/*
 url/*
