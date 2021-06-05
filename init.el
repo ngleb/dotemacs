@@ -308,7 +308,7 @@
 (use-package youtube-dl
   :config
   (setq youtube-dl-arguments '("--no-mtime" "--restrict-filenames" "--format" "bestvideo[ext=mp4][width<=1920][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best")
-        youtube-dl-directory (expand-file-name "Downloads" gn-base-dir)))
+        youtube-dl-directory (expand-file-name "videos/videos" gn-base-dir)))
 
 (use-package elfeed
   :bind ("C-x w" . elfeed)
