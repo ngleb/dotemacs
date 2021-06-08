@@ -58,7 +58,6 @@
         (langtool . "melpa")
         (ledger-mode . "melpa")
         (magit . "melpa-stable")
-        (magit-popup . "melpa-stable")
         (markdown-mode . "melpa")
         (olivetti . "melpa")
         (org-plus-contrib . "org")
