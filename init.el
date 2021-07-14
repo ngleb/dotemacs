@@ -20,7 +20,7 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("org" . "https://orgmode.org/elpa/") t)
+             '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 
 (setq package-pinned-packages
       '(;; list of packages to be installed
@@ -60,7 +60,8 @@
         (magit . "melpa-stable")
         (markdown-mode . "melpa")
         (olivetti . "melpa")
-        (org-plus-contrib . "org")
+        (org . "gnu")
+        (org-contrib . "nongnu")
         (ox-clip . "melpa")
         (ox-pandoc . "melpa")
         (popup . "melpa-stable")
