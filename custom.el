@@ -31,7 +31,8 @@
      markdown-mode
      nginx-mode
      olivetti
-     org-plus-contrib
+     org
+     org-contrib
      ox-clip
      ox-pandoc
      pyvenv
