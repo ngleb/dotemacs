@@ -315,7 +315,6 @@
   :config
   (setq elfeed-feeds
         '(("https://softwaremaniacs.org/blog/feed/" blogs)
-          ("https://kg-portal.ru/rss/news_all.rss" movies)
           ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://planet.gentoo.org/rss20.xml" software)
@@ -338,14 +337,10 @@
           ("https://planet.emacslife.com/atom.xml" software)
           ("https://nemihail.livejournal.com/data/atom" blogs)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCB_qr75-ydFVKSF9Dmo6izg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCg0Y6Q0m3A_5X0CPY-IG3Yg" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCbhMGG0ZievPtK8mzLH5jhQ" youtube)
           ("https://www.youtube.com/feeds/videos.xml?user=TheBadComedian" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCyNtlmLB73-7gtlBz00XOQQ" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCes1EvRjcKU4sY_UEavndBw" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZ-ix1fUTguJvwj6sxgF-6A" youtube)))
 
