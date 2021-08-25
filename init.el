@@ -315,7 +315,6 @@
   :config
   (setq elfeed-feeds
         '(("https://softwaremaniacs.org/blog/feed/" blogs)
-          ("https://feeds.feedburner.com/smartfiction" books)
           ("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://planet.gentoo.org/rss20.xml" software)
           ("https://lwn.net/headlines/newrss" software)
@@ -335,7 +334,6 @@
           ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://blog.mikrotik.com/rss/" software)
           ("https://planet.emacslife.com/atom.xml" software)
-          ("https://nemihail.livejournal.com/data/atom" blogs)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)
@@ -344,7 +342,7 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCes1EvRjcKU4sY_UEavndBw" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZ-ix1fUTguJvwj6sxgF-6A" youtube)))
 
-  (setq elfeed-search-filter "@2-days-ago +unread "
+  (setq elfeed-search-filter "@2-days-ago +unread -news"
         elfeed-search-title-max-width 95)
 
   (defun elfeed-show-youtube-dl ()
