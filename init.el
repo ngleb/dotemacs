@@ -71,8 +71,6 @@
 (eval-when-compile
   (require 'use-package))
 
-(setq use-package-compute-statistics t)
-
 (require 'bind-key)
 (require 'cl-lib)
 (require 'diminish)
@@ -258,6 +256,9 @@
               ("C-c j" . helm-org-in-buffer-headings))
   :config
   (setq helm-org-format-outline-path t))
+
+(autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
+(use-package tramp)
 
 (use-package ediff
   :config
