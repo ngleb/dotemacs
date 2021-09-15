@@ -36,3 +36,4 @@ tramp
 transient/*
 url/*
 /straight/
+/.lsp-session-v1

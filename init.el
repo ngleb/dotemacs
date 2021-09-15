@@ -68,6 +68,11 @@
 (straight-use-package 'yasnippet)
 (straight-use-package 'zenburn-theme)
 
+(straight-use-package 'lsp-mode)
+(straight-use-package 'lsp-ui)
+(straight-use-package 'lsp-pyright)
+
+
 (eval-when-compile
   (require 'use-package))
 
@@ -175,11 +180,12 @@
 (cond (*is-linux*
        ;; TODO fix the font changing in GUI on Linux
        ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
-       (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
-       (define-key special-event-map [config-changed-event] #'ignore)
-       (set-face-attribute 'default nil
-                           :family "Meslo LG M"
-                           :height 115)
+       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
+       ;; (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
+       ;; (define-key special-event-map [config-changed-event] #'ignore)
+       ;; (set-face-attribute 'default nil
+       ;;                     :family "Meslo LG S"
+       ;;                     :height 115)
        (use-package zenburn-theme
          :config
          (load-theme 'zenburn t)
@@ -197,6 +203,23 @@
        (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
+
+(use-package lsp-mode
+  :disabled t
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+(use-package lsp-ui
+  :disabled t
+  :commands lsp-ui-mode)
+
+(use-package lsp-pyright
+  :disabled t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))
 
 (use-package helm-config
   :disabled t)
