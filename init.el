@@ -67,6 +67,10 @@
 (straight-use-package 'web-mode)
 (straight-use-package 'yasnippet)
 (straight-use-package 'zenburn-theme)
+(straight-use-package 'helm)
+(straight-use-package 'helm-descbinds)
+(straight-use-package 'helm-org)
+(straight-use-package 'helm-swoop)
 
 (straight-use-package 'lsp-mode)
 (straight-use-package 'lsp-ui)
@@ -221,13 +225,8 @@
                           (require 'lsp-pyright)
                           (lsp))))
 
-(use-package helm-config
-  :disabled t)
-
-(use-package helm-mode
-  :disabled t
-  :demand
-  :after helm-config
+(use-package helm
+  :demand t
   :bind (("M-x" . helm-M-x)
          ("C-x r b" . helm-filtered-bookmarks)
          ("C-x C-f" . helm-find-files)
@@ -236,14 +235,10 @@
          ("C-x B" . helm-mini)
          ("C-x c o" . helm-occur))
   :config
-  (setq helm-ff-cache-mode-lighter-sleep ""
-        helm-ff-cache-mode-lighter-updating "")
   (setq helm-mode-handle-completion-in-region nil)
   (setq helm-display-header-line nil)
   (setq helm-split-window-inside-p t)
   (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit"))
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck"))
 
   (when *is-windows*
     (setq helm-locate-command "es %s -sort run-count %s")
@@ -257,23 +252,20 @@
     (add-hook 'helm-find-many-files-after-hook 'helm-es-hook))
 
   (helm-mode 1)
-  (helm-autoresize-mode 1))
+  (helm-autoresize-mode 1)
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit"))
+  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
 
 (use-package helm-descbinds
-  :disabled t
-  :after helm-mode
   :config
   (helm-descbinds-mode 1))
 
 (use-package helm-swoop
-  :disabled t
-  :after helm-mode
   :bind ("C-x c s" . helm-swoop)
   :config
   (setq helm-swoop-speed-or-color t))
 
 (use-package helm-org
-  :disabled t
   :after (org helm-mode)
   :bind (:map org-mode-map
               ("C-c j" . helm-org-in-buffer-headings))
@@ -414,32 +406,34 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
-  :demand t
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window))
+  ;; :demand t
+  ;; :bind (("C-x b" . ivy-switch-buffer)
+  ;;        ("C-x B" . ivy-switch-buffer-other-window))
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-do-completion-in-region nil)
   (setq ivy-height 10)
-  (ivy-mode 1))
+  (setq ivy-initial-inputs-alist nil)
+  (setcdr (assoc t ivy-format-functions-alist) #'ivy-format-function-line))
+  ;; ;;(ivy-mode 1)
 
-(use-package counsel
-  :demand t
-  :after ivy
-  :bind (("M-x" . counsel-M-x)
-         ("C-c i i" . counsel-imenu)
-         ("C-x C-f" . counsel-find-file)
-         ("M-y" . counsel-yank-pop)
-         ("C-x r b" . counsel-bookmark)
-         ("C-c o" . counsel-outline)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ("C-h b" . counsel-descbinds)
-         ("C-*" . counsel-org-agenda-headlines)
-         ("C-x l" . counsel-locate))
-  :config
-  (counsel-mode 1))
+;; (use-package counsel
+;;   :demand t
+;;   :after ivy
+;;   :bind (("M-x" . counsel-M-x)
+;;          ("C-c i i" . counsel-imenu)
+;;          ("C-x C-f" . counsel-find-file)
+;;          ("M-y" . counsel-yank-pop)
+;;          ("C-x r b" . counsel-bookmark)
+;;          ("C-c o" . counsel-outline)
+;;          ("C-h f" . counsel-describe-function)
+;;          ("C-h v" . counsel-describe-variable)
+;;          ("C-h b" . counsel-descbinds)
+;;          ("C-*" . counsel-org-agenda-headlines)
+;;          ("C-x l" . counsel-locate))
+;;   :config
+;;   (counsel-mode 1))
   
 (use-package swiper
   :after ivy
