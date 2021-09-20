@@ -208,6 +208,11 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
+(use-package avy
+  :bind* ("C-." . avy-goto-char-timer)
+  :config
+  (avy-setup-default))
+
 (use-package lsp-mode
   :disabled t
   :init
