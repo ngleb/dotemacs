@@ -479,6 +479,7 @@
         ("<tab>" . company-complete-common-or-cycle))
   :init
   (add-hook 'prog-mode-hook 'company-mode)
+  (add-hook 'inferior-python-mode-hook 'company-mode)
   :config
   (setq company-require-match nil
         company-show-numbers t
