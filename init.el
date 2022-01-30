@@ -97,6 +97,7 @@
 (column-number-mode 1)
 (show-paren-mode 1)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(setq display-fill-column-indicator-column 79)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (setq mouse-highlight nil)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -231,6 +232,7 @@
                           (lsp))))
 
 (use-package helm
+  :disabled t
   :demand t
   :bind (("M-x" . helm-M-x)
          ("C-x r b" . helm-filtered-bookmarks)
@@ -262,15 +264,18 @@
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
 
 (use-package helm-descbinds
+  :disabled t
   :config
   (helm-descbinds-mode 1))
 
 (use-package helm-swoop
+  :disabled t
   :bind ("C-x c s" . helm-swoop)
   :config
   (setq helm-swoop-speed-or-color t))
 
 (use-package helm-org
+  :disabled t
   :after (org helm-mode)
   :bind (:map org-mode-map
               ("C-c j" . helm-org-in-buffer-headings))
@@ -411,34 +416,34 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
-  ;; :demand t
-  ;; :bind (("C-x b" . ivy-switch-buffer)
-  ;;        ("C-x B" . ivy-switch-buffer-other-window))
+  :demand t
+  :bind (("C-x b" . ivy-switch-buffer)
+         ("C-x B" . ivy-switch-buffer-other-window))
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-do-completion-in-region nil)
   (setq ivy-height 10)
   (setq ivy-initial-inputs-alist nil)
-  (setcdr (assoc t ivy-format-functions-alist) #'ivy-format-function-line))
-  ;; ;;(ivy-mode 1)
+  (setcdr (assoc t ivy-format-functions-alist) #'ivy-format-function-line)
+  (ivy-mode 1))
 
-;; (use-package counsel
-;;   :demand t
-;;   :after ivy
-;;   :bind (("M-x" . counsel-M-x)
-;;          ("C-c i i" . counsel-imenu)
-;;          ("C-x C-f" . counsel-find-file)
-;;          ("M-y" . counsel-yank-pop)
-;;          ("C-x r b" . counsel-bookmark)
-;;          ("C-c o" . counsel-outline)
-;;          ("C-h f" . counsel-describe-function)
-;;          ("C-h v" . counsel-describe-variable)
-;;          ("C-h b" . counsel-descbinds)
-;;          ("C-*" . counsel-org-agenda-headlines)
-;;          ("C-x l" . counsel-locate))
-;;   :config
-;;   (counsel-mode 1))
+(use-package counsel
+  :demand t
+  :after ivy
+  :bind (("M-x" . counsel-M-x)
+         ("C-c i i" . counsel-imenu)
+         ("C-x C-f" . counsel-find-file)
+         ("M-y" . counsel-yank-pop)
+         ("C-x r b" . counsel-bookmark)
+         ("C-c o" . counsel-outline)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-h b" . counsel-descbinds)
+         ("C-*" . counsel-org-agenda-headlines)
+         ("C-x l" . counsel-locate))
+  :config
+  (counsel-mode 1))
   
 (use-package swiper
   :after ivy
