@@ -27,7 +27,9 @@
  ("C-c a" . org-agenda)
  ("C-c c" . org-capture)
  ("C-c b" . org-switchb)
- ("<f12>" . (lambda () (interactive) (gn/open-agenda "g" nil))))
+ ("<f12>" . (lambda () (interactive) (gn/open-agenda "g" nil)))
+ :map org-agenda-mode-map
+ ("<f10>" . org-agenda-switch-to-narrowed-subtree))
 
 (setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory))
@@ -245,6 +247,13 @@
 (use-package ox-clip)
 (use-package ox-pandoc)
 (use-package ox-beamer)
+
+
+(defun org-agenda-switch-to-narrowed-subtree ()
+  (interactive)
+  (org-agenda-switch-to)
+  (org-narrow-to-subtree))
+
 
 (defun gn/open-agenda (&optional arg split)
   "Visit the org agenda `ARG', in the current window or a `SPLIT'."

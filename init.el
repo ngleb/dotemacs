@@ -97,7 +97,8 @@
 (column-number-mode 1)
 (show-paren-mode 1)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(setq display-fill-column-indicator-column 79)
+(setq-default display-fill-column-indicator-column 79)
+(add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (setq mouse-highlight nil)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -324,15 +325,12 @@
           ("https://dictionaryblog.cambridge.org/feed/" english)
           ("https://feeds.feedburner.com/arstechnica/index/" news)
           ("https://dxdt.ru/feed/" software)
-          ("http://jimblog.me/?feed=atom" blogs)
           ("https://www.smashingmagazine.com/feed/" blogs)
-          ("http://www.stayclassicblog.com/feed/atom/" blogs)
           ("http://lleo.me/dnevnik/rss.xml" blogs)
           ("https://postnauka.ru/feed" news)
           ("http://nullprogram.com/feed/" software)
           ("http://ammo1.livejournal.com/data/rss" blogs)
           ("https://mikrotik.com/current.rss" software)
-          ("https://anchor.fm/s/29b5580/podcast/rss" marketing)
           ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://blog.mikrotik.com/rss/" software)
           ("https://planet.emacslife.com/atom.xml" software)
@@ -346,7 +344,7 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)))
 
   (setq elfeed-search-filter "@2-days-ago +unread -news"
-        elfeed-search-title-max-width 95)
+        elfeed-search-title-max-width 75)
 
   (defun elfeed-show-youtube-dl ()
     "Download the current entry with youtube-dl."
@@ -401,6 +399,16 @@
   (add-hook 'elfeed-new-entry-hook
             (elfeed-make-tagger :before "2 weeks ago"
                                 :remove 'unread))
+  (add-hook 'elfeed-show-mode-hook
+            (lambda ()
+              (let ((inhibit-read-only t)
+                    (inhibit-modification-hooks t))
+                (setq-local truncate-lines nil)
+                (setq-local shr-width 85)
+                (set-buffer-modified-p nil))
+              (setq-local left-margin-width 15)
+              (setq-local right-margin-width 15)
+              ))
 
   (defface elfeed-youtube
     '((t :foreground "#f9f"))
@@ -705,7 +713,7 @@
   :hook (dired-mode . hl-line-mode)
 ;;  :hook (dired-mode . dired-hide-details-mode)
   :config
-  (setq font-lock-maximum-decoration (quote ((dired-mode . nil) (t . t))))
+  ;;(setq font-lock-maximum-decoration (quote ((dired-mode . nil) (t . t))))
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-dwim-target t)
   (setq dired-hide-details-hide-symlink-targets nil)
