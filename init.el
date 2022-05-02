@@ -333,7 +333,6 @@
           ("https://mikrotik.com/current.rss" software)
           ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://blog.mikrotik.com/rss/" software)
-          ("https://planet.emacslife.com/atom.xml" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)
@@ -341,7 +340,8 @@
           ("https://www.youtube.com/feeds/videos.xml?user=TheBadComedian" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCes1EvRjcKU4sY_UEavndBw" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZ-ix1fUTguJvwj6sxgF-6A" youtube)
-          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)))
+          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)
+          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCsKiNBoIWLpIxU6vsAv3v3w" youtube)))
 
   (setq elfeed-search-filter "@2-days-ago +unread -news"
         elfeed-search-title-max-width 75)
