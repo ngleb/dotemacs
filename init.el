@@ -712,9 +712,9 @@
   :bind (:map dired-mode-map
               ("l" . dired-up-directory))
   :hook (dired-mode . hl-line-mode)
-;;  :hook (dired-mode . dired-hide-details-mode)
+  ;;:hook (dired-mode . dired-hide-details-mode)
   :config
-  ;;(setq font-lock-maximum-decoration (quote ((dired-mode . nil) (t . t))))
+  (setq font-lock-maximum-decoration (quote ((dired-mode . t) (t . t))))
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-dwim-target t)
   (setq dired-hide-details-hide-symlink-targets nil)
