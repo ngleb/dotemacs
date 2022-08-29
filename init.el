@@ -153,6 +153,10 @@
 (setq auto-save-default nil) ; stop creating those #auto-save# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
 
+;; C style
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 
