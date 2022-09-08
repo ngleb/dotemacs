@@ -116,13 +116,18 @@
 (setq-default truncate-lines t)
 (setq-default word-wrap t)
 (setq visual-line-fringe-indicators '(nil right-curly-arrow))
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
 (global-auto-revert-mode 1)
 (setq enable-recursive-minibuffers t)
 (setq auth-source-save-behavior nil)
 (setq kill-whole-line t)
 (setq-default indicate-empty-lines t)
+
+(setq-default tab-width 4)
+;; (setq-default indent-tabs-mode nil)
+
+;; C style
+(setq c-default-style "linux"
+      c-basic-offset 4)
 
 (put 'narrow-to-defun  'disabled nil)
 (put 'narrow-to-page   'disabled nil)
@@ -152,10 +157,6 @@
 (setq make-backup-files nil) ; stop creating those backup~ files
 (setq auto-save-default nil) ; stop creating those #auto-save# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
-
-;; C style
-(setq c-default-style "linux"
-      c-basic-offset 4)
 
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)

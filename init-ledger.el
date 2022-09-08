@@ -22,7 +22,8 @@
     (setq-local company-backends '(company-capf))
     (setq-local tab-always-indent 'complete)
     (setq-local completion-ignore-case t)
-    (setq-local ledger-complete-in-steps t))
+    (setq-local ledger-complete-in-steps t)
+    (setq-local indent-tabs-mode nil))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
   (add-hook 'ledger-report-mode-hook 'hl-line-mode)
   :config
