@@ -242,7 +242,8 @@
       org-habit-preceding-days 30
       org-habit-following-days 1
       org-habit-today-glyph ?@
-      org-habit-show-habits-only-for-today t)
+      org-habit-show-habits-only-for-today t
+	  org-habit-show-done-always-green t)
 
 (use-package ox-clip)
 (use-package ox-pandoc)

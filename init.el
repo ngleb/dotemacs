@@ -122,6 +122,8 @@
 (setq kill-whole-line t)
 (setq-default indicate-empty-lines t)
 
+(setq bookmark-set-fringe-mark nil)
+
 (setq-default tab-width 4)
 ;; (setq-default indent-tabs-mode nil)
 
@@ -409,10 +411,11 @@
               (let ((inhibit-read-only t)
                     (inhibit-modification-hooks t))
                 (setq-local truncate-lines nil)
-                (setq-local shr-width 85)
+                (setq-local shr-width 70)
                 (set-buffer-modified-p nil))
-              (setq-local left-margin-width 15)
-              (setq-local right-margin-width 15)
+			  (set-face-attribute 'variable-pitch (selected-frame) :font (font-spec :family "Noto Sans" :size 16))
+              (setq-local left-margin-width 55)
+              (setq-local right-margin-width 55)
               ))
 
   (defface elfeed-youtube
