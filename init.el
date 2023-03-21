@@ -32,7 +32,7 @@
 (straight-use-package 'nginx-mode)
 (straight-use-package 'csv-mode)
 (straight-use-package 'treemacs)
-(straight-use-package 'tramp)
+;;(straight-use-package 'tramp)
 (straight-use-package 'avy)
 (straight-use-package 'elfeed)
 (straight-use-package 'bind-key)
@@ -191,14 +191,14 @@
         (fill-region-as-paragraph beg (point))))))
 
 (cond (*is-linux*
-       ;; TODO fix the font changing in GUI on Linux
-       ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
-       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
-       ;; (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
-       ;; (define-key special-event-map [config-changed-event] #'ignore)
-       ;; (set-face-attribute 'default nil
-       ;;                     :family "Meslo LG S"
-       ;;                     :height 115)
+       ;; ;; TODO fix the font changing in GUI on Linux
+       ;; ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
+       ;; (add-to-list 'default-frame-alist '(font . "Meslo LG M 11"))
+       (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
+       (define-key special-event-map [config-changed-event] #'ignore)
+       (set-face-attribute 'default nil
+                           :family "Meslo LG S"
+                           :height 115)
        (use-package zenburn-theme
          :config
          (load-theme 'zenburn t)
@@ -212,7 +212,7 @@
 
       (*is-windows*
        (set-face-attribute 'mode-line nil :box nil)
-       (add-to-list 'default-frame-alist '(font . "Meslo LG S 11"))
+       (add-to-list 'default-frame-alist '(font . "Meslo LG S 12"))
        (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
@@ -324,23 +324,18 @@
   :bind ("C-x w" . elfeed)
   :config
   (setq elfeed-feeds
-        '(("https://softwaremaniacs.org/blog/feed/" blogs)
-          ("https://www.opennet.ru/opennews/opennews_all.rss" software)
+        '(("https://www.opennet.ru/opennews/opennews_all.rss" software)
           ("https://planet.gentoo.org/rss20.xml" software)
           ("https://lwn.net/headlines/newrss" software)
-          ("http://www.buchman.co.il/feed/" marketing)
           ("https://dictionaryblog.cambridge.org/feed/" english)
           ("https://feeds.feedburner.com/arstechnica/index/" news)
           ("https://dxdt.ru/feed/" software)
           ("https://www.smashingmagazine.com/feed/" blogs)
           ("http://lleo.me/dnevnik/rss.xml" blogs)
-          ("https://postnauka.ru/feed" news)
-          ("http://nullprogram.com/feed/" software)
           ("http://ammo1.livejournal.com/data/rss" blogs)
           ("https://mikrotik.com/current.rss" software)
           ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://blog.mikrotik.com/rss/" software)
-          ("https://kg-portal.ru/rss/news.rss" cinema)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)

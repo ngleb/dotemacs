@@ -138,7 +138,7 @@
 (let ((active-project-match "-INBOX/PROJECT"))
 
   (setq org-stuck-projects
-        `(,active-project-match ("NEXT")))
+        `(,active-project-match ("NEXT" "WAITING")))
 
   (setq org-agenda-compact-blocks t
         org-agenda-sticky nil
@@ -189,7 +189,7 @@
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
                          '(category-keep))))
-            (tags-todo "-INBOX/-NEXT"
+            (tags-todo "LEVEL=1-INBOX/-NEXT"
                        ((org-agenda-overriding-header "Orphaned Tasks")
                         (org-agenda-tags-todo-honor-ignore-options t)
                         (org-agenda-todo-ignore-scheduled 'all)
