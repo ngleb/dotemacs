@@ -31,14 +31,14 @@
  :map org-agenda-mode-map
  ("<f10>" . org-agenda-switch-to-narrowed-subtree))
 
-(setq org-directory (expand-file-name "Sync/org/" gn-base-dir))
+(setq org-directory (expand-file-name "Nextcloud/org/" gn-base-dir))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory))
 (setq gn-org-agenda-file (expand-file-name "todo.org" org-directory))
 (setq gn-org-someday-file (expand-file-name "someday.org" org-directory))
 (setq org-agenda-files (list gn-org-agenda-file))
 
-(setq gn-org-mobile-file (expand-file-name "Nextcloud/org-mobile/mobile.org" gn-base-dir))
-(setq gn-org-purchases (expand-file-name "Nextcloud/org-mobile/purchases.org" gn-base-dir))
+(setq gn-org-mobile-file (expand-file-name "mobile.org" org-directory))
+(setq gn-org-purchases (expand-file-name "purchases.org" org-directory))
 
 (setq org-startup-indented t)
 (setq org-archive-save-context-info nil)
@@ -119,7 +119,7 @@
       '(("x" "Note" entry (file "")
          "* %?" :clock-resume t :empty-lines 0)
         ("t" "Task" entry (file "")
-         "* NEXT %?" :clock-resume t :empty-lines 0)
+         "* TODO %?" :clock-resume t :empty-lines 0)
         ("j" "Journal" entry (file+olp+datetree "")
          "* %?\n")
         ("p" "Link" entry (file "")
@@ -127,7 +127,7 @@
         ("s" "Link with text" entry (file "")
         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
         ("h" "Habit" entry (file "")
-         "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
+         "* TODO %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d>>\")\n:PROPERTIES:\n:STYLE: habit\n:END:\n")))
 
 
 ;;; org agenda
