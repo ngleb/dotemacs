@@ -16,7 +16,7 @@
 (add-to-list 'org-modules 'org-habit)
 (add-to-list 'org-modules 'org-protocol)
 (add-to-list 'org-modules 'org-checklist)
-(setq org-export-backends '(html latex ascii))
+(setq org-export-backends '(html latex ascii odt))
 
 ;; List of additional LaTeX packages
 (add-to-list 'org-latex-packages-alist '("" "cmap" t))
