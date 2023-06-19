@@ -29,7 +29,9 @@
  ("C-c b" . org-switchb)
  ("<f12>" . (lambda () (interactive) (gn/open-agenda "g" nil)))
  :map org-agenda-mode-map
- ("<f10>" . org-agenda-switch-to-narrowed-subtree))
+ ("<f10>" . org-agenda-switch-to-narrowed-subtree)
+ :map org-mode-map
+ ("<f1>" . org-toggle-narrow-to-subtree))
 
 (setq org-directory (expand-file-name "Nextcloud/org/" gn-base-dir))
 (setq org-default-notes-file (expand-file-name "refile.org" org-directory))
@@ -117,13 +119,13 @@
 
 (setq org-capture-templates
       '(("x" "Note" entry (file "")
-         "* %?" :clock-resume t :empty-lines 0)
+         "* %?\nAdded on: %U\n" :clock-resume t :empty-lines 0)
         ("t" "Task" entry (file "")
-         "* TODO %?" :clock-resume t :empty-lines 0)
+         "* TODO %?\nAdded on: %U\n" :clock-resume t :empty-lines 0)
         ("j" "Journal" entry (file+olp+datetree "")
          "* %?\n")
         ("p" "Link" entry (file "")
-         "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n" :immediate-finish t)
+         "* Review [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\nAdded on: %U\n" :immediate-finish t)
         ("s" "Link with text" entry (file "")
         "* %^{Title}\nSource: [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n%?")
         ("h" "Habit" entry (file "")
