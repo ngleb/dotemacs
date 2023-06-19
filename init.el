@@ -125,7 +125,7 @@
 (setq bookmark-set-fringe-mark nil)
 
 (setq-default tab-width 4)
-;; (setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 ;; C style
 (setq c-default-style "linux"
@@ -170,6 +170,9 @@
 (bind-key "C-c i t" #'toggle-truncate-lines)
 
 (define-key minibuffer-inactive-mode-map [mouse-1] #'ignore)
+
+(defun gn/disable-company-mode-hook ()
+  (company-mode -1))
 
 (defun expose (function &rest args)
   "Return an interactive version of FUNCTION, 'exposing' it to the user."
@@ -240,7 +243,6 @@
                           (lsp))))
 
 (use-package helm
-  :disabled t
   :demand t
   :bind (("M-x" . helm-M-x)
          ("C-x r b" . helm-filtered-bookmarks)
@@ -272,18 +274,15 @@
   (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
 
 (use-package helm-descbinds
-  :disabled t
   :config
   (helm-descbinds-mode 1))
 
 (use-package helm-swoop
-  :disabled t
   :bind ("C-x c s" . helm-swoop)
   :config
   (setq helm-swoop-speed-or-color t))
 
 (use-package helm-org
-  :disabled t
   :after (org helm-mode)
   :bind (:map org-mode-map
               ("C-c j" . helm-org-in-buffer-headings))
@@ -427,6 +426,7 @@
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
 
 (use-package ivy
+  :disabled t
   :demand t
   :bind (("C-x b" . ivy-switch-buffer)
          ("C-x B" . ivy-switch-buffer-other-window))
@@ -440,6 +440,7 @@
   (ivy-mode 1))
 
 (use-package counsel
+  :disabled t
   :demand t
   :after ivy
   :bind (("M-x" . counsel-M-x)
@@ -455,8 +456,9 @@
          ("C-x l" . counsel-locate))
   :config
   (counsel-mode 1))
-  
+
 (use-package swiper
+  :disabled t
   :after ivy
   :demand t
   :commands iswiper-isearch
@@ -548,7 +550,8 @@
              whitespace-newline-mode)
   :config
   (setq whitespace-line-column 80) ;; limit line length
-  (setq whitespace-style '(face tabs tab-mark trailing)))
+  (setq whitespace-style '(face tabs tab-mark trailing))
+  (global-whitespace-mode))
 
 (use-package deft
   :bind (("<f9>" . deft)
@@ -576,14 +579,27 @@
   (setq calendar-date-display-form calendar-european-date-display-form))
 
 (use-package web-mode
-  :mode ("\\.html?\\'" . web-mode))
+  :mode ("\\.html?\\'" . web-mode)
+  :config
+  (add-hook 'web-mode-hook #'gn/disable-company-mode-hook)
+  :custom
+    (web-mode-markup-indent-offset 2)
+	(web-mode-css-indent-offset 2)
+	(web-mode-code-indent-offset 2)
+	(web-mode-enable-auto-closing nil))
 
 (use-package js2-mode
   :mode "\\.js\\'"
   :config
   (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-mode 1))
+  (flycheck-mode 1)
+  (add-hook 'js2-mode-hook #'gn/disable-company-mode-hook))
+
+(use-package css-mode
+  :config
+  (add-hook 'css-mode-hook #'gn/disable-company-mode-hook)
+  (setq-default css-indent-offset 2))
 
 (use-package ibuffer
   :commands ibuffer
@@ -827,8 +843,6 @@
 
 (add-hook 'emacs-startup-hook #'emacs-maximize t)
 (bind-key "C-<f12>" #'emacs-toggle-size)
-
-
 
 (provide 'init)
 
