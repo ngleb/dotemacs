@@ -63,10 +63,6 @@
 (straight-use-package 'web-mode)
 (straight-use-package 'yasnippet)
 (straight-use-package 'zenburn-theme)
-(straight-use-package 'helm)
-(straight-use-package 'helm-descbinds)
-(straight-use-package 'helm-org)
-(straight-use-package 'helm-swoop)
 
 (straight-use-package 'lsp-mode)
 (straight-use-package 'lsp-ui)
@@ -238,52 +234,10 @@
                           (require 'lsp-pyright)
                           (lsp))))
 
-(use-package helm
-  :demand t
-  :bind (("M-x" . helm-M-x)
-         ("C-x r b" . helm-filtered-bookmarks)
-         ("C-x C-f" . helm-find-files)
-         ("C-x b" . helm-buffers-list)
-         ("C-c j" . helm-imenu)
-         ("C-x B" . helm-mini)
-         ("C-x c o" . helm-occur))
   :config
-  (setq helm-mode-handle-completion-in-region nil)
-  (setq helm-display-header-line nil)
-  (setq helm-split-window-inside-p t)
-  (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
 
-  (when *is-windows*
-    (setq helm-locate-command "es %s -sort run-count %s")
-    (defun helm-es-hook ()
-      (when (and (equal (assoc-default 'name (helm-get-current-source)) "Locate")
-                 (string-match "\\`es" helm-locate-command))
-        (mapc (lambda (file)
-                (call-process "es" nil nil nil
-                              "-inc-run-count" (convert-standard-filename file)))
-              (helm-marked-candidates))))
-    (add-hook 'helm-find-many-files-after-hook 'helm-es-hook))
 
-  (helm-mode 1)
-  (helm-autoresize-mode 1)
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "magit"))
-  (add-to-list 'helm-boring-buffer-regexp-list (rx "*Flycheck")))
 
-(use-package helm-descbinds
-  :config
-  (helm-descbinds-mode 1))
-
-(use-package helm-swoop
-  :bind ("C-x c s" . helm-swoop)
-  :config
-  (setq helm-swoop-speed-or-color t))
-
-(use-package helm-org
-  :after (org helm-mode)
-  :bind (:map org-mode-map
-              ("C-c j" . helm-org-in-buffer-headings))
-  :config
-  (setq helm-org-format-outline-path t))
 
 (autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
 (use-package tramp)
