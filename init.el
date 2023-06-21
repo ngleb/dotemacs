@@ -36,7 +36,6 @@
 (straight-use-package 'elfeed)
 (straight-use-package 'bind-key)
 (straight-use-package 'company)
-(straight-use-package 'counsel)
 (straight-use-package 'deft)
 (straight-use-package 'diminish)
 (straight-use-package 'docker-compose-mode)
@@ -46,7 +45,6 @@
 (straight-use-package 'flycheck)
 (straight-use-package 'flycheck-ledger)
 (straight-use-package 'flyspell-popup)
-(straight-use-package 'ivy)
 (straight-use-package 'js2-mode)
 (straight-use-package 'langtool)
 (straight-use-package 'ledger-mode)
@@ -60,7 +58,6 @@
 (straight-use-package 'smartparens)
 (straight-use-package 'smex)
 (straight-use-package 'sokoban)
-(straight-use-package 'swiper)
 (straight-use-package 'which-key)
 (straight-use-package 'w32-browser)
 (straight-use-package 'web-mode)
@@ -423,45 +420,6 @@
   :config
   (bind-key "j" (kbd "C-u 1 C-v") Man-mode-map)
   (bind-key "k" (kbd "C-u 1 M-v") Man-mode-map))
-
-(use-package ivy
-  :disabled t
-  :demand t
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window))
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-do-completion-in-region nil)
-  (setq ivy-height 10)
-  (setq ivy-initial-inputs-alist nil)
-  (setcdr (assoc t ivy-format-functions-alist) #'ivy-format-function-line)
-  (ivy-mode 1))
-
-(use-package counsel
-  :disabled t
-  :demand t
-  :after ivy
-  :bind (("M-x" . counsel-M-x)
-         ("C-c i i" . counsel-imenu)
-         ("C-x C-f" . counsel-find-file)
-         ("M-y" . counsel-yank-pop)
-         ("C-x r b" . counsel-bookmark)
-         ("C-c o" . counsel-outline)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ("C-h b" . counsel-descbinds)
-         ("C-*" . counsel-org-agenda-headlines)
-         ("C-x l" . counsel-locate))
-  :config
-  (counsel-mode 1))
-
-(use-package swiper
-  :disabled t
-  :after ivy
-  :demand t
-  :commands iswiper-isearch
-  :bind ("C-s" . swiper-isearch))
 
 (use-package uniquify
   :config
