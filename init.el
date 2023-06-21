@@ -32,7 +32,6 @@
 (straight-use-package 'nginx-mode)
 (straight-use-package 'csv-mode)
 (straight-use-package 'treemacs)
-;;(straight-use-package 'tramp)
 (straight-use-package 'avy)
 (straight-use-package 'elfeed)
 (straight-use-package 'bind-key)
