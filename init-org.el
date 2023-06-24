@@ -62,6 +62,22 @@
                       ("calls" . ?c)
                       (:endgroup . nil)))
 
+;; On an org-heading, C-a goes to after the star, heading markers.
+;; To use speed keys, run C-a C-a to get to the star markers.
+;;
+;; C-e goes to the end of the heading, not including the tags.
+;;
+(setq org-special-ctrl-a/e t)
+
+;; C-k no longer removes tags, if activated in the middle of a heading's name.
+(setq org-special-ctrl-k t)
+
+;; When you yank a subtree and paste it alongside a subtree of depth ‘d’,
+;; then the yanked tree's depth is adjusted to become depth ‘d’ as well.
+;; If you don't want this, then refile instead of copy pasting.
+(setq org-yank-adjusted-subtrees t)
+
+
 (setq org-enable-priority-commands nil)
 
 ;;; org babel
