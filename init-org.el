@@ -52,7 +52,7 @@
 (setq org-tag-alist '((:startgroup . nil)
                       ("home" . ?h)
                       ("office" . ?o)
-                      ("a" . ?a)
+                      ("aa" . ?a)
                       ("anywhere" . ?w)
                       (:newline . nil)
                       ("laptop" . ?l)
@@ -60,6 +60,8 @@
                       ("reading" . ?r)
                       ("video" . ?v)
                       ("calls" . ?c)
+                      (:newline . nil)
+                      ("project")
                       (:endgroup . nil)))
 
 ;; On an org-heading, C-a goes to after the star, heading markers.
@@ -109,6 +111,9 @@
       (quote (("NEXT" :inherit warning)
               ("PROJECT" . "turquoise"))))
 
+(setq org-todo-state-tags-triggers
+      (quote (("PROJECT" ("project" . t))
+              ("DONE" ("project")))))
 
 ;;; org clock
 
@@ -156,7 +161,7 @@
 (let ((active-project-match "-INBOX/PROJECT"))
 
   (setq org-stuck-projects
-        `(,active-project-match ("NEXT" "WAITING")))
+        `(,active-project-match ("TODO" "WAITING")))
 
   (setq org-agenda-compact-blocks t
         org-agenda-sticky nil
@@ -198,7 +203,7 @@
                         (org-agenda-skip-function
                          '(lambda ()
                             (or (org-agenda-skip-subtree-if 'todo '("HOLD" "WAITING"))
-                                (org-agenda-skip-entry-if 'nottodo '("NEXT")))))
+                                (org-agenda-skip-entry-if 'todo '("PROJECT")))))
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
                          '(todo-state-down tag-up effort-up category-keep))))
@@ -207,20 +212,20 @@
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
                          '(category-keep))))
-            (tags-todo "LEVEL=1-INBOX/-NEXT"
-                       ((org-agenda-overriding-header "Orphaned Tasks")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'all)
-                        (org-agenda-todo-ignore-with-date 'all)
-                        (org-agenda-todo-ignore-timestamp 'all)
-                        (org-agenda-sorting-strategy '(tag-up))
-                        (org-agenda-skip-function
-                         '(lambda ()
-                            (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING" "DELEGATED"))
-                                (org-agenda-skip-subtree-if 'nottododo '("TODO")))))
-                        (org-tags-match-list-sublevels t)
-                        (org-agenda-sorting-strategy
-                         '(tag-up category-keep))))
+            ;; (tags-todo "LEVEL=1-INBOX/-NEXT"
+            ;;            ((org-agenda-overriding-header "Orphaned Tasks")
+            ;;             (org-agenda-tags-todo-honor-ignore-options t)
+            ;;             (org-agenda-todo-ignore-scheduled 'all)
+            ;;             (org-agenda-todo-ignore-with-date 'all)
+            ;;             (org-agenda-todo-ignore-timestamp 'all)
+            ;;             (org-agenda-sorting-strategy '(tag-up))
+            ;;             (org-agenda-skip-function
+            ;;              '(lambda ()
+            ;;                 (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING" "DELEGATED"))
+            ;;                     (org-agenda-skip-subtree-if 'nottododo '("TODO")))))
+            ;;             (org-tags-match-list-sublevels t)
+            ;;             (org-agenda-sorting-strategy
+            ;;              '(tag-up category-keep))))
             (tags-todo "/WAITING"
                        ((org-agenda-overriding-header "Waiting")
                         (org-agenda-tags-todo-honor-ignore-options t)
