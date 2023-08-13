@@ -88,6 +88,8 @@
      (`gnu/linux (expand-file-name "~"))
      (`windows-nt (getenv "USERPROFILE")))))
 
+(setq native-comp-async-report-warnings-errors 'silent)
+
 (blink-cursor-mode -1)
 (tooltip-mode -1)
 (column-number-mode 1)
@@ -196,7 +198,7 @@
        (defalias 'dynamic-setting-handle-config-changed-event 'ignore)
        (define-key special-event-map [config-changed-event] #'ignore)
        (set-face-attribute 'default nil
-                           :family "Meslo LG S"
+                           :family "JetBrains Mono 11"
                            :height 115)
        (use-package zenburn-theme
          :config
@@ -220,6 +222,9 @@
   :bind* ("C-." . avy-goto-char-timer)
   :config
   (avy-setup-default))
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
 
 (use-package lsp-mode
   :disabled t

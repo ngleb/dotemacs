@@ -12,6 +12,7 @@ backup
 backups
 bookmarks
 el-get
+eln-cache/
 elpa
 eshell
 eudc-options
