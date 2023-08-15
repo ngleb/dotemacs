@@ -4,7 +4,6 @@
 ;; Init file
 
 ;;; Code:
-
 (add-hook 'after-init-hook
           `(lambda ()
              (setq gc-cons-threshold 16777216
@@ -28,7 +27,18 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
-(straight-use-package 'vertico)
+
+(straight-use-package '( vertico :files (:defaults "extensions/*")
+                         :includes (vertico-buffer
+                                    vertico-directory
+                                    vertico-flat
+                                    vertico-indexed
+                                    vertico-mouse
+                                    vertico-quick
+                                    vertico-repeat
+                                    vertico-reverse)))
+(straight-use-package 'corfu)
+(straight-use-package 'cape)
 (straight-use-package 'orderless)
 (straight-use-package 'consult)
 (straight-use-package 'marginalia)
@@ -39,7 +49,6 @@
 (straight-use-package 'avy)
 (straight-use-package 'elfeed)
 (straight-use-package 'bind-key)
-(straight-use-package 'company)
 (straight-use-package 'deft)
 (straight-use-package 'diminish)
 (straight-use-package 'docker-compose-mode)
@@ -71,7 +80,6 @@
 (straight-use-package 'lsp-mode)
 (straight-use-package 'lsp-ui)
 (straight-use-package 'lsp-pyright)
-
 
 (eval-when-compile
   (require 'use-package))
@@ -252,8 +260,22 @@
 
 ;; Enable vertico
 (use-package vertico
-  :init
-  (vertico-mode))
+  :demand t
+  :custom
+  (vertico-cycle t)
+
+  :config
+  (vertico-mode)
+
+  (use-package vertico-directory
+    :demand t
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
+    :bind (:map vertico-map
+                ("<backspace>"   . vertico-directory-delete-char)
+                ("C-w"           . vertico-directory-delete-word)
+                ("C-<backspace>" . vertico-directory-delete-word)
+                ("RET" .           vertico-directory-enter)
+                )))
 
 ;; Optionally use the `orderless' completion style.
 (use-package orderless
@@ -525,21 +547,77 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point))
 
-(use-package company
-  :diminish " ❋"
-  :bind(:map company-mode-map
-        ("TAB" . company-indent-or-complete-common)
-        :map company-active-map
-        ("TAB" . company-complete-common-or-cycle)
-        ("<tab>" . company-complete-common-or-cycle))
-  :init
-  (add-hook 'prog-mode-hook 'company-mode)
-  (add-hook 'inferior-python-mode-hook 'company-mode)
+(use-package corfu
+  :straight (:files (:defaults "extensions/*"))
+  :demand t
+  :bind (("M-/" . completion-at-point)
+         :map corfu-map
+         ("C-n"      . corfu-next)
+         ("C-p"      . corfu-previous)
+         ("<escape>" . corfu-quit)
+         ("<return>" . corfu-insert)
+         ("M-d"      . corfu-info-documentation)
+         ("M-l"      . corfu-info-location)
+         ("M-."      . corfu-move-to-minibuffer))
+  :custom
+  (tab-always-indent 'complete)
+  (completion-cycle-threshold nil)
+
+  (corfu-auto nil)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.25)
+
+  (corfu-min-width 80)
+  (corfu-max-width corfu-min-width)     ; Always have the same width
+  (corfu-count 14)
+  (corfu-scroll-margin 4)
+  (corfu-cycle nil)
+
+  (corfu-echo-documentation nil)
+
+  (corfu-quit-at-boundary nil)
+  (corfu-separator ?\s)            ; Use space
+  (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+  (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
+  (corfu-preselect-first t)        ; Preselect first candidate?
+
   :config
-  (setq company-require-match nil
-        company-show-numbers t
-        company-minimum-prefix-length 2
-        company-idle-delay 0.1))
+  (global-corfu-mode))
+
+(use-package corfu-popupinfo
+  :after corfu
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :bind (:map corfu-map
+              ("M-n" . corfu-popupinfo-scroll-up)
+              ("M-p" . corfu-popupinfo-scroll-down)
+              ([remap corfu-show-documentation] . corfu-popupinfo-toggle))
+  :custom
+  (corfu-popupinfo-delay 0.5)
+  (corfu-popupinfo-max-width 70)
+  (corfu-popupinfo-max-height 20)
+  (corfu-echo-documentation nil))
+
+(use-package cape
+  :bind (("C-c p p" . completion-at-point) ;; capf
+         ("C-c p t" . complete-tag)        ;; etags
+         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p s" . cape-symbol)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)
+         ("C-c p \\" . cape-tex)
+         ("C-c p _" . cape-tex)
+         ("C-c p ^" . cape-tex)
+         ("C-c p &" . cape-sgml)
+         ("C-c p r" . cape-rfc1345))
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev))
 
 (use-package find-file-in-project)
 
@@ -617,25 +695,21 @@
 
 (use-package web-mode
   :mode ("\\.html?\\'" . web-mode)
-  :config
-  (add-hook 'web-mode-hook #'gn/disable-company-mode-hook)
   :custom
     (web-mode-markup-indent-offset 2)
-	(web-mode-css-indent-offset 2)
-	(web-mode-code-indent-offset 2)
-	(web-mode-enable-auto-closing nil))
+    (web-mode-css-indent-offset 2)
+    (web-mode-code-indent-offset 2)
+    (web-mode-enable-auto-closing nil))
 
 (use-package js2-mode
   :mode "\\.js\\'"
   :config
   (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-mode 1)
-  (add-hook 'js2-mode-hook #'gn/disable-company-mode-hook))
+  (flycheck-mode 1))
 
 (use-package css-mode
   :config
-  (add-hook 'css-mode-hook #'gn/disable-company-mode-hook)
   (setq-default css-indent-offset 2))
 
 (use-package ibuffer
@@ -807,9 +881,9 @@
         gnus-home-directory "~/my/gnus"))
 
 (use-package savehist
+  :custom
+  (savehist-mode t)
   :config
-  (setq history-delete-duplicates t)
-  :init
   (savehist-mode 1))
 
 (use-package server
