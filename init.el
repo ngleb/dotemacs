@@ -28,16 +28,22 @@
 
 (straight-use-package 'use-package)
 
-(straight-use-package '( vertico :files (:defaults "extensions/*")
-                         :includes (vertico-buffer
-                                    vertico-directory
-                                    vertico-flat
-                                    vertico-indexed
-                                    vertico-mouse
-                                    vertico-quick
-                                    vertico-repeat
-                                    vertico-reverse)))
-(straight-use-package 'corfu)
+(straight-use-package '(vertico :files (:defaults "extensions/*")
+                                :includes (vertico-buffer
+                                           vertico-directory
+                                           vertico-flat
+                                           vertico-indexed
+                                           vertico-mouse
+                                           vertico-quick
+                                           vertico-repeat
+                                           vertico-reverse)))
+(straight-use-package '(corfu :files (:defaults "extensions/*")
+                              :includes (corfu-echo       ;; corfu-echo-mode displays a brief candidate documentation in the echo area.
+                                         corfu-history    ;; corfu-history-mode remembers selected candidates and sorts the candidates by their history position.
+                                         corfu-indexed    ;; corfu-indexed-mode allows you to select indexed candidates with prefix arguments.
+                                         corfu-info       ;; Actions to access the candidate location and documentation.
+                                         corfu-popupinfo  ;; Display candidate documentation or source in a popup next to the candidate menu.
+                                         corfu-quick)))      ;; Commands to select using Avy-style quick keys.)
 (straight-use-package 'cape)
 (straight-use-package 'orderless)
 (straight-use-package 'consult)
@@ -422,16 +428,12 @@
   :config
   (setq elfeed-feeds
         '(("https://www.opennet.ru/opennews/opennews_all.rss" software)
-          ("https://planet.gentoo.org/rss20.xml" software)
           ("https://lwn.net/headlines/newrss" software)
           ("https://dictionaryblog.cambridge.org/feed/" english)
-          ("https://feeds.feedburner.com/arstechnica/index/" news)
           ("https://dxdt.ru/feed/" software)
-          ("https://www.smashingmagazine.com/feed/" blogs)
           ("http://lleo.me/dnevnik/rss.xml" blogs)
           ("http://ammo1.livejournal.com/data/rss" blogs)
           ("https://mikrotik.com/current.rss" software)
-          ("https://www.allthingsdistributed.com/index.xml" marketing)
           ("https://blog.mikrotik.com/rss/" software)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
@@ -548,7 +550,6 @@
     'flycheck-show-error-at-point))
 
 (use-package corfu
-  :straight (:files (:defaults "extensions/*"))
   :demand t
   :bind (("M-/" . completion-at-point)
          :map corfu-map

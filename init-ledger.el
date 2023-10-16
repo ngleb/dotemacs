@@ -11,14 +11,14 @@
          ("<f7>"   . gn/quick-calc)
          ("C-<f7>" . quick-calc)
          ("<f8>"   . my-ledger-report/body)
-         ("TAB"    . company-indent-or-complete-common)
+         ;;("TAB"    . company-indent-or-complete-common)
          :map ledger-report-mode-map
          ("n"      . next-line)
          ("p"      . previous-line))
   :init
   (defun my-ledger-mode-hook ()
     (flycheck-mode 1)
-    (company-mode 1)
+    ;;(company-mode 1)
     (setq-local company-backends '(company-capf))
     (setq-local tab-always-indent 'complete)
     (setq-local completion-ignore-case t)
