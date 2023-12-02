@@ -720,7 +720,9 @@
   (defun my-ibuffer-mode-hook ()
     (ibuffer-auto-mode 1)
     (ibuffer-switch-to-saved-filter-groups "default")
-    (hl-line-mode 1))
+    (setq ibuffer-hidden-filter-groups (list "Other" "Emacs"))
+    (hl-line-mode 1)
+    (ibuffer-update nil t))
   (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook)
   :config
   (use-package ibuf-ext)
