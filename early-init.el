@@ -16,6 +16,8 @@
 
 (setq frame-inhibit-implied-resize t)
 
+(setq byte-compile-warnings nil)
+
 ;; Ignore X resources; its settings would be redundant with the other settings
 ;; in this file and can conflict with later config (particularly where the
 ;; cursor color is concerned).

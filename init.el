@@ -12,11 +12,13 @@
 (defconst *is-linux* (eq system-type 'gnu/linux))
 (defconst *is-windows* (eq system-type 'windows-nt))
 
-;; Install straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -44,21 +46,17 @@
                                          corfu-info       ;; Actions to access the candidate location and documentation.
                                          corfu-popupinfo  ;; Display candidate documentation or source in a popup next to the candidate menu.
                                          corfu-quick)))      ;; Commands to select using Avy-style quick keys.)
-(straight-use-package 'cape)
-(straight-use-package 'orderless)
-(straight-use-package 'consult)
-(straight-use-package 'marginalia)
 (straight-use-package 'ag)
-(straight-use-package 'nginx-mode)
-(straight-use-package 'csv-mode)
-(straight-use-package 'treemacs)
 (straight-use-package 'avy)
-(straight-use-package 'elfeed)
 (straight-use-package 'bind-key)
+(straight-use-package 'cape)
+(straight-use-package 'consult)
+(straight-use-package 'csv-mode)
 (straight-use-package 'deft)
 (straight-use-package 'diminish)
 (straight-use-package 'docker-compose-mode)
 (straight-use-package 'dockerfile-mode)
+(straight-use-package 'elfeed)
 (straight-use-package 'elpy)
 (straight-use-package 'find-file-in-project)
 (straight-use-package 'flycheck)
@@ -67,9 +65,15 @@
 (straight-use-package 'js2-mode)
 (straight-use-package 'langtool)
 (straight-use-package 'ledger-mode)
+(straight-use-package 'lsp-mode)
+(straight-use-package 'lsp-pyright)
+(straight-use-package 'lsp-ui)
 (straight-use-package 'magit)
+(straight-use-package 'marginalia)
 (straight-use-package 'markdown-mode)
+(straight-use-package 'nginx-mode)
 (straight-use-package 'olivetti)
+(straight-use-package 'orderless)
 (straight-use-package 'org)
 (straight-use-package 'org-contrib)
 (straight-use-package 'ox-clip)
@@ -77,15 +81,12 @@
 (straight-use-package 'smartparens)
 (straight-use-package 'smex)
 (straight-use-package 'sokoban)
-(straight-use-package 'which-key)
+(straight-use-package 'treemacs)
 (straight-use-package 'w32-browser)
 (straight-use-package 'web-mode)
+(straight-use-package 'which-key)
 (straight-use-package 'yasnippet)
 (straight-use-package 'zenburn-theme)
-
-(straight-use-package 'lsp-mode)
-(straight-use-package 'lsp-ui)
-(straight-use-package 'lsp-pyright)
 
 (eval-when-compile
   (require 'use-package))
@@ -291,12 +292,13 @@
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
+  ;; :commands (marginalia-mode
+  ;;            marginalia-cycle)
   :bind (:map minibuffer-local-map
          ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
 
-;; Example configuration for Consult
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
@@ -333,6 +335,14 @@
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
+  :custom
+  (consult-narrow-key "<")
+
+  :functions
+  (consult-register-format
+   consult-register-window
+   consult-xref)
+
   ;; The :init configuration is always executed (Not lazy)
   :init
 
@@ -350,48 +360,21 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
 
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
   :config
-
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key "M-.")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (use-package consult-xref)
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
-   ;; :preview-key "M-."
-   :preview-key '(:debounce 0.4 any))
-
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; "C-+"
-
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-  ;; By default `consult-project-function' uses `project-root' from project.el.
-  ;; Optionally configure a different project root function.
-  ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
-  ;;;; 2. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-  ;;;; 3. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-  ;;;; 4. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-  ;;;; 5. No project support
-  ;; (setq consult-project-function nil)
-)
+   consult-ripgrep
+   consult-git-grep
+   consult-grep
+   consult-bookmark
+   consult-recent-file
+   consult-xref
+   consult--source-bookmark
+   consult--source-file-register
+   consult--source-recent-file
+   consult--source-project-recent-file
+   :preview-key '(:debounce 0.4 any)))
 
 (autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
 (use-package tramp)
@@ -507,7 +490,7 @@
                 (setq-local truncate-lines nil)
                 (setq-local shr-width 70)
                 (set-buffer-modified-p nil))
-			  (set-face-attribute 'variable-pitch (selected-frame) :font (font-spec :family "Noto Sans" :size 16))
+              (set-face-attribute 'variable-pitch (selected-frame) :font (font-spec :family "Noto Sans" :size 16))
               (setq-local left-margin-width 55)
               (setq-local right-margin-width 55)
               ))
@@ -534,7 +517,8 @@
 (use-package flycheck
   :commands (flycheck-mode
              flycheck-next-error
-             flycheck-previous-error)
+             flycheck-previous-error
+             global-flycheck-mode)
   :init
   (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
                    (js2-mode-hook        . js2-mode-map)
@@ -546,6 +530,7 @@
                  (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
   (global-flycheck-mode)
   :config
+;;  (global-flycheck-mode)
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point))
 
@@ -704,6 +689,7 @@
 
 (use-package js2-mode
   :mode "\\.js\\'"
+  :after flycheck
   :config
   (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
