@@ -103,8 +103,6 @@
      (`gnu/linux (expand-file-name "~"))
      (`windows-nt (getenv "USERPROFILE")))))
 
-(setq native-comp-async-report-warnings-errors 'silent)
-
 (blink-cursor-mode -1)
 (tooltip-mode -1)
 (column-number-mode 1)
@@ -183,9 +181,6 @@
 (bind-key "C-c i t" #'toggle-truncate-lines)
 
 (define-key minibuffer-inactive-mode-map [mouse-1] #'ignore)
-
-(defun gn/disable-company-mode-hook ()
-  (company-mode -1))
 
 (defun expose (function &rest args)
   "Return an interactive version of FUNCTION, 'exposing' it to the user."
@@ -292,8 +287,6 @@
         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package marginalia
-  ;; :commands (marginalia-mode
-  ;;            marginalia-cycle)
   :bind (:map minibuffer-local-map
          ("M-A" . marginalia-cycle))
   :init
@@ -515,24 +508,8 @@
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package flycheck
-  :commands (flycheck-mode
-             flycheck-next-error
-             flycheck-previous-error
-             global-flycheck-mode)
-  :init
-  (dolist (where '((emacs-lisp-mode-hook . emacs-lisp-mode-map)
-                   (js2-mode-hook        . js2-mode-map)
-                   (c-mode-common-hook   . c-mode-base-map)
-                   (elpy-mode-hook       . elpy-mode-map)))
-    (add-hook (car where)
-              `(lambda ()
-                 (bind-key "M-n" #'flycheck-next-error ,(cdr where))
-                 (bind-key "M-p" #'flycheck-previous-error ,(cdr where)))))
-  (global-flycheck-mode)
   :config
-;;  (global-flycheck-mode)
-  (defalias 'show-error-at-point-soon
-    'flycheck-show-error-at-point))
+  (global-flycheck-mode))
 
 (use-package corfu
   :demand t
@@ -640,11 +617,6 @@
   :commands magit-status
   :bind ("C-c m" . magit-status))
 
-(use-package ielm
-  :defer t
-  :config
-  (define-key ielm-map (kbd "C-c C-z") #'quit-window))
-
 (use-package whitespace
   :diminish (global-whitespace-mode
              whitespace-mode
@@ -712,7 +684,6 @@
   (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook)
   :config
   (use-package ibuf-ext)
-  (add-to-list 'ibuffer-never-show-predicates "^\\*helm")
   (setq ibuffer-show-empty-filter-groups nil)
   (setq ibuffer-expert t)
   (setq ibuffer-saved-filter-groups
@@ -829,11 +800,10 @@
 (use-package dired
   :bind (:map dired-mode-map
               ("l" . dired-up-directory))
-  :hook (dired-mode . hl-line-mode)
-  ;;:hook (dired-mode . dired-hide-details-mode)
+  :hook ((dired-mode . hl-line-mode)
+         (dired-mode . dired-hide-details-mode))
   :config
-  (setq font-lock-maximum-decoration (quote ((dired-mode . t) (t . t))))
-  (put 'dired-find-alternate-file 'disabled nil)
+  (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-dwim-target t)
   (setq dired-hide-details-hide-symlink-targets nil)
   (setq dired-hide-details-hide-information-lines nil)
@@ -852,22 +822,9 @@
   (setq dired-omit-verbose nil)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
 
-(use-package dired+
-  :after dired-x
-  :init
-  (setq diredp-hide-details-initially-flag nil)
-  (setq diredp-hide-details-propagate-flag t)
-  :config
-  (diredp-toggle-find-file-reuse-dir 1))
-
 (use-package nginx-mode
   :config
   (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)))
-
-(use-package gnus
-  :init
-  (setq gnus-init-file (expand-file-name "init-gnus" user-emacs-directory)
-        gnus-home-directory "~/my/gnus"))
 
 (use-package savehist
   :custom
@@ -889,7 +846,7 @@
 (defconst display-name
   (pcase (display-pixel-height)
     (`768 'lenovo)
-    (`1200 'lenovo-m)
+    (`1200 'pc)
     (`1080 'office)))
 
 (defconst emacs-min-top 20)
@@ -897,19 +854,19 @@
 (defconst emacs-min-left
   (pcase display-name
     (`lenovo 100)
-    (`lenovo-m 190)
+    (`pc 190)
     (`office 220)))
 
 (defconst emacs-min-height
   (pcase display-name
     (`lenovo 40)
-    (`lenovo-m 53)
+    (`pc 53)
     (`office 50)))
 
 (defconst emacs-min-width
   (pcase display-name
     (`lenovo 140)
-    (`lenovo-m 172)
+    (`pc 172)
     (`office 160)))
 
 (defun emacs-min ()
