@@ -50,8 +50,10 @@
 (straight-use-package 'avy)
 (straight-use-package 'bind-key)
 (straight-use-package 'cape)
+(straight-use-package 'company)
 (straight-use-package 'consult)
 (straight-use-package 'csv-mode)
+(straight-use-package 'dap-mode)
 (straight-use-package 'deft)
 (straight-use-package 'diminish)
 (straight-use-package 'docker-compose-mode)
@@ -66,11 +68,11 @@
 (straight-use-package 'langtool)
 (straight-use-package 'ledger-mode)
 (straight-use-package 'lsp-mode)
-(straight-use-package 'lsp-pyright)
 (straight-use-package 'lsp-ui)
 (straight-use-package 'magit)
 (straight-use-package 'marginalia)
 (straight-use-package 'markdown-mode)
+(straight-use-package 'nix-mode)
 (straight-use-package 'nginx-mode)
 (straight-use-package 'olivetti)
 (straight-use-package 'orderless)
@@ -236,23 +238,6 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-(use-package lsp-mode
-  :disabled t
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
-
-(use-package lsp-ui
-  :disabled t
-  :commands lsp-ui-mode)
-
-(use-package lsp-pyright
-  :disabled t
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))
-
 (use-package recentf
   :config
   (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
@@ -260,15 +245,12 @@
   (setq recentf-max-saved-items 100)
   (recentf-mode 1))
 
-;; Enable vertico
 (use-package vertico
   :demand t
   :custom
   (vertico-cycle t)
-
   :config
   (vertico-mode)
-
   (use-package vertico-directory
     :demand t
     :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
@@ -276,10 +258,8 @@
                 ("<backspace>"   . vertico-directory-delete-char)
                 ("C-w"           . vertico-directory-delete-word)
                 ("C-<backspace>" . vertico-directory-delete-word)
-                ("RET" .           vertico-directory-enter)
-                )))
+                ("RET" .           vertico-directory-enter))))
 
-;; Optionally use the `orderless' completion style.
 (use-package orderless
   :init
   (setq completion-styles '(orderless basic)
@@ -293,7 +273,6 @@
   (marginalia-mode))
 
 (use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
          ([remap Info-search] . consult-info)
          ;; C-x bindings in `ctl-x-map'
@@ -336,7 +315,6 @@
    consult-register-window
    consult-xref)
 
-  ;; The :init configuration is always executed (Not lazy)
   :init
 
   ;; Optionally configure the register formatting. This improves the register
@@ -369,30 +347,10 @@
    consult--source-project-recent-file
    :preview-key '(:debounce 0.4 any)))
 
-(autoload #'tramp-register-crypt-file-name-handler "tramp-crypt")
-(use-package tramp)
-
 (use-package ediff
   :config
-  ;; use existing frame instead of creating a new one
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (setq ediff-split-window-function 'split-window-horizontally)
-
-  ;; `d` for using A and B into C
-  (defun ediff-copy-both-to-C ()
-    (interactive)
-    (ediff-copy-diff ediff-current-difference nil 'C nil
-                     (concat
-                      (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-                      (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
-  (defun add-d-to-ediff-mode-map ()
-    (bind-key "d" #'ediff-copy-both-to-C ediff-mode-map))
-  ;;  (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
-  (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map))
-
-(use-package eldoc
-  :config
-  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
+  (setq ediff-split-window-function 'split-window-horizontally))
 
 (use-package youtube-dl
   :config
@@ -560,28 +518,6 @@
   (corfu-popupinfo-max-height 20)
   (corfu-echo-documentation nil))
 
-(use-package cape
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-symbol)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev))
-
 (use-package find-file-in-project)
 
 (use-package pyvenv
@@ -661,65 +597,78 @@
 
 (use-package js2-mode
   :mode "\\.js\\'"
-  :after flycheck
   :config
   (add-to-list 'flycheck-disabled-checkers #'javascript-jshint)
-  (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-mode 1))
+  (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
 (use-package css-mode
   :config
   (setq-default css-indent-offset 2))
 
-(use-package ibuffer
-  :commands ibuffer
-  :bind ("C-x C-b" . ibuffer)
+(use-package lsp-mode
   :init
-  (defun my-ibuffer-mode-hook ()
-    (ibuffer-auto-mode 1)
-    (ibuffer-switch-to-saved-filter-groups "default")
-    (setq ibuffer-hidden-filter-groups (list "Other" "Emacs"))
-    (hl-line-mode 1)
-    (ibuffer-update nil t))
-  (add-hook 'ibuffer-mode-hook #'my-ibuffer-mode-hook)
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((js2-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+(use-package lsp-ui :commands lsp-ui-mode)
+
+(use-package dap-mode
   :config
-  (use-package ibuf-ext)
-  (setq ibuffer-show-empty-filter-groups nil)
-  (setq ibuffer-expert t)
-  (setq ibuffer-saved-filter-groups
-        '(("default"
-           ("Dired" (mode . dired-mode))
-           ("Planner"
-            (or (filename . "\\(gtd\\|todo\\|refile\\|reading\\|mobile\\|someday\\|purchases\\|archive\*\\).org")
-                (mode . org-agenda-mode)
-                (name . "^\\*Calendar\\*$")
-                (name . "^diary$")))
-           ("Text"
-            (or (name . "\\.\\(tex\\|bib\\|csv\\)")
-                (mode . org-mode)
-                (mode . markdown-mode)
-                (mode . text-mode)
-                (mode . ledger-mode)))
-           ("Emacs"
-            (or (name . "^\\*scratch\\*$")
-                (name . "^\\*Messages\\*$")
-                (name . "^\\*Help\\*$")
-                (name . "^\\*info\\*$")))
-           ("Other"
-            (or (name . "\*.*\*")
-                (name . "^magit.*"))))))
-  ;; nearly all of this is the default layout
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 30 30 :left :elide) ; change: 30s were originally 18s
-                " "
-                (size 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " " filename-and-process)
-          (mark " "
-                (name 16 -1)
-                " " filename))))
+  (dap-mode 1)
+  (dap-ui-mode 1)
+  (tooltip-mode 1)
+  (dap-ui-controls-mode 1)
+  (use-package dap-firefox))
+
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer)
+  :custom
+  (ibuffer-expert t)
+  (ibuffer-show-empty-filter-groups nil)
+  (ibuffer-formats
+   '((mark modified read-only " "
+           (name 30 30 :left :elide) ; change: 30s were originally 18s
+           " "
+           (size 9 -1 :right)
+           " "
+           (mode 16 16 :left :elide)
+           " " filename-and-process)
+     (mark " "
+           (name 16 -1)
+           " " filename)))
+  (ibuffer-saved-filter-groups
+   '(("default"
+      ("Dired" (mode . dired-mode))
+      ("Planner"
+       (or
+        (filename . "\\(gtd\\|todo\\|refile\\|reading\\|mobile\\|someday\\|purchases\\|archive\*\\).org")
+        (mode . org-agenda-mode)
+        (name . "^\\*Calendar\\*$")
+        (name . "^diary$")))
+      ("Text"
+       (or
+        (name . "\\.\\(tex\\|bib\\|csv\\)")
+        (mode . org-mode)
+        (mode . markdown-mode)
+        (mode . text-mode)
+        (mode . ledger-mode)))
+      ("Emacs"
+       (or
+        (name . "^\\*scratch\\*$")
+        (name . "^\\*Messages\\*$")
+        (name . "^\\*Help\\*$")
+        (name . "^\\*info\\*$")))
+      ("Other"
+       (or
+        (name . "\*.*\*")
+        (name . "^magit.*"))))))
+  :config
+  (add-hook 'ibuffer-mode-hook #'hl-line-mode)
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-switch-to-saved-filter-groups "default"))))
 
 (use-package olivetti
   :commands olivetti-mode
@@ -762,16 +711,11 @@
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
-         ("C-c i f" . flyspell-mode))
+         ("C-c i f" . flyspell-mode)
+         :map flyspell-mode-map
+         ("C-;" . flyspell-popup-correct))
   :config
-  (use-package flyspell-popup)
-  (defun flyspell-check-next-highlighted-word ()
-    "Custom function to spell check next highlighted word"
-    (interactive)
-    (flyspell-goto-next-error)
-    (ispell-word))
-  (bind-key "C-;" #'flyspell-popup-correct flyspell-mode-map)
-  (bind-key "C-:" #'flyspell-check-next-highlighted-word flyspell-mode-map))
+  (use-package flyspell-popup))
 
 (use-package langtool
   :config
@@ -842,59 +786,10 @@
 (load "~/.emacs.d/init-org")
 (load "~/.emacs.d/init-ledger")
 
-
-(defconst display-name
-  (pcase (display-pixel-height)
-    (`768 'lenovo)
-    (`1200 'pc)
-    (`1080 'office)))
-
-(defconst emacs-min-top 20)
-
-(defconst emacs-min-left
-  (pcase display-name
-    (`lenovo 100)
-    (`pc 190)
-    (`office 220)))
-
-(defconst emacs-min-height
-  (pcase display-name
-    (`lenovo 40)
-    (`pc 53)
-    (`office 50)))
-
-(defconst emacs-min-width
-  (pcase display-name
-    (`lenovo 140)
-    (`pc 172)
-    (`office 160)))
-
-(defun emacs-min ()
-  (interactive)
-  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
-    (set-param 'fullscreen nil)
-    (set-param 'vertical-scroll-bars nil)
-    (set-param 'horizontal-scroll-bars nil))
-  (set-frame-position (selected-frame) emacs-min-left emacs-min-top)
-  (set-frame-size (selected-frame) emacs-min-width emacs-min-height))
-
-(defun emacs-max ()
-  (cl-flet ((set-param (p v) (set-frame-parameter (selected-frame) p v)))
-    (set-param 'fullscreen 'maximized)
-    (set-param 'vertical-scroll-bars nil)
-    (set-param 'horizontal-scroll-bars nil)))
-
 (defun emacs-maximize ()
   (set-frame-parameter (selected-frame) 'fullscreen 'maximized))
 
-(defun emacs-toggle-size ()
-  (interactive)
-  (if (alist-get 'fullscreen (frame-parameters))
-      (emacs-min)
-    (emacs-max)))
-
 (add-hook 'emacs-startup-hook #'emacs-maximize t)
-(bind-key "C-<f12>" #'emacs-toggle-size)
 
 (provide 'init)
 
