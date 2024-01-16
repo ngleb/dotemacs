@@ -113,48 +113,24 @@
 (setq-default display-fill-column-indicator-column 79)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-(setq mouse-highlight nil)
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq initial-scratch-message nil)
-(setq x-underline-at-descent-line t)
-(when (eq 'window-system 'x)
-  (setq x-wait-for-event-timeout nil))
-(setq visible-bell t)
-(setq ring-bell-function 'ignore)
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
-(setq confirm-kill-emacs 'y-or-n-p)
-(setq require-final-newline nil)
-(setq sentence-end-double-space nil)
-(setq-default truncate-lines t)
-(setq-default word-wrap t)
-(setq visual-line-fringe-indicators '(nil right-curly-arrow))
-(global-auto-revert-mode 1)
-(setq enable-recursive-minibuffers t)
-(setq auth-source-save-behavior nil)
-(setq kill-whole-line t)
-(setq-default indicate-empty-lines t)
-
-(setq bookmark-set-fringe-mark nil)
+(setopt mouse-highlight nil)
+(setopt use-short-answers t)
+(setopt initial-scratch-message nil)
+(setopt inhibit-splash-screen t)
+(setopt inhibit-startup-message t)
+(setopt confirm-kill-emacs 'y-or-n-p)
+(setopt sentence-end-double-space nil)
+(setopt enable-recursive-minibuffers t)
+(setopt kill-whole-line t)
+(setopt indicate-empty-lines t)
+(setopt scroll-conservatively 101)
 
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
-;; C style
-(setq c-default-style "linux"
-      c-basic-offset 4)
-
 (put 'narrow-to-defun  'disabled nil)
 (put 'narrow-to-page   'disabled nil)
 (put 'narrow-to-region 'disabled nil)
-
-;; Stop scrolling by huge leaps
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
-      scroll-conservatively most-positive-fixnum
-      scroll-preserve-screen-position t
-      scroll-margin 0
-      hscroll-margin 1
-      hscroll-step 1)
 
 ;; MULE & encoding setup
 (set-language-environment 'utf-8)
@@ -166,17 +142,14 @@
      'utf-16-le  ;; https://rufflewind.com/2014-07-20/pasting-unicode-in-emacs-on-windows
    'utf-8))
 (prefer-coding-system 'utf-8)
-(setq default-input-method "russian-computer")
+(setopt default-input-method "russian-computer")
 
 ;; Stop creating backup and auto-save files
-(setq make-backup-files nil) ; stop creating those backup~ files
-(setq auto-save-default nil) ; stop creating those #auto-save# files
+(setopt make-backup-files nil) ; stop creating those backup~ files
+(setopt auto-save-default nil) ; stop creating those #auto-save# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
 
-(autoload 'zap-up-to-char "misc"
-  "Kill up to, but not including ARGth occurrence of CHAR." t)
-
-(global-set-key (kbd "C-x k") #'kill-this-buffer)
+(bind-key "C-x k" #'kill-this-buffer)
 (bind-key "M-z" #'zap-up-to-char)
 (bind-key "M-N" (kbd "C-u 1 C-v"))
 (bind-key "M-P" (kbd "C-u 1 M-v"))
@@ -218,13 +191,10 @@
          (zenburn-with-color-variables
            (custom-theme-set-faces
             'zenburn
-            `(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))
-            `(ivy-current-match ((t (:background ,zenburn-bg+1 :underline nil))))
-            `(swiper-line-face ((t (:background ,zenburn-bg+1 :underline nil))))))
+            `(whitespace-tab ((t (:foreground "gray40" :background "#424242"))))))
          (setq zenburn-add-font-lock-keywords t)))
 
       (*is-windows*
-       (set-face-attribute 'mode-line nil :box nil)
        (add-to-list 'default-frame-alist '(font . "Meslo LG S 12"))
        (setq inhibit-compacting-font-caches t)
        (setq default-directory gn-base-dir)
@@ -238,12 +208,14 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
+(use-package csv-mode
+  :mode "\\.csv\\'")
+
 (use-package recentf
+  :custom
+  (recentf-max-saved-items 200)
   :config
-  (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude "AppData/Local/Temp")
-  (setq recentf-max-saved-items 100)
-  (recentf-mode 1))
+  (recentf-mode))
 
 (use-package vertico
   :demand t
@@ -273,26 +245,39 @@
   (marginalia-mode))
 
 (use-package consult
-  :bind (;; C-c bindings in `mode-specific-map'
+  :bind (("C-c i i" . consult-info)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ([remap Info-search] . consult-info)
          ;; C-x bindings in `ctl-x-map'
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x b" . consult-buffer)              ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("M-y" . consult-yank-pop)            ;; orig. yank-pop
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
          ;; M-g bindings in `goto-map'
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g g" . consult-goto-line)           ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g o" . consult-outline)             ;; Alternative: consult-org-heading
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings in `search-map'
+         ("M-s f" . consult-fd)
          ("M-s r" . consult-ripgrep)
          ("M-s l" . consult-line)
          ("M-s L" . consult-line-multi)
-         ;; Isearch integration
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
          ("M-s e" . consult-isearch-history)
+         :map org-mode-map
+         ("C-c o" . consult-org-heading)
          :map isearch-mode-map
          ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
          ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
@@ -746,11 +731,12 @@
               ("l" . dired-up-directory))
   :hook ((dired-mode . hl-line-mode)
          (dired-mode . dired-hide-details-mode))
+  :custom
+  (dired-kill-when-opening-new-dired-buffer t)
+  (dired-dwim-target t)
+  (dired-hide-details-hide-symlink-targets nil)
+  (dired-hide-details-hide-information-lines nil)
   :config
-  (setq dired-kill-when-opening-new-dired-buffer t)
-  (setq dired-dwim-target t)
-  (setq dired-hide-details-hide-symlink-targets nil)
-  (setq dired-hide-details-hide-information-lines nil)
   (defconst my-dired-listing-switches
     (pcase system-type
       (`gnu/linux "-ahl --group-directories-first")
