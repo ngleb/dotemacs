@@ -705,10 +705,10 @@
 (use-package langtool
   :config
   (cond (*is-linux*
-         (setq langtool-bin "/usr/bin/languagetool"))
+         (setq langtool-bin "languagetool-commandline"))
         (*is-windows*
          (setq langtool-language-tool-jar "C:/apps/langtool/languagetool-commandline.jar")))
-  (setq langtool-default-language "en-US")
+  (setq langtool-default-language "ru-RU")
   (defun langtool-autoshow-detail-popup (overlays)
     (when (require 'popup nil t)
       ;; Do not interrupt current popup
