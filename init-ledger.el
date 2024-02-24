@@ -25,8 +25,9 @@
     (setq-local ledger-complete-in-steps t)
     (setq-local indent-tabs-mode nil))
   (add-hook 'ledger-mode-hook 'my-ledger-mode-hook)
-  (add-hook 'ledger-report-mode-hook 'hl-line-mode)
   :config
+  (add-hook 'ledger-report-mode-hook 'hl-line-mode)
+
   (setq ledger-report-use-header-line t)
   (setq ledger-report-use-strict t)
   (setq ledger-add-transaction-prompt-for-text nil)
@@ -38,6 +39,7 @@
           ("payee" "%(binary) -f %(ledger-file) --wide register @%(payee)")
           ("account" "%(binary) -f %(ledger-file) --wide register %(account)")
           ("account-last-45days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 45 days]\" register %(account)")
+          ("account-last-120days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 120 days]\" register %(account)")
           ("assets-short" "%(binary) -f %(ledger-file) --wide balance \"^assets:cash.*$|^assets:checking.*$|^assets:savings.*$\"")
           ("assets-full" "%(binary) -f %(ledger-file) --wide balance ^assets ^liabilities")
           ("expenses-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide balance \"^expenses|^liabilities\"")
@@ -62,10 +64,10 @@
 
   (defhydra my-ledger-report (nil nil :foreign-keys nil :hint nil :exit t)
     "
-Balance:               Reports                  Budget:
-_a_: Assets (short)    _e_: Monthly expenses    _b_: Monthly budget
-_f_: Assets (full)     _r_: Account register    _u_: Monthly unbudgeted
-_1_: Balance
+Balance:               Reports                        Budget:
+_a_: Assets (short)    _e_: Monthly expenses          _b_: Monthly budget
+_f_: Assets (full)     _r_: Account register          _u_: Monthly unbudgeted
+_1_: Balance           _t_: Account register (120)
 
 _q_ quit"
     ("q" nil)
@@ -74,6 +76,7 @@ _q_ quit"
 
     ("e" (gn/ledger-report "expenses-monthly"))
     ("r" (gn/ledger-report "account-last-45days"))
+    ("t" (gn/ledger-report "account-last-120days"))
 
     ("b" (gn/ledger-report "budget-monthly"))
     ("u" (gn/ledger-report "unbudgeted-monthly"))

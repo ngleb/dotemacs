@@ -124,7 +124,7 @@
 (setopt kill-whole-line t)
 (setopt indicate-empty-lines t)
 (setopt scroll-conservatively 101)
-
+(setopt native-comp-async-report-warnings-errors nil)
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
@@ -467,7 +467,7 @@
          ("M-."      . corfu-move-to-minibuffer))
   :custom
   (tab-always-indent 'complete)
-  (completion-cycle-threshold nil)
+  (completion-cycle-threshold 3)
 
   (corfu-auto nil)
   (corfu-auto-prefix 2)
