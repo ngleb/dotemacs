@@ -354,6 +354,7 @@
           ("http://ammo1.livejournal.com/data/rss" blogs)
           ("https://mikrotik.com/current.rss" software)
           ("https://blog.mikrotik.com/rss/" software)
+          ("https://kg-portal.ru/rss/news_all.rss" news)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)
@@ -363,7 +364,7 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCZ-ix1fUTguJvwj6sxgF-6A" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)))
 
-  (setq elfeed-search-filter "@2-days-ago +unread"
+  (setq elfeed-search-filter "@3-days-ago +unread"
         elfeed-search-title-max-width 75)
 
   (defun elfeed-show-youtube-dl ()
