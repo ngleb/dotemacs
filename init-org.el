@@ -166,7 +166,7 @@
   (setq org-agenda-compact-blocks t
         org-agenda-sticky nil
         org-agenda-start-on-weekday nil
-        org-agenda-span 5
+        org-agenda-span 7
         org-agenda-start-day "-2d"
         org-agenda-include-diary nil
         org-agenda-sorting-strategy
@@ -298,6 +298,11 @@
                 (org-capture-frame . t)))
   (select-frame-by-name "capture")
   (org-capture))
+
+(defun stag-misanthropic-capture (&rest r)
+  (delete-other-windows))
+
+(advice-add  #'org-capture-place-template :after 'stag-misanthropic-capture)
 
 (advice-add
  'org-switch-to-buffer-other-window :after
