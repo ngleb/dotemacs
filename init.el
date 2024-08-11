@@ -353,7 +353,7 @@
           ("http://lleo.me/dnevnik/rss.xml" blogs)
           ("http://ammo1.livejournal.com/data/rss" blogs)
           ("https://mikrotik.com/current.rss" software)
-          ("https://blog.mikrotik.com/rss/" software)
+          ("https://download.mikrotik.com/routeros/latest-stable-and-long-term.rss" software)
           ("https://kg-portal.ru/rss/news_all.rss" news)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
@@ -365,7 +365,8 @@
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCRI00CwLZdLRCWg5BdDOsNw" youtube)))
 
   (setq elfeed-search-filter "@3-days-ago +unread"
-        elfeed-search-title-max-width 75)
+        elfeed-search-title-max-width 75
+        elfeed-curl-extra-arguments '("-xhttp://127.0.0.1:8080"))
 
   (defun elfeed-show-youtube-dl ()
     "Download the current entry with youtube-dl."
@@ -508,7 +509,10 @@
 
 (use-package pyvenv
   :init
-  (defalias 'workon 'pyvenv-workon))
+  (defalias 'workon 'pyvenv-workon)
+  :config
+  (setenv "WORKON_HOME" (expand-file-name "~/dev/envs/"))
+  (pyvenv-mode t))
 
 (use-package python
   :mode ("\\.py\\'" . python-mode)
@@ -517,16 +521,16 @@
         python-shell-interpreter-args "-i")
   (setq python-indent-guess-indent-offset nil))
 
-(use-package elpy
-  :after python
-  :config
-  (setq elpy-remove-modeline-lighter nil)
-  (setq elpy-rpc-virtualenv-path 'current)
-  (setq elpy-shell-echo-input nil)
-  (delete 'elpy-module-highlight-indentation elpy-modules)
-  (delete 'elpy-module-flymake elpy-modules)
-  (add-hook 'elpy-mode-hook 'flycheck-mode)
-  (elpy-enable))
+;; (use-package elpy
+;;   :after python
+;;   :config
+;;   (setq elpy-remove-modeline-lighter nil)
+;;   (setq elpy-rpc-virtualenv-path 'current)
+;;   (setq elpy-shell-echo-input nil)
+;;   (delete 'elpy-module-highlight-indentation elpy-modules)
+;;   (delete 'elpy-module-flymake elpy-modules)
+;;   (add-hook 'elpy-mode-hook 'flycheck-mode)
+;;   (elpy-enable))
 
 (use-package which-key
   :config
@@ -595,7 +599,8 @@
   :init
   (setq lsp-keymap-prefix "C-c l")
   :hook ((js2-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
+         (lsp-mode . lsp-enable-which-key-integration)
+         (python-mode . lsp))
   :commands lsp)
 
 (use-package lsp-ui :commands lsp-ui-mode)
