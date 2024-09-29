@@ -339,8 +339,9 @@
 
 (use-package youtube-dl
   :config
-  (setq youtube-dl-arguments '("--no-mtime" "--format" "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best")
-        youtube-dl-directory (expand-file-name "videos/videos" gn-base-dir)))
+  (setq youtube-dl-program "yt-dlp"
+        youtube-dl-arguments '("--no-mtime" "--format" "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" "--merge-output-format mkv")
+        youtube-dl-directory "/media/media/online"))
 
 (use-package elfeed
   :bind ("C-x w" . elfeed)
