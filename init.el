@@ -89,6 +89,7 @@
 (straight-use-package 'which-key)
 (straight-use-package 'yasnippet)
 (straight-use-package 'zenburn-theme)
+(straight-use-package 'envrc)
 
 (eval-when-compile
   (require 'use-package))
@@ -200,6 +201,9 @@
        (setq default-directory gn-base-dir)
        (use-package w32-browser)))
 
+;; (use-package envrc
+;;   :hook (after-init . envrc-global-mode))
+
 (use-package avy
   :bind* ("C-." . avy-goto-char-timer)
   :config
@@ -293,7 +297,8 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
   :custom
-  (consult-narrow-key "<")
+  ((consult-narrow-key "<")
+   (consult-line-start-from-top nil))
 
   :functions
   (consult-register-format
@@ -355,7 +360,6 @@
           ("http://ammo1.livejournal.com/data/rss" blogs)
           ("https://mikrotik.com/current.rss" software)
           ("https://download.mikrotik.com/routeros/latest-stable-and-long-term.rss" software)
-          ("https://kg-portal.ru/rss/news_all.rss" news)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCi8e0iOVk1fEOogdfu4YgfA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCSc16oMxxlcJSb9SXkjwMjA" youtube)
           ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWiY6fYdxuEe78r-0uFCnhA" youtube)
@@ -470,11 +474,11 @@
          ("M-."      . corfu-move-to-minibuffer))
   :custom
   (tab-always-indent 'complete)
-  (completion-cycle-threshold 3)
+  (completion-cycle-threshold 0)
 
   (corfu-auto nil)
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.25)
+  (corfu-auto-delay 0.1)
 
   (corfu-min-width 80)
   (corfu-max-width corfu-min-width)     ; Always have the same width
@@ -601,8 +605,8 @@
   (setq lsp-keymap-prefix "C-c l")
   :hook ((js2-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration)
-         (python-mode . lsp))
-  :commands lsp)
+         (python-mode . lsp-deferred))
+  :commands (lsp lsp-deferred))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
@@ -612,7 +616,15 @@
   (dap-ui-mode 1)
   (tooltip-mode 1)
   (dap-ui-controls-mode 1)
-  (use-package dap-firefox))
+  (use-package dap-firefox)
+  (use-package dap-python
+    :config
+    (setq dap-python-debugger 'debugpy)))
+
+;; (use-package eglot
+;;   :ensure t
+;;   :hook
+;;   ((python-mode . eglot-ensure)))
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)

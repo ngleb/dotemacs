@@ -14,7 +14,9 @@
          ;;("TAB"    . company-indent-or-complete-common)
          :map ledger-report-mode-map
          ("n"      . next-line)
-         ("p"      . previous-line))
+         ("p"      . previous-line)
+         ("j"      . next-line)
+         ("k"      . previous-line))
   :init
   (defun my-ledger-mode-hook ()
     (flycheck-mode 1)
@@ -29,7 +31,7 @@
   (add-hook 'ledger-report-mode-hook 'hl-line-mode)
 
   (setq ledger-report-use-header-line t)
-  (setq ledger-report-use-strict t)
+  (setq ledger-report-use-strict nil)
   (setq ledger-add-transaction-prompt-for-text nil)
 
   (setq ledger-reports
@@ -38,11 +40,13 @@
           ("reg" "%(binary) -f %(ledger-file) --wide register")
           ("payee" "%(binary) -f %(ledger-file) --wide register @%(payee)")
           ("account" "%(binary) -f %(ledger-file) --wide register %(account)")
-          ("account-last-45days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 45 days]\" register %(account)")
+          ("account-last-14days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 14 days]\" register %(account)")
+          ("account-last-30days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 30 days]\" register %(account)")
           ("account-last-120days" "%(binary) -f %(ledger-file) --wide -d \"d>=[last 120 days]\" register %(account)")
           ("assets-short" "%(binary) -f %(ledger-file) --wide balance \"^assets:cash.*$|^assets:checking.*$|^assets:savings.*$\"")
           ("assets-full" "%(binary) -f %(ledger-file) --wide balance ^assets ^liabilities")
           ("expenses-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide balance \"^expenses|^liabilities\"")
+          ("expenses-monthly-2" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --sort \"-abs(amount)\" --flat balance \"^expenses|^liabilities\"")
           ("budget-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --budget --invert bal ^expenses")
           ("unbudgeted-monthly" "%(binary) -f %(ledger-file) --period %(month) --aux-date --wide --unbudgeted balance ^expenses"))))
 
@@ -64,10 +68,10 @@
 
   (defhydra my-ledger-report (nil nil :foreign-keys nil :hint nil :exit t)
     "
-Balance:               Reports                        Budget:
-_a_: Assets (short)    _e_: Monthly expenses          _b_: Monthly budget
-_f_: Assets (full)     _r_: Account register          _u_: Monthly unbudgeted
-_1_: Balance           _t_: Account register (120)
+Balance:               Reports                  Register                       Budget
+_a_: Assets (short)    _e_: Monthly expenses    _r_: Account register (14)     _b_: Monthly budget
+_f_: Assets (full)     _2_: Sorted expenses     _t_: Account register (30)     _u_: Monthly unbudgeted
+_1_: Balance                                    _y_: Account register (120)
 
 _q_ quit"
     ("q" nil)
@@ -75,8 +79,10 @@ _q_ quit"
     ("f" (gn/ledger-report "assets-full"))
 
     ("e" (gn/ledger-report "expenses-monthly"))
-    ("r" (gn/ledger-report "account-last-45days"))
-    ("t" (gn/ledger-report "account-last-120days"))
+    ("2" (gn/ledger-report "expenses-monthly-2"))
+    ("r" (gn/ledger-report "account-last-14days"))
+    ("t" (gn/ledger-report "account-last-30days"))
+    ("y" (gn/ledger-report "account-last-120days"))
 
     ("b" (gn/ledger-report "budget-monthly"))
     ("u" (gn/ledger-report "unbudgeted-monthly"))
