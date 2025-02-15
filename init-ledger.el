@@ -71,7 +71,7 @@
 Balance:               Reports                  Register                       Budget
 _a_: Assets (short)    _e_: Monthly expenses    _r_: Account register (14)     _b_: Monthly budget
 _f_: Assets (full)     _2_: Sorted expenses     _t_: Account register (30)     _u_: Monthly unbudgeted
-_1_: Balance                                    _y_: Account register (120)
+_1_: Balance                                  _y_: Account register (120)
 
 _q_ quit"
     ("q" nil)
