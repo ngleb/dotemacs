@@ -38,3 +38,4 @@ transient/*
 url/*
 /straight/
 /.lsp-session-v1
+.dap-breakpoints
