@@ -299,14 +299,13 @@
   (select-frame-by-name "capture")
   (org-capture))
 
-(defun stag-misanthropic-capture (&rest r)
-  (delete-other-windows))
+(defun gn/delete-other-windows-if-org-capture-frame (&rest args)
+  "Detele other windows only when in org-capture-frame"
+  (when (frame-parameter nil 'org-capture-frame)
+    (delete-other-windows)))
 
-(advice-add  #'org-capture-place-template :after 'stag-misanthropic-capture)
-
-(advice-add
- 'org-switch-to-buffer-other-window :after
- (lambda (&rest _) (when (frame-parameter nil 'org-capture-frame) (delete-other-windows))))
+(advice-add #'org-capture-place-template :after 'gn/delete-other-windows-if-org-capture-frame)
+(advice-add #'switch-to-buffer-other-window :after 'gn/delete-other-windows-if-org-capture-frame)
 
 (advice-add
  'org-capture :around
