@@ -158,6 +158,13 @@
 (setq-default org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
 
 
+(with-eval-after-load 'org-agenda
+  (add-to-list 'org-agenda-bulk-custom-functions
+               '(?\s (lambda nil (org-agenda-todo "")))
+               )
+  )
+
+
 (let ((active-project-match "-INBOX/PROJECT"))
 
   (setq org-stuck-projects

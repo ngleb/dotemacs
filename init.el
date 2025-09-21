@@ -150,7 +150,7 @@
 (setopt auto-save-default nil) ; stop creating those #auto-save# files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup")))
 
-(bind-key "C-x k" #'kill-this-buffer)
+(bind-key "C-x k" #'kill-current-buffer)
 (bind-key "M-z" #'zap-up-to-char)
 (bind-key "M-N" (kbd "C-u 1 C-v"))
 (bind-key "M-P" (kbd "C-u 1 M-v"))
@@ -494,7 +494,7 @@
   (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
   (corfu-preselect-first t)        ; Preselect first candidate?
 
-  :config
+  :init
   (global-corfu-mode))
 
 (use-package corfu-popupinfo
@@ -508,7 +508,7 @@
   (corfu-popupinfo-delay 0.5)
   (corfu-popupinfo-max-width 70)
   (corfu-popupinfo-max-height 20)
-  (corfu-echo-documentation nil))
+  (corfu-echo-documentation t))
 
 (use-package find-file-in-project)
 
@@ -601,11 +601,17 @@
   (setq-default css-indent-offset 2))
 
 (use-package lsp-mode
+  :custom
+  (lsp-completion-provider :none) ;; we use Corfu!
   :init
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(flex))) ;; Configure flex
   (setq lsp-keymap-prefix "C-c l")
   :hook ((js2-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration)
-         (python-mode . lsp-deferred))
+         (python-mode . lsp-deferred)
+         (lsp-completion-mode . my/lsp-mode-setup-completion))
   :commands (lsp lsp-deferred))
 
 (use-package lsp-ui :commands lsp-ui-mode)
