@@ -268,12 +268,15 @@
 
 ;;; org habit
 
-(setq org-habit-graph-column 55
-      org-habit-preceding-days 30
-      org-habit-following-days 1
-      org-habit-today-glyph ?@
-      org-habit-show-habits-only-for-today t
-	  org-habit-show-done-always-green t)
+(use-package org-habit
+  :custom
+  (org-habit-graph-column 90)
+  (org-habit-preceding-days 14)
+  (org-habit-following-days 1)
+  (org-habit-today-glyph ?@)
+  (org-habit-show-habits-only-for-today t)
+  (org-habit-show-done-always-green t)
+  (org-habit-show-all-today t))
 
 (use-package ox-clip)
 (use-package ox-pandoc)
